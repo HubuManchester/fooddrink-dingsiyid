@@ -48,11 +48,11 @@ public class Recipe
 
     public string CategoryIcon => Category switch
     {
-        "主食" => "🍚",
-        "甜点" => "🍰",
-        "素食" => "🥗",
-        "汤品" => "🍲",
-        "饮品" => "🥤",
+        "Staples" => "🍚",
+        "Desserts" => "🍰",
+        "Vegetarian" => "🥗",
+        "Soups" => "🍲",
+        "Beverages" => "🥤",
         _ => "🍽️"
     };
 

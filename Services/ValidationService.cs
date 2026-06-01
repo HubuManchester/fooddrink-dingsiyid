@@ -1,126 +1,126 @@
 namespace CampusEats.Services;
 
 /// <summary>
-/// 验证服务 - 提供通用的输入验证功能
+/// Validation service - provides general input validation functions
 /// </summary>
 public class ValidationService
 {
     /// <summary>
-    /// 验证字符串是否为空或空白
+    /// Validate if string is empty or whitespace
     /// </summary>
-    public (bool IsValid, string Message) IsNotEmpty(string? value, string fieldName = "输入")
+    public (bool IsValid, string Message) IsNotEmpty(string? value, string fieldName = "Input")
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return (false, $"{fieldName}不能为空");
+            return (false, $"{fieldName} cannot be empty");
         }
         return (true, string.Empty);
     }
 
     /// <summary>
-    /// 验证字符串长度
+    /// Validate string length
     /// </summary>
-    public (bool IsValid, string Message) CheckLength(string? value, int minLength, int maxLength, string fieldName = "输入")
+    public (bool IsValid, string Message) CheckLength(string? value, int minLength, int maxLength, string fieldName = "Input")
     {
         if (value == null)
         {
-            return (false, $"{fieldName}不能为空");
+            return (false, $"{fieldName} cannot be empty");
         }
         if (value.Length < minLength)
         {
-            return (false, $"{fieldName}至少需要{minLength}个字符");
+            return (false, $"{fieldName} needs at least {minLength} characters");
         }
         if (value.Length > maxLength)
         {
-            return (false, $"{fieldName}不能超过{maxLength}个字符");
+            return (false, $"{fieldName} cannot exceed {maxLength} characters");
         }
         return (true, string.Empty);
     }
 
     /// <summary>
-    /// 验证数值范围
+    /// Validate numeric range
     /// </summary>
-    public (bool IsValid, string Message) CheckRange(int value, int min, int max, string fieldName = "数值")
+    public (bool IsValid, string Message) CheckRange(int value, int min, int max, string fieldName = "Number")
     {
         if (value < min)
         {
-            return (false, $"{fieldName}不能小于{min}");
+            return (false, $"{fieldName} cannot be less than {min}");
         }
         if (value > max)
         {
-            return (false, $"{fieldName}不能大于{max}");
+            return (false, $"{fieldName} cannot be greater than {max}");
         }
         return (true, string.Empty);
     }
 
     /// <summary>
-    /// 验证数值范围（double）
+    /// Validate numeric range (double)
     /// </summary>
-    public (bool IsValid, string Message) CheckRange(double value, double min, double max, string fieldName = "数值")
+    public (bool IsValid, string Message) CheckRange(double value, double min, double max, string fieldName = "Number")
     {
         if (value < min)
         {
-            return (false, $"{fieldName}不能小于{min}");
+            return (false, $"{fieldName} cannot be less than {min}");
         }
         if (value > max)
         {
-            return (false, $"{fieldName}不能大于{max}");
+            return (false, $"{fieldName} cannot be greater than {max}");
         }
         return (true, string.Empty);
     }
 
     /// <summary>
-    /// 验证电子邮件格式
+    /// Validate email format
     /// </summary>
     public (bool IsValid, string Message) IsEmail(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return (false, "邮箱地址不能为空");
+            return (false, "Email address cannot be empty");
         }
         try
         {
             var addr = new System.Net.Mail.MailAddress(value);
-            return (addr.Address == value, "请输入有效的邮箱地址");
+            return (addr.Address == value, "Please enter a valid email address");
         }
         catch
         {
-            return (false, "请输入有效的邮箱地址");
+            return (false, "Please enter a valid email address");
         }
     }
 
     /// <summary>
-    /// 验证评分范围（1-5）
+    /// Validate rating range (1-5)
     /// </summary>
     public (bool IsValid, string Message) IsValidRating(int rating)
     {
-        return CheckRange(rating, 1, 5, "评分");
+        return CheckRange(rating, 1, 5, "Rating");
     }
 
     /// <summary>
-    /// 验证评论内容
+    /// Validate comment content
     /// </summary>
     public (bool IsValid, string Message) IsValidComment(string? comment)
     {
-        var notEmpty = IsNotEmpty(comment, "评论");
+        var notEmpty = IsNotEmpty(comment, "Comment");
         if (!notEmpty.IsValid) return notEmpty;
         
-        return CheckLength(comment, 1, 500, "评论");
+        return CheckLength(comment, 1, 500, "Comment");
     }
 
     /// <summary>
-    /// 验证卡路里数值
+    /// Validate calories value
     /// </summary>
     public (bool IsValid, string Message) IsValidCalories(int calories)
     {
-        return CheckRange(calories, 0, 5000, "卡路里");
+        return CheckRange(calories, 0, 5000, "Calories");
     }
 
     /// <summary>
-    /// 验证时间（分钟）
+    /// Validate time (minutes)
     /// </summary>
     public (bool IsValid, string Message) IsValidTime(int minutes)
     {
-        return CheckRange(minutes, 1, 1440, "时间");
+        return CheckRange(minutes, 1, 1440, "Time");
     }
 }

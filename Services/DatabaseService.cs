@@ -64,13 +64,13 @@ public class DatabaseService
             },
             new Restaurant
             {
-                Name = "Re Gan Mian (Hot Dry Noodles)",
+                Name = "Hot Dry Noodles",
                 Cuisine = "Hubei Noodles",
                 Rating = 4.6,
                 Description = "Traditional Wuhan hot dry noodles with sesame paste, pickled vegetables, and chili oil.",
                 Latitude = 53.473,
                 Longitude = -2.236,
-                ImageName = "reganmian.jpg"      // 小写文件名
+                ImageName = "reganmian.jpg"
             },
             new Restaurant
             {
@@ -158,6 +158,35 @@ public class DatabaseService
         return restaurant.Id == 0 ? await _database.InsertAsync(restaurant) : await _database.UpdateAsync(restaurant);
     }
 
+    public async Task<int> UpdateRestaurantAsync(Restaurant restaurant)
+    {
+        await EnsureInitialized();
+        return await _database.UpdateAsync(restaurant);
+    }
+
+    public async Task<int> DeleteRestaurantAsync(Restaurant restaurant)
+    {
+        await EnsureInitialized();
+        // Delete all reviews for this restaurant first
+        var reviews = await _database.Table<Review>().Where(r => r.RestaurantId == restaurant.Id).ToListAsync();
+        foreach (var review in reviews)
+        {
+            await _database.DeleteAsync(review);
+        }
+        return await _database.DeleteAsync(restaurant);
+    }
+
+    public async Task<int> DeleteRestaurantByIdAsync(int restaurantId)
+    {
+        await EnsureInitialized();
+        var restaurant = await _database.Table<Restaurant>().Where(r => r.Id == restaurantId).FirstOrDefaultAsync();
+        if (restaurant != null)
+        {
+            return await DeleteRestaurantAsync(restaurant);
+        }
+        return 0;
+    }
+
     public async Task<List<Review>> GetReviewsForRestaurantAsync(int restaurantId)
     {
         await EnsureInitialized();
@@ -167,7 +196,30 @@ public class DatabaseService
     public async Task<int> SaveReviewAsync(Review review)
     {
         await EnsureInitialized();
-        return await _database.InsertAsync(review);
+        return review.Id == 0 ? await _database.InsertAsync(review) : await _database.UpdateAsync(review);
+    }
+
+    public async Task<int> UpdateReviewAsync(Review review)
+    {
+        await EnsureInitialized();
+        return await _database.UpdateAsync(review);
+    }
+
+    public async Task<int> DeleteReviewAsync(Review review)
+    {
+        await EnsureInitialized();
+        return await _database.DeleteAsync(review);
+    }
+
+    public async Task<int> DeleteReviewByIdAsync(int reviewId)
+    {
+        await EnsureInitialized();
+        var review = await _database.Table<Review>().Where(r => r.Id == reviewId).FirstOrDefaultAsync();
+        if (review != null)
+        {
+            return await _database.DeleteAsync(review);
+        }
+        return 0;
     }
 
     #region Recipe Methods
@@ -178,72 +230,72 @@ public class DatabaseService
         {
             new Recipe
             {
-                Name = "番茄炒蛋",
-                Category = "主食",
+                Name = "Tomato Egg Stir Fry",
+                Category = "Staples",
                 Rating = 4.8,
-                Description = "经典家常菜，酸甜可口，营养丰富",
-                Ingredients = "番茄2个,鸡蛋3个,盐适量,糖少许,葱花",
-                Instructions = "1. 番茄切块，鸡蛋打散备用。2. 热锅放油，倒入鸡蛋液炒至凝固盛出。3. 锅中留底油，放入番茄翻炒出汁。4. 加入炒好的鸡蛋，加盐和糖调味。5. 撒葱花出锅。",
+                Description = "Classic home cooking, sweet and sour, nutritious",
+                Ingredients = "2 tomatoes, 3 eggs, salt, sugar, scallion",
+                Instructions = "1. Cut tomatoes into pieces, beat eggs. 2. Heat oil, pour egg mixture and cook until set. 3. Leave some oil, add tomatoes and stir-fry. 4. Add cooked eggs, season with salt and sugar. 5. Sprinkle scallion and serve.",
                 ImageName = "food_placeholder.jpg",
                 Calories = 280,
                 PrepTime = 15
             },
             new Recipe
             {
-                Name = "红烧肉",
-                Category = "主食",
+                Name = "Braised Pork",
+                Category = "Staples",
                 Rating = 4.9,
-                Description = "色泽红亮，肥而不腻，入口即化",
-                Ingredients = "五花肉500g,生姜,葱段,八角,桂皮,香叶,料酒,生抽,老抽,冰糖",
-                Instructions = "1. 五花肉切块焯水。2. 锅中放少许油，加入冰糖炒出糖色。3. 放入五花肉翻炒上色。4. 加入葱姜和香料炒香。5. 加料酒、生抽、老抽调味。6. 加水炖煮1小时。",
+                Description = "Bright red color, fatty but not greasy, melts in mouth",
+                Ingredients = "500g pork belly, ginger, scallion, star anise, cinnamon, bay leaf, cooking wine, light soy sauce, dark soy sauce, rock sugar",
+                Instructions = "1. Cut pork into pieces and blanch. 2. Add a little oil, add rock sugar and caramelize. 3. Add pork and stir-fry to color. 4. Add scallion, ginger and spices. 5. Add cooking wine, light and dark soy sauce. 6. Add water and simmer for 1 hour.",
                 ImageName = "food_placeholder.jpg",
                 Calories = 450,
                 PrepTime = 70
             },
             new Recipe
             {
-                Name = "蔬菜沙拉",
-                Category = "素食",
+                Name = "Vegetable Salad",
+                Category = "Vegetarian",
                 Rating = 4.5,
-                Description = "新鲜蔬菜，健康美味",
-                Ingredients = "生菜,番茄,黄瓜,紫甘蓝,沙拉酱,橄榄油",
-                Instructions = "1. 各种蔬菜洗净切块。2. 放入碗中，加入沙拉酱和橄榄油。3. 搅拌均匀即可。",
+                Description = "Fresh vegetables, healthy and delicious",
+                Ingredients = "Lettuce, tomato, cucumber, purple cabbage, salad dressing, olive oil",
+                Instructions = "1. Wash and cut all vegetables. 2. Put in bowl, add salad dressing and olive oil. 3. Stir well and serve.",
                 ImageName = "food_placeholder.jpg",
                 Calories = 150,
                 PrepTime = 10
             },
             new Recipe
             {
-                Name = "提拉米苏",
-                Category = "甜点",
+                Name = "Tiramisu",
+                Category = "Desserts",
                 Rating = 4.7,
-                Description = "意大利经典甜品，咖啡与马斯卡彭的完美结合",
-                Ingredients = "马斯卡彭芝士,手指饼干,咖啡,可可粉,鸡蛋,糖",
-                Instructions = "1. 蛋黄加糖打发，加入马斯卡彭芝士搅拌。2. 蛋白打发后加入。3. 手指饼干蘸咖啡后铺在底部。4. 倒入芝士糊，冷藏4小时。5. 撒可可粉装饰。",
+                Description = "Italian classic dessert, perfect combination of coffee and mascarpone",
+                Ingredients = "Mascarpone cheese, ladyfingers, coffee, cocoa powder, eggs, sugar",
+                Instructions = "1. Beat egg yolks with sugar, mix with mascarpone. 2. Beat egg whites and fold in. 3. Dip ladyfingers in coffee and place at bottom. 4. Pour cheese mixture, refrigerate for 4 hours. 5. Sprinkle cocoa powder on top.",
                 ImageName = "food_placeholder.jpg",
                 Calories = 350,
                 PrepTime = 60
             },
             new Recipe
             {
-                Name = "酸辣汤",
-                Category = "汤品",
+                Name = "Hot and Sour Soup",
+                Category = "Soups",
                 Rating = 4.6,
-                Description = "酸辣开胃，温暖身心",
-                Ingredients = "豆腐,木耳,香菇,鸡蛋,醋,胡椒粉,淀粉",
-                Instructions = "1. 食材切好备用。2. 锅中加水烧开，放入食材煮5分钟。3. 加入醋和胡椒粉调味。4. 淀粉勾芡，打入鸡蛋花。5. 出锅淋香油。",
+                Description = "Sour and spicy, warms your heart and body",
+                Ingredients = "Tofu, wood ear mushrooms, shiitake mushrooms, eggs, vinegar, white pepper, starch",
+                Instructions = "1. Prepare all ingredients. 2. Bring water to boil, add ingredients and cook for 5 minutes. 3. Add vinegar and white pepper. 4. Starch thickening, beat in eggs. 5. Drizzle sesame oil and serve.",
                 ImageName = "food_placeholder.jpg",
                 Calories = 120,
                 PrepTime = 20
             },
             new Recipe
             {
-                Name = "珍珠奶茶",
-                Category = "饮品",
+                Name = "Bubble Tea",
+                Category = "Beverages",
                 Rating = 4.4,
-                Description = "香甜可口，Q弹珍珠",
-                Ingredients = "红茶,牛奶,珍珠,糖",
-                Instructions = "1. 珍珠煮熟备用。2. 红茶冲泡后过滤。3. 加入牛奶和糖调味。4. 放入珍珠即可。",
+                Description = "Sweet and fragrant, chewy pearls",
+                Ingredients = "Black tea, milk, tapioca pearls, sugar",
+                Instructions = "1. Cook pearls and set aside. 2. Brew black tea and strain. 3. Add milk and sugar. 4. Add pearls and serve.",
                 ImageName = "food_placeholder.jpg",
                 Calories = 280,
                 PrepTime = 30

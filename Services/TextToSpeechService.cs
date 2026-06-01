@@ -3,20 +3,20 @@ using System.Globalization;
 namespace CampusEats.Services;
 
 /// <summary>
-/// 语音合成服务 - 负责将文本转换为语音
-/// 支持多种语言和语速调节
+/// Text-to-speech service - responsible for converting text to speech
+/// Supports multiple languages and speed adjustment
 /// </summary>
 public class TextToSpeechService
 {
     private CancellationTokenSource? _cts;
 
     /// <summary>
-    /// 检查语音合成是否可用
+    /// Check if text-to-speech is supported
     /// </summary>
     public bool IsSupported => TextToSpeech.Default.IsSupported;
 
     /// <summary>
-    /// 获取可用的语音列表
+    /// Get available voices
     /// </summary>
     public async Task<IEnumerable<Locale>> GetAvailableVoicesAsync()
     {
@@ -25,17 +25,17 @@ public class TextToSpeechService
     }
 
     /// <summary>
-    /// 朗读文本
+    /// Speak text
     /// </summary>
-    /// <param name="text">要朗读的文本</param>
-    /// <param name="language">语言代码（如 "zh-CN", "en-US"）</param>
-    /// <param name="speed">语速（0.5-2.0，默认1.0）</param>
-    /// <param name="pitch">音调（0.5-2.0，默认1.0）</param>
-    public async Task SpeakAsync(string text, string language = "zh-CN", double speed = 1.0, double pitch = 1.0)
+    /// <param name="text">Text to speak</param>
+    /// <param name="language">Language code (e.g., "en-US", "zh-CN")</param>
+    /// <param name="speed">Speech rate (0.5-2.0, default 1.0)</param>
+    /// <param name="pitch">Pitch (0.5-2.0, default 1.0)</param>
+    public async Task SpeakAsync(string text, string language = "en-US", double speed = 1.0, double pitch = 1.0)
     {
         if (!IsSupported || string.IsNullOrWhiteSpace(text)) return;
 
-        // 取消之前的朗读
+        // Cancel previous speech
         Stop();
 
         _cts = new CancellationTokenSource();
@@ -54,34 +54,34 @@ public class TextToSpeechService
         }
         catch (OperationCanceledException)
         {
-            // 正常取消
+            // Normal cancellation
         }
         catch (Exception)
         {
-            // 忽略语音合成错误
+            // Ignore text-to-speech errors
         }
     }
 
     /// <summary>
-    /// 朗读餐厅信息
+    /// Speak restaurant information
     /// </summary>
     public async Task SpeakRestaurantInfo(string name, string cuisine, double rating, string description)
     {
-        var text = $"餐厅：{name}。菜系：{cuisine}。评分：{rating}分。{description}";
+        var text = $"Restaurant: {name}. Cuisine: {cuisine}. Rating: {rating} stars. {description}";
         await SpeakAsync(text);
     }
 
     /// <summary>
-    /// 朗读评论内容
+    /// Speak review content
     /// </summary>
     public async Task SpeakReview(string comment, int rating)
     {
-        var text = $"评论评分：{rating}星。评论内容：{comment}";
+        var text = $"Review rating: {rating} stars. Review content: {comment}";
         await SpeakAsync(text);
     }
 
     /// <summary>
-    /// 停止当前朗读
+    /// Stop current speech
     /// </summary>
     public void Stop()
     {
@@ -91,16 +91,16 @@ public class TextToSpeechService
     }
 
     /// <summary>
-    /// 检查是否正在朗读
+    /// Check if currently speaking
     /// </summary>
     public bool IsSpeaking => _cts != null;
 
     /// <summary>
-    /// 获取系统语言代码
+    /// Get system language code
     /// </summary>
     public string GetSystemLanguage()
     {
         var culture = CultureInfo.CurrentCulture;
-        return $"{culture.TwoLetterISOLanguageName}-{culture.Name.Split('-').LastOrDefault()?.ToUpper() ?? "CN"}";
+        return $"{culture.TwoLetterISOLanguageName}-{culture.Name.Split('-').LastOrDefault()?.ToUpper() ?? "US"}";
     }
 }

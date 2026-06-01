@@ -5,11 +5,9 @@
        x:Class="CampusEats.AppShell"
        Shell.FlyoutBehavior="Disabled">
 
-    <!-- 底部 TabBar 导航 -->
     <TabBar>
-        <!-- 首页 - 餐厅列表 -->
         <ShellContent 
-            Title="餐厅" 
+            Title="Restaurants" 
             Icon="🍽️"
             ContentTemplate="{DataTemplate views:MainPage}" 
             Route="mainpage">
@@ -18,9 +16,8 @@
             </ShellContent.Icon>
         </ShellContent>
 
-        <!-- 食谱库页面 -->
         <ShellContent 
-            Title="食谱" 
+            Title="Recipes" 
             Icon="📖"
             ContentTemplate="{DataTemplate views:RecipePage}" 
             Route="recipepage">
@@ -29,9 +26,8 @@
             </ShellContent.Icon>
         </ShellContent>
 
-        <!-- 无障碍设置页面 -->
         <ShellContent 
-            Title="无障碍" 
+            Title="Accessibility" 
             Icon="♿"
             ContentTemplate="{DataTemplate views:AccessibilityPage}" 
             Route="accessibilitypage">
@@ -40,9 +36,8 @@
             </ShellContent.Icon>
         </ShellContent>
 
-        <!-- 模拟测试页面 -->
         <ShellContent 
-            Title="模拟" 
+            Title="Mock Test" 
             Icon="🎮"
             ContentTemplate="{DataTemplate views:MockTestPage}" 
             Route="mocktestpage">
@@ -50,9 +45,8 @@
                 <FontImageSource FontFamily="OpenSansRegular" Glyph="🎮" />
             </ShellContent.Icon>
         </ShellContent>
-        <!-- 位置测试页面 -->
         <ShellContent 
-            Title="测试" 
+            Title="Location Test" 
             Icon="🧪"
             ContentTemplate="{DataTemplate views:LocationTestPage}" 
             Route="locationtestpage">
@@ -60,10 +54,18 @@
                 <FontImageSource FontFamily="OpenSansRegular" Glyph="🧪" />
             </ShellContent.Icon>
         </ShellContent>
+        <ShellContent 
+            Title="CRUD Test" 
+            Icon="🗄️"
+            ContentTemplate="{DataTemplate views:CrudTestPage}" 
+            Route="crudtestpage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="🗄️" />
+            </ShellContent.Icon>
+        </ShellContent>
     </TabBar>
 
-    <!-- 详情页（非 TabBar 页面） -->
-    <ShellContent Title="餐厅详情" Route="detailpage" ContentTemplate="{DataTemplate views:DetailPage}" />
-    <ShellContent Title="食谱详情" Route="recipecdetailpage" ContentTemplate="{DataTemplate views:RecipeDetailPage}" />
+    <ShellContent Title="Restaurant Details" Route="detailpage" ContentTemplate="{DataTemplate views:DetailPage}" />
+    <ShellContent Title="Recipe Details" Route="recipecdetailpage" ContentTemplate="{DataTemplate views:RecipeDetailPage}" />
 
 </Shell>

@@ -13,29 +13,29 @@
     </ContentPage.Resources>
 
     <Grid>
-        <!-- 主内容区域 -->
+        <!-- Main content area -->
         <ScrollView IsVisible="{Binding Restaurant, Converter={StaticResource InvertedBoolConverter}, Mode=OneWay}" Opacity="{Binding Restaurant, Converter={StaticResource InvertedBoolConverter}, Mode=OneWay}">
             <VerticalStackLayout Padding="20" Spacing="15">
                 <Frame CornerRadius="20" BackgroundColor="White" Padding="15" HasShadow="True">
                 <VerticalStackLayout>
                     <Label Text="{Binding Restaurant.Name}" FontSize="24" FontAttributes="Bold" 
-                           AutomationProperties.Name="餐厅名称" />
+                           AutomationProperties.Name="Restaurant name" />
                     <Label Text="{Binding Restaurant.Cuisine}" FontSize="16" TextColor="Gray" 
-                           AutomationProperties.Name="菜系" />
+                           AutomationProperties.Name="Cuisine" />
                     <Label Text="{Binding Restaurant.RatingStars}" FontSize="16" TextColor="#FFD700" 
-                           AutomationProperties.Name="评分" />
+                           AutomationProperties.Name="Rating" />
                     <Label Text="{Binding Restaurant.Distance, StringFormat='📍 {0:F1} km from you'}" FontSize="14" 
-                           AutomationProperties.Name="距离" />
-                    <Button Text="🔊 朗读餐厅信息" Command="{Binding SpeakRestaurantCommand}" Margin="0,10,0,0" 
-                            AutomationProperties.Name="朗读餐厅信息按钮" />
+                           AutomationProperties.Name="Distance" />
+                    <Button Text="🔊 Speak Restaurant Info" Command="{Binding SpeakRestaurantCommand}" Margin="0,10,0,0" 
+                            AutomationProperties.Name="Speak restaurant info button" />
                 </VerticalStackLayout>
             </Frame>
 
                 <Frame CornerRadius="20" BackgroundColor="White" Padding="15" HasShadow="True">
                     <VerticalStackLayout>
-                        <Label Text="📸 食物照片" FontSize="16" FontAttributes="Bold" 
-                               AutomationProperties.Name="食物照片" />
-                        <Image HeightRequest="200" Aspect="AspectFill" AutomationProperties.Name="餐厅图片">
+                        <Label Text="📸 Food Photo" FontSize="16" FontAttributes="Bold" 
+                               AutomationProperties.Name="Food photo" />
+                        <Image HeightRequest="200" Aspect="AspectFill" AutomationProperties.Name="Restaurant image">
                             <Image.Source>
                                 <MultiBinding Converter="{StaticResource ByteArrayToImageSourceConverter}">
                                     <Binding Path="Restaurant.ImageData" />
@@ -43,62 +43,62 @@
                                 </MultiBinding>
                             </Image.Source>
                         </Image>
-                        <Button Text="📷 拍照" Command="{Binding TakePhotoCommand}" Margin="0,10,0,0" 
-                                AutomationProperties.Name="拍照按钮" />
+                        <Button Text="📷 Take Photo" Command="{Binding TakePhotoCommand}" Margin="0,10,0,0" 
+                                AutomationProperties.Name="Take photo button" />
                     </VerticalStackLayout>
                 </Frame>
 
                 <Frame CornerRadius="20" BackgroundColor="White" Padding="15" HasShadow="True">
                     <VerticalStackLayout>
-                        <Label Text="ℹ️ 关于餐厅" FontSize="16" FontAttributes="Bold" 
-                               AutomationProperties.Name="关于餐厅" />
+                        <Label Text="ℹ️ About Restaurant" FontSize="16" FontAttributes="Bold" 
+                               AutomationProperties.Name="About restaurant" />
                         <Label Text="{Binding Restaurant.Description}" FontSize="14" 
-                               AutomationProperties.Name="餐厅描述" />
+                               AutomationProperties.Name="Restaurant description" />
                     </VerticalStackLayout>
                 </Frame>
 
                 <Frame CornerRadius="20" BackgroundColor="White" Padding="15" HasShadow="True">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="✍️ 写评论" FontSize="16" FontAttributes="Bold" 
-                               AutomationProperties.Name="写评论" />
+                        <Label Text="✍️ Write Review" FontSize="16" FontAttributes="Bold" 
+                               AutomationProperties.Name="Write review" />
                         <HorizontalStackLayout Spacing="10">
-                            <Label Text="评分:" VerticalOptions="Center" AutomationProperties.Name="评分标签" />
-                            <Picker Title="请选择评分" 
+                            <Label Text="Rating:" VerticalOptions="Center" AutomationProperties.Name="Rating label" />
+                            <Picker Title="Select rating" 
                                     ItemsSource="{Binding RatingOptions}"
                                     SelectedItem="{Binding SelectedRatingString}"
                                     WidthRequest="100"
-                                    AutomationProperties.Name="评分选择器" />
+                                    AutomationProperties.Name="Rating picker" />
                         </HorizontalStackLayout>
-                        <Editor Text="{Binding NewComment}" Placeholder="分享您的用餐体验..." HeightRequest="80" 
-                                AutomationProperties.Name="评论内容输入框" />
-                        <Button Text="提交评论" Command="{Binding SubmitCommentCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" 
-                                AutomationProperties.Name="提交评论按钮" />
+                        <Editor Text="{Binding NewComment}" Placeholder="Share your dining experience..." HeightRequest="80" 
+                                AutomationProperties.Name="Comment input" />
+                        <Button Text="Submit Review" Command="{Binding SubmitCommentCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" 
+                                AutomationProperties.Name="Submit review button" />
                         <Label Text="{Binding StatusMessage}" FontSize="12" 
-                               AutomationProperties.Name="状态消息" />
+                               AutomationProperties.Name="Status message" />
                     </VerticalStackLayout>
                 </Frame>
 
                 <Frame CornerRadius="20" BackgroundColor="White" Padding="15" HasShadow="True">
                     <VerticalStackLayout>
-                        <Label Text="💬 用户评论" FontSize="16" FontAttributes="Bold" 
-                               AutomationProperties.Name="用户评论列表" />
+                        <Label Text="💬 User Reviews" FontSize="16" FontAttributes="Bold" 
+                               AutomationProperties.Name="User review list" />
                         <CollectionView ItemsSource="{Binding Reviews}" HeightRequest="300"
-                                        AutomationProperties.Name="评论列表">
+                                        AutomationProperties.Name="Review list">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <VerticalStackLayout Padding="10,5">
                                         <Label Text="{Binding UserComment}" FontSize="14" 
-                                               AutomationProperties.Name="评论内容" />
+                                               AutomationProperties.Name="Review content" />
                                         <Label Text="{Binding Rating, StringFormat='⭐ {0}/5'}" FontSize="12" 
-                                               AutomationProperties.Name="评论评分" />
-                                        <Label Text="{Binding CreatedAt, StringFormat='发布于: {0:yyyy-MM-dd}'}" FontSize="10" TextColor="Gray" 
-                                               AutomationProperties.Name="发布时间" />
+                                               AutomationProperties.Name="Review rating" />
+                                        <Label Text="{Binding CreatedAt, StringFormat='Posted: {0:yyyy-MM-dd}'}" FontSize="10" TextColor="Gray" 
+                                               AutomationProperties.Name="Post time" />
                                         <BoxView HeightRequest="1" BackgroundColor="LightGray" />
                                     </VerticalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                             <CollectionView.EmptyView>
-                                <Label Text="暂无评论，快来做第一个评论的人吧！" Padding="20" HorizontalOptions="Center" />
+                                <Label Text="No reviews yet, be the first to review!" Padding="20" HorizontalOptions="Center" />
                             </CollectionView.EmptyView>
                         </CollectionView>
                     </VerticalStackLayout>
@@ -106,16 +106,16 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- 空状态布局 -->
+        <!-- Empty state layout -->
         <VerticalStackLayout IsVisible="{Binding Restaurant, Converter={StaticResource InvertedBoolConverter}}" 
                             HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
-            <Label Text="🍽️" FontSize="64" HorizontalOptions="Center" AutomationProperties.Name="空状态图标" />
-            <Label Text="未选择餐厅" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,20,0,10" 
-                   AutomationProperties.Name="空状态标题" />
-            <Label Text="请从首页选择一家餐厅查看详情" FontSize="14" TextColor="Gray" HorizontalOptions="Center" 
-                   AutomationProperties.Name="空状态提示" />
-            <Button Text="🏠 返回首页" Margin="0,20,0,0" Command="{Binding GoBackCommand}" 
-                    AutomationProperties.Name="返回首页按钮" />
+            <Label Text="🍽️" FontSize="64" HorizontalOptions="Center" AutomationProperties.Name="Empty state icon" />
+            <Label Text="No Restaurant Selected" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,20,0,10" 
+                   AutomationProperties.Name="Empty state title" />
+            <Label Text="Please select a restaurant from the home page" FontSize="14" TextColor="Gray" HorizontalOptions="Center" 
+                   AutomationProperties.Name="Empty state hint" />
+            <Button Text="🏠 Go Back" Margin="0,20,0,0" Command="{Binding GoBackCommand}" 
+                    AutomationProperties.Name="Go back button" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

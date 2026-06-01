@@ -8,7 +8,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
-            <!-- 食谱标题 -->
+            <!-- Recipe title -->
             <Frame CornerRadius="20" Padding="20">
                 <VerticalStackLayout>
                     <HorizontalStackLayout>
@@ -23,53 +23,53 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 图片 -->
+            <!-- Image -->
             <Frame CornerRadius="20" Padding="15">
                 <Image Source="{Binding Recipe.ImageName}" HeightRequest="200" Aspect="AspectFill" />
             </Frame>
 
-            <!-- 营养信息 -->
+            <!-- Nutrition info -->
             <Frame CornerRadius="20" Padding="15">
                 <HorizontalStackLayout Spacing="20">
                     <VerticalStackLayout>
                         <Label Text="🔥" FontSize="24" />
-                        <Label Text="卡路里" FontSize="12" TextColor="Gray" />
+                        <Label Text="Calories" FontSize="12" TextColor="Gray" />
                         <Label Text="{Binding Recipe.Calories}" FontSize="18" FontAttributes="Bold" />
                     </VerticalStackLayout>
                     <VerticalStackLayout>
                         <Label Text="⏱️" FontSize="24" />
-                        <Label Text="准备时间" FontSize="12" TextColor="Gray" />
-                        <Label Text="{Binding Recipe.PrepTime}分钟" FontSize="18" FontAttributes="Bold" />
+                        <Label Text="Prep Time" FontSize="12" TextColor="Gray" />
+                        <Label Text="{Binding Recipe.PrepTime} min" FontSize="18" FontAttributes="Bold" />
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
             </Frame>
 
-            <!-- 描述 -->
+            <!-- Description -->
             <Frame CornerRadius="20" Padding="15">
                 <VerticalStackLayout>
-                    <Label Text="📝 简介" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="📝 Description" FontSize="18" FontAttributes="Bold" />
                     <Label Text="{Binding Recipe.Description}" FontSize="14" />
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 食材 -->
+            <!-- Ingredients -->
             <Frame CornerRadius="20" Padding="15">
                 <VerticalStackLayout>
-                    <Label Text="🥗 食材" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="🥗 Ingredients" FontSize="18" FontAttributes="Bold" />
                     <Label Text="{Binding IngredientsDisplay}" FontSize="14" />
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 步骤 -->
+            <!-- Steps -->
             <Frame CornerRadius="20" Padding="15">
                 <VerticalStackLayout>
-                    <Label Text="👩🍳 做法步骤" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="👩🍳 Instructions" FontSize="18" FontAttributes="Bold" />
                     <Label Text="{Binding InstructionsDisplay}" FontSize="14" />
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 朗读按钮 -->
-            <Button Text="🔊 朗读食谱" Command="{Binding SpeakRecipeCommand}" />
+            <!-- Speak button -->
+            <Button Text="🔊 Speak Recipe" Command="{Binding SpeakRecipeCommand}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

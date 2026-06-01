@@ -43,7 +43,6 @@ public partial class MainPageViewModel : ObservableObject
             
             if (_mockService.UseMockData)
             {
-                // 启用模拟模式，始终使用模拟数据
                 var mockLocation = _currentLocation != null 
                     ? (_currentLocation.Latitude, _currentLocation.Longitude)
                     : await _mockService.MockGetLocationAsync();
@@ -53,7 +52,6 @@ public partial class MainPageViewModel : ObservableObject
             }
             else
             {
-                // 不使用模拟数据，使用真实数据库
                 restaurantList = await _databaseService.GetRestaurantsAsync();
                 
                 if (_currentLocation != null)
@@ -75,7 +73,6 @@ public partial class MainPageViewModel : ObservableObject
                 }
             }
 
-            // 按距离排序并更新UI
             var sorted = restaurantList.OrderBy(r => r.Distance).ToList();
             Restaurants.Clear();
             foreach (var r in sorted) Restaurants.Add(r);
@@ -94,7 +91,6 @@ public partial class MainPageViewModel : ObservableObject
     {
         try
         {
-            // 先尝试真实定位
             var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
             if (status != PermissionStatus.Granted)
                 status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
@@ -106,7 +102,6 @@ public partial class MainPageViewModel : ObservableObject
             }
             else if (_mockService.UseMockData)
             {
-                // 权限被拒绝时使用模拟位置
                 var mockLoc = await _mockService.MockGetLocationAsync();
                 _currentLocation = new Location(mockLoc.Latitude, mockLoc.Longitude);
                 LocationStatus = "📍 Using mock location";
@@ -190,6 +185,5 @@ public partial class MainPageViewModel : ObservableObject
         await Shell.Current.GoToAsync("detailpage");
     }
 
-    // Expose RefreshCommand that binds to LoadDataCommand for XAML compatibility
     public IAsyncRelayCommand RefreshCommand => LoadDataCommand;
 }

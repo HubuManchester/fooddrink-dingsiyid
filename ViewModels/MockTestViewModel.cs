@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CampusEats.Models;
@@ -13,9 +15,8 @@ public partial class MockTestViewModel : ObservableObject
     private bool isMockEnabled = true;
 
     [ObservableProperty]
-    private string statusMessage = "模拟功能已启用，可以开始测试！";
+    private string statusMessage = "Mock feature enabled, ready to test!";
 
-    // 拍照识别
     [ObservableProperty]
     private bool hasRecognitionResult;
 
@@ -31,21 +32,18 @@ public partial class MockTestViewModel : ObservableObject
     [ObservableProperty]
     private string recognizedDescription = string.Empty;
 
-    // 定位
     [ObservableProperty]
     private bool hasLocation;
 
     [ObservableProperty]
     private string currentLocation = string.Empty;
 
-    // 附近餐厅
     [ObservableProperty]
     private bool hasNearbyRestaurants;
 
     [ObservableProperty]
     private ObservableCollection<Restaurant> nearbyRestaurants = new();
 
-    // 摇一摇
     [ObservableProperty]
     private bool hasShakeRecipe;
 
@@ -61,7 +59,7 @@ public partial class MockTestViewModel : ObservableObject
     partial void OnIsMockEnabledChanged(bool value)
     {
         _mockService.UseMockData = value;
-        StatusMessage = value ? "模拟功能已启用！" : "模拟功能已禁用！";
+        StatusMessage = value ? "Mock feature enabled!" : "Mock feature disabled!";
     }
 
     [RelayCommand]
@@ -69,7 +67,7 @@ public partial class MockTestViewModel : ObservableObject
     {
         try
         {
-            StatusMessage = "正在模拟拍照...";
+            StatusMessage = "Simulating photo capture...";
             var result = await _mockService.MockCaptureAndRecognizeAsync();
             
             RecognizedFoodName = result.FoodName;
@@ -78,12 +76,12 @@ public partial class MockTestViewModel : ObservableObject
             RecognizedDescription = result.Description;
             HasRecognitionResult = true;
             
-            StatusMessage = $"识别成功！这是 {result.FoodName}";
+            StatusMessage = $"Recognition successful! This is {result.FoodName}";
         }
         catch (Exception ex)
         {
-            StatusMessage = $"模拟失败: {ex.Message}";
-            await Application.Current!.MainPage!.DisplayAlert("错误", ex.Message, "确定");
+            StatusMessage = $"Mock failed: {ex.Message}";
+            await Application.Current!.MainPage!.DisplayAlert("Error", ex.Message, "OK");
         }
     }
 
@@ -92,17 +90,17 @@ public partial class MockTestViewModel : ObservableObject
     {
         try
         {
-            StatusMessage = "正在获取位置...";
+            StatusMessage = "Getting location...";
             var location = await _mockService.MockGetLocationAsync();
             
-            CurrentLocation = $"纬度: {location.Latitude:F4}, 经度: {location.Longitude:F4}";
+            CurrentLocation = $"Latitude: {location.Latitude:F4}, Longitude: {location.Longitude:F4}";
             HasLocation = true;
             
-            StatusMessage = "位置获取成功！";
+            StatusMessage = "Location obtained successfully!";
         }
         catch (Exception ex)
         {
-            StatusMessage = $"定位失败: {ex.Message}";
+            StatusMessage = $"Location failed: {ex.Message}";
         }
     }
 
@@ -111,7 +109,7 @@ public partial class MockTestViewModel : ObservableObject
     {
         try
         {
-            StatusMessage = "正在搜索附近餐厅...";
+            StatusMessage = "Searching nearby restaurants...";
             
             var location = await _mockService.MockGetLocationAsync();
             var restaurants = await _mockService.MockGetNearbyRestaurantsAsync(location);
@@ -123,11 +121,11 @@ public partial class MockTestViewModel : ObservableObject
             }
             
             HasNearbyRestaurants = NearbyRestaurants.Count > 0;
-            StatusMessage = $"找到 {NearbyRestaurants.Count} 家餐厅！";
+            StatusMessage = $"Found {NearbyRestaurants.Count} restaurants!";
         }
         catch (Exception ex)
         {
-            StatusMessage = $"搜索失败: {ex.Message}";
+            StatusMessage = $"Search failed: {ex.Message}";
         }
     }
 
@@ -136,17 +134,17 @@ public partial class MockTestViewModel : ObservableObject
     {
         try
         {
-            StatusMessage = "摇晃中...";
+            StatusMessage = "Shaking...";
             var recipe = await _mockService.MockShakeForRecipeAsync();
             
             ShakedRecipe = recipe;
             HasShakeRecipe = true;
             
-            StatusMessage = $"摇到了: {recipe.Name}！";
+            StatusMessage = $"Shook and got: {recipe.Name}!";
         }
         catch (Exception ex)
         {
-            StatusMessage = $"摇晃失败: {ex.Message}";
+            StatusMessage = $"Shake failed: {ex.Message}";
         }
     }
 }

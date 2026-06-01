@@ -6,37 +6,37 @@ using CampusEats.Services;
 namespace CampusEats.ViewModels;
 
 /// <summary>
-/// 无障碍设置页面视图模型
-/// 管理主题切换、字体大小、语音合成、震动反馈等无障碍功能
+/// Accessibility settings page view model
+/// Manages theme switching, font size, text-to-speech, vibration feedback and other accessibility features
 /// </summary>
 public partial class AccessibilityViewModel : ObservableObject
 {
     private readonly ThemeService _themeService;
     private readonly TextToSpeechService _ttsService;
 
-    // 主题相关
+    // Theme related
     [ObservableProperty]
     private string _themeDisplayName;
 
-    // 字体大小相关
+    // Font size related
     [ObservableProperty]
     private double _fontScale = 1.0;
 
     [ObservableProperty]
-    private string _fontScaleDisplay = "标准";
+    private string _fontScaleDisplay = "Standard";
 
-    // 语音合成相关
+    // Text-to-speech related
     [ObservableProperty]
     private bool _ttsEnabled = true;
 
     [ObservableProperty]
     private double _ttsSpeed = 1.0;
 
-    // 震动反馈相关
+    // Vibration feedback related
     [ObservableProperty]
     private bool _vibrationEnabled = true;
 
-    // 命令
+    // Commands
     public ICommand ToggleThemeCommand { get; }
     public ICommand SetLightThemeCommand { get; }
     public ICommand SetDarkThemeCommand { get; }
@@ -52,7 +52,7 @@ public partial class AccessibilityViewModel : ObservableObject
         _themeService = themeService;
         _ttsService = ttsService;
 
-        // 初始化命令
+        // Initialize commands
         ToggleThemeCommand = new RelayCommand(ToggleTheme);
         SetLightThemeCommand = new RelayCommand(SetLightTheme);
         SetDarkThemeCommand = new RelayCommand(SetDarkTheme);
@@ -63,11 +63,11 @@ public partial class AccessibilityViewModel : ObservableObject
         TestTtsCommand = new AsyncRelayCommand(TestTts);
         TestVibrationCommand = new RelayCommand(TestVibration);
 
-        // 初始化状态
+        // Initialize state
         UpdateThemeDisplay();
         UpdateFontScaleDisplay();
 
-        // 订阅主题变化
+        // Subscribe to theme changes
         _themeService.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(_themeService.SelectedTheme))
@@ -78,7 +78,7 @@ public partial class AccessibilityViewModel : ObservableObject
     }
 
     /// <summary>
-    /// 更新主题显示名称
+    /// Update theme display name
     /// </summary>
     private void UpdateThemeDisplay()
     {
@@ -86,7 +86,7 @@ public partial class AccessibilityViewModel : ObservableObject
     }
 
     /// <summary>
-    /// 切换主题
+    /// Toggle theme
     /// </summary>
     private void ToggleTheme()
     {
@@ -94,7 +94,7 @@ public partial class AccessibilityViewModel : ObservableObject
     }
 
     /// <summary>
-    /// 设置浅色主题
+    /// Set light theme
     /// </summary>
     private void SetLightTheme()
     {
@@ -102,7 +102,7 @@ public partial class AccessibilityViewModel : ObservableObject
     }
 
     /// <summary>
-    /// 设置深色主题
+    /// Set dark theme
     /// </summary>
     private void SetDarkTheme()
     {
@@ -110,7 +110,7 @@ public partial class AccessibilityViewModel : ObservableObject
     }
 
     /// <summary>
-    /// 设置跟随系统主题
+    /// Set system theme
     /// </summary>
     private void SetSystemTheme()
     {
@@ -118,32 +118,32 @@ public partial class AccessibilityViewModel : ObservableObject
     }
 
     /// <summary>
-    /// 更新字体大小显示
+    /// Update font size display
     /// </summary>
     private void UpdateFontScaleDisplay()
     {
         FontScaleDisplay = FontScale switch
         {
-            < 0.9 => "小",
-            < 1.1 => "标准",
-            < 1.3 => "大",
-            < 1.5 => "较大",
-            _ => "最大"
+            < 0.9 => "Small",
+            < 1.1 => "Standard",
+            < 1.3 => "Large",
+            < 1.5 => "Extra Large",
+            _ => "Extra Extra Large"
         };
     }
 
     /// <summary>
-    /// 字体大小变化时触发
+    /// Triggered when font scale changes
     /// </summary>
     partial void OnFontScaleChanged(double value)
     {
-        // 应用字体缩放
+        // Apply font scaling
         Application.Current?.Resources["DefaultFontSize"] = value * 14;
         UpdateFontScaleDisplay();
     }
 
     /// <summary>
-    /// 增大字体
+    /// Increase font size
     /// </summary>
     private void IncreaseFont()
     {
@@ -151,7 +151,7 @@ public partial class AccessibilityViewModel : ObservableObject
     }
 
     /// <summary>
-    /// 减小字体
+    /// Decrease font size
     /// </summary>
     private void DecreaseFont()
     {
@@ -159,7 +159,7 @@ public partial class AccessibilityViewModel : ObservableObject
     }
 
     /// <summary>
-    /// 重置字体大小
+    /// Reset font size
     /// </summary>
     private void ResetFont()
     {
@@ -167,18 +167,18 @@ public partial class AccessibilityViewModel : ObservableObject
     }
 
     /// <summary>
-    /// 测试语音合成
+    /// Test text-to-speech
     /// </summary>
     private async Task TestTts()
     {
         if (TtsEnabled && _ttsService.IsSupported)
         {
-            await _ttsService.SpeakAsync("欢迎使用校园美食应用，这是一个语音合成测试。");
+            await _ttsService.SpeakAsync("Welcome to Campus Eats, this is a text-to-speech test.");
         }
     }
 
     /// <summary>
-    /// 测试震动反馈
+    /// Test vibration feedback
     /// </summary>
     private void TestVibration()
     {

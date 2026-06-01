@@ -1,3 +1,4 @@
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CampusEats.Models;
@@ -15,7 +16,7 @@ public partial class RecipeDetailViewModel : ObservableObject
 
     public string IngredientsDisplay => Recipe?.Ingredients.Replace(",", "\n• ") ?? string.Empty;
 
-    public string InstructionsDisplay => Recipe?.Instructions.Replace("。", "。\n\n") ?? string.Empty;
+    public string InstructionsDisplay => Recipe?.Instructions.Replace(".", ".\n\n") ?? string.Empty;
 
     public RecipeDetailViewModel(DatabaseService databaseService, TextToSpeechService ttsService)
     {
@@ -44,7 +45,7 @@ public partial class RecipeDetailViewModel : ObservableObject
         
         if (_ttsService.IsSupported)
         {
-            var text = $"食谱：{Recipe.Name}。分类：{Recipe.Category}。评分：{Recipe.Rating}分。简介：{Recipe.Description}。食材：{Recipe.Ingredients}。做法：{Recipe.Instructions}";
+            var text = $"Recipe: {Recipe.Name}. Category: {Recipe.Category}. Rating: {Recipe.Rating} stars. Description: {Recipe.Description}. Ingredients: {Recipe.Ingredients}. Instructions: {Recipe.Instructions}";
             await _ttsService.SpeakAsync(text);
         }
     }

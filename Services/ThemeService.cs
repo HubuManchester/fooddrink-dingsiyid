@@ -3,8 +3,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace CampusEats.Services;
 
 /// <summary>
-/// 主题管理服务 - 负责管理应用的深色/浅色模式切换
-/// 支持三种模式：跟随系统、浅色模式、深色模式
+/// Theme management service - responsible for managing app dark/light mode switching
+/// Supports three modes: follow system, light mode, dark mode
 /// </summary>
 public partial class ThemeService : ObservableObject
 {
@@ -26,7 +26,7 @@ public partial class ThemeService : ObservableObject
     }
 
     /// <summary>
-    /// 加载保存的主题设置
+    /// Load saved theme settings
     /// </summary>
     private void LoadTheme()
     {
@@ -42,7 +42,7 @@ public partial class ThemeService : ObservableObject
     }
 
     /// <summary>
-    /// 切换主题
+    /// Toggle theme
     /// </summary>
     public void ToggleTheme()
     {
@@ -63,7 +63,7 @@ public partial class ThemeService : ObservableObject
     }
 
     /// <summary>
-    /// 设置指定主题
+    /// Set specified theme
     /// </summary>
     public void SetTheme(AppTheme theme)
     {
@@ -73,7 +73,7 @@ public partial class ThemeService : ObservableObject
     }
 
     /// <summary>
-    /// 应用主题到应用程序
+    /// Apply theme to application
     /// </summary>
     private void ApplyTheme(AppTheme theme)
     {
@@ -92,7 +92,7 @@ public partial class ThemeService : ObservableObject
     }
 
     /// <summary>
-    /// 保存主题设置到偏好设置
+    /// Save theme settings to preferences
     /// </summary>
     private void SaveTheme()
     {
@@ -100,21 +100,21 @@ public partial class ThemeService : ObservableObject
     }
 
     /// <summary>
-    /// 获取当前主题的显示名称
+    /// Get display name of current theme
     /// </summary>
     public string GetThemeDisplayName()
     {
         return SelectedTheme switch
         {
-            AppTheme.System => "跟随系统",
-            AppTheme.Light => "浅色模式",
-            AppTheme.Dark => "深色模式",
-            _ => "跟随系统"
+            AppTheme.System => "System",
+            AppTheme.Light => "Light Mode",
+            AppTheme.Dark => "Dark Mode",
+            _ => "System"
         };
     }
 
     /// <summary>
-    /// 获取主题图标
+    /// Get theme icon
     /// </summary>
     public string GetThemeIcon()
     {

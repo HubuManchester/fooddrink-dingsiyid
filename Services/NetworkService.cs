@@ -3,7 +3,7 @@ using System.ComponentModel;
 namespace CampusEats.Services;
 
 /// <summary>
-/// 网络状态服务 - 提供网络连接状态检测和离线缓存管理
+/// Network status service - provides network connection status detection and offline cache management
 /// </summary>
 public class NetworkService : INotifyPropertyChanged
 {
@@ -31,10 +31,10 @@ public class NetworkService : INotifyPropertyChanged
 
     private void Initialize()
     {
-        // 初始检查网络状态
+        // Initial check of network status
         IsConnected = Connectivity.NetworkAccess == NetworkAccess.Internet;
 
-        // 订阅网络状态变化
+        // Subscribe to network status changes
         Connectivity.ConnectivityChanged += OnConnectivityChanged;
     }
 
@@ -49,20 +49,20 @@ public class NetworkService : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// 检查网络连接并显示提示
+    /// Check network connection and display alert
     /// </summary>
-    public async Task<bool> CheckConnectionAsync(string message = "当前网络不可用，请检查网络连接")
+    public async Task<bool> CheckConnectionAsync(string message = "Network is currently unavailable, please check your connection")
     {
         if (!IsConnected)
         {
-            await Application.Current?.MainPage?.DisplayAlert("网络错误", message, "确定")!;
+            await Application.Current?.MainPage?.DisplayAlert("Network Error", message, "OK")!;
             return false;
         }
         return true;
     }
 
     /// <summary>
-    /// 获取网络类型描述
+    /// Get network type description
     /// </summary>
     public string GetNetworkType()
     {
@@ -70,9 +70,9 @@ public class NetworkService : INotifyPropertyChanged
         if (profiles.Contains(ConnectionProfile.WiFi))
             return "Wi-Fi";
         if (profiles.Contains(ConnectionProfile.Cellular))
-            return "移动数据";
+            return "Mobile Data";
         if (profiles.Contains(ConnectionProfile.Ethernet))
-            return "有线网络";
-        return "离线";
+            return "Wired Network";
+        return "Offline";
     }
 }

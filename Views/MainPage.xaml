@@ -17,16 +17,16 @@
 	<Grid RowDefinitions="Auto, Auto, *">
 		<VerticalStackLayout Grid.Row="0" BackgroundColor="{StaticResource PrimaryColor}" Padding="20,30,20,15">
 			<Label Text="🍜 Campus Eats" FontSize="28" FontAttributes="Bold" TextColor="White" 
-				   AutomationProperties.Name="校园美食应用标题" />
+				   AutomationProperties.Name="Campus Eats app title" />
 			<Label Text="{Binding LocationStatus}" FontSize="14" TextColor="White" Opacity="0.9" 
-				   AutomationProperties.Name="当前位置状态" />
+				   AutomationProperties.Name="Current location status" />
 		</VerticalStackLayout>
 
 		<HorizontalStackLayout Grid.Row="1" Padding="15" Spacing="10">
-			<Button Text="🎲 摇一摇推荐" Command="{Binding ShakeToRecommendCommand}" HorizontalOptions="Fill" 
-					AutomationProperties.Name="摇一摇随机推荐餐厅" />
-			<Button Text="🔄 刷新" Command="{Binding RefreshCommand}" 
-					AutomationProperties.Name="刷新餐厅列表" />
+			<Button Text="🎲 Shake to Recommend" Command="{Binding ShakeToRecommendCommand}" HorizontalOptions="Fill" 
+					AutomationProperties.Name="Shake to recommend random restaurant" />
+			<Button Text="🔄 Refresh" Command="{Binding RefreshCommand}" 
+					AutomationProperties.Name="Refresh restaurant list" />
 		</HorizontalStackLayout>
 
 		<RefreshView Grid.Row="2" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
@@ -34,23 +34,23 @@
 							SelectionMode="Single"
 							SelectionChangedCommand="{Binding SelectRestaurantCommand}"
 							SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}"
-							AutomationProperties.Name="餐厅列表">
+							AutomationProperties.Name="Restaurant list">
 				<CollectionView.ItemTemplate>
 					<DataTemplate x:DataType="models:Restaurant">
 						<Grid Padding="12,5">
 							<Frame CornerRadius="15" BackgroundColor="{StaticResource CardBackground}" Padding="10" Margin="0,5" HasShadow="True">
 								<Grid ColumnDefinitions="80, *">
 									<Image Source="{Binding ImageName}" HeightRequest="70" WidthRequest="70" Aspect="AspectFill" 
-										   AutomationProperties.Name="餐厅图片" />
+										   AutomationProperties.Name="Restaurant image" />
 									<VerticalStackLayout Grid.Column="1" Padding="10,0">
 										<Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" 
-											   AutomationProperties.Name="餐厅名称" />
+											   AutomationProperties.Name="Restaurant name" />
 										<Label Text="{Binding Cuisine}" FontSize="12" TextColor="Gray" 
-											   AutomationProperties.Name="菜系" />
+											   AutomationProperties.Name="Cuisine" />
 										<Label Text="{Binding RatingStars}" FontSize="12" TextColor="{StaticResource PrimaryColor}" 
-											   AutomationProperties.Name="评分" />
+											   AutomationProperties.Name="Rating" />
 										<Label Text="{Binding Distance, StringFormat='📍 {0:F1} km'}" FontSize="11" TextColor="{StaticResource PrimaryColor}" 
-											   AutomationProperties.Name="距离" />
+											   AutomationProperties.Name="Distance" />
 									</VerticalStackLayout>
 								</Grid>
 							</Frame>
@@ -59,8 +59,8 @@
 				</CollectionView.ItemTemplate>
 				<CollectionView.EmptyView>
 					<VerticalStackLayout Padding="40" HorizontalOptions="Center">
-						<Label Text="🍽️ 暂无餐厅" FontSize="20" HorizontalOptions="Center" />
-						<Label Text="下拉刷新或检查位置设置" FontSize="14" TextColor="Gray" HorizontalOptions="Center" />
+						<Label Text="🍽️ No Restaurants" FontSize="20" HorizontalOptions="Center" />
+						<Label Text="Pull to refresh or check location settings" FontSize="14" TextColor="Gray" HorizontalOptions="Center" />
 					</VerticalStackLayout>
 				</CollectionView.EmptyView>
 			</CollectionView>

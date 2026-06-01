@@ -3,39 +3,39 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:CampusEats.ViewModels"
              x:Class="CampusEats.Views.AccessibilityPage"
-             Title="无障碍设置"
+             Title="Accessibility Settings"
              x:DataType="viewmodels:AccessibilityViewModel">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
-            <!-- 页面标题 -->
+            <!-- Page title -->
             <Frame CornerRadius="20" Padding="20">
                 <VerticalStackLayout>
-                    <Label Text="♿ 无障碍设置" FontSize="24" FontAttributes="Bold" />
-                    <Label Text="为您提供更好的使用体验" FontSize="14" TextColor="Gray" />
+                    <Label Text="♿ Accessibility Settings" FontSize="24" FontAttributes="Bold" />
+                    <Label Text="For a better user experience" FontSize="14" TextColor="Gray" />
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 主题模式 -->
+            <!-- Theme mode -->
             <Frame CornerRadius="20" Padding="20">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="🎨 主题模式" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="🎨 Theme Mode" FontSize="18" FontAttributes="Bold" />
                     <Grid ColumnDefinitions="*, Auto">
                         <Label Text="{Binding ThemeDisplayName}" FontSize="16" />
-                        <Button Text="切换" Command="{Binding ToggleThemeCommand}" WidthRequest="80" />
+                        <Button Text="Toggle" Command="{Binding ToggleThemeCommand}" WidthRequest="80" />
                     </Grid>
                     <HorizontalStackLayout Spacing="10">
-                        <Button Text="☀️ 浅色" Command="{Binding SetLightThemeCommand}" />
-                        <Button Text="🌙 深色" Command="{Binding SetDarkThemeCommand}" />
-                        <Button Text="🔄 系统" Command="{Binding SetSystemThemeCommand}" />
+                        <Button Text="☀️ Light" Command="{Binding SetLightThemeCommand}" />
+                        <Button Text="🌙 Dark" Command="{Binding SetDarkThemeCommand}" />
+                        <Button Text="🔄 System" Command="{Binding SetSystemThemeCommand}" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 字体大小 -->
+            <!-- Font size -->
             <Frame CornerRadius="20" Padding="20">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="📝 字体大小" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="📝 Font Size" FontSize="18" FontAttributes="Bold" />
                     <Label Text="{Binding FontScaleDisplay}" FontSize="16" />
                     <Slider 
                         Minimum="0.8" 
@@ -45,62 +45,62 @@
                     <HorizontalStackLayout Spacing="10">
                         <Button Text="A-" Command="{Binding DecreaseFontCommand}" />
                         <Button Text="A+" Command="{Binding IncreaseFontCommand}" />
-                        <Button Text="重置" Command="{Binding ResetFontCommand}" />
+                        <Button Text="Reset" Command="{Binding ResetFontCommand}" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 语音合成 -->
+            <!-- Text to speech -->
             <Frame CornerRadius="20" Padding="20">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="🔊 语音播报" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="🔊 Text-to-Speech" FontSize="18" FontAttributes="Bold" />
                     <Switch IsToggled="{Binding TtsEnabled}" />
                     <Slider 
                         Minimum="0.5" 
                         Maximum="2.0" 
                         Value="{Binding TtsSpeed, Mode=TwoWay}" 
                         Margin="0,10,0,0" />
-                    <Label Text="语速: {Binding TtsSpeed, StringFormat='{0:F1}x'}" FontSize="14" />
-                    <Button Text="🔊 测试语音" Command="{Binding TestTtsCommand}" />
+                    <Label Text="Speed: {Binding TtsSpeed, StringFormat='{0:F1}x'}" FontSize="14" />
+                    <Button Text="🔊 Test Speech" Command="{Binding TestTtsCommand}" />
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 震动反馈 -->
+            <!-- Vibration feedback -->
             <Frame CornerRadius="20" Padding="20">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="📳 震动反馈" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="📳 Vibration Feedback" FontSize="18" FontAttributes="Bold" />
                     <Switch IsToggled="{Binding VibrationEnabled}" />
-                    <Button Text="测试震动" Command="{Binding TestVibrationCommand}" />
+                    <Button Text="Test Vibration" Command="{Binding TestVibrationCommand}" />
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 无障碍指引 -->
+            <!-- Accessibility guidelines -->
             <Frame CornerRadius="20" Padding="20">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="📖 WCAG 无障碍指南" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="📖 WCAG Accessibility Guidelines" FontSize="18" FontAttributes="Bold" />
                     
-                    <Label Text="1. 感知性" FontSize="16" FontAttributes="Bold" TextColor="#FF6B35" />
-                    <Label Text="   - 信息和用户界面组件必须以可感知的方式呈现给用户" FontSize="14" />
+                    <Label Text="1. Perceivable" FontSize="16" FontAttributes="Bold" TextColor="#FF6B35" />
+                    <Label Text="   - Information and user interface components must be presented to users in ways they can perceive" FontSize="14" />
                     
-                    <Label Text="2. 可操作性" FontSize="16" FontAttributes="Bold" TextColor="#FF6B35" />
-                    <Label Text="   - 用户界面组件和导航必须是可操作的" FontSize="14" />
+                    <Label Text="2. Operable" FontSize="16" FontAttributes="Bold" TextColor="#FF6B35" />
+                    <Label Text="   - User interface components and navigation must be operable" FontSize="14" />
                     
-                    <Label Text="3. 可理解性" FontSize="16" FontAttributes="Bold" TextColor="#FF6B35" />
-                    <Label Text="   - 信息和操作必须是可理解的" FontSize="14" />
+                    <Label Text="3. Understandable" FontSize="16" FontAttributes="Bold" TextColor="#FF6B35" />
+                    <Label Text="   - Information and the operation of user interface must be understandable" FontSize="14" />
                     
-                    <Label Text="4. 健壮性" FontSize="16" FontAttributes="Bold" TextColor="#FF6B35" />
-                    <Label Text="   - 内容必须足够健壮，可以被各种用户代理可靠地解释" FontSize="14" />
+                    <Label Text="4. Robust" FontSize="16" FontAttributes="Bold" TextColor="#FF6B35" />
+                    <Label Text="   - Content must be robust enough to be interpreted reliably by a wide variety of user agents" FontSize="14" />
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- 对比度说明 -->
+            <!-- Contrast information -->
             <Frame CornerRadius="20" Padding="20">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="🎯 对比度标准" FontSize="18" FontAttributes="Bold" />
-                    <Label Text="本应用遵循 WCAG 2.1 AA 级标准：" FontSize="14" />
-                    <Label Text="• 普通文本对比度 ≥ 4.5:1" FontSize="14" />
-                    <Label Text="• 大文本对比度 ≥ 3:1" FontSize="14" />
-                    <Label Text="• 图标和图形对比度 ≥ 3:1" FontSize="14" />
+                    <Label Text="🎯 Contrast Standards" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="This app follows WCAG 2.1 AA standards:" FontSize="14" />
+                    <Label Text="• Normal text contrast ≥ 4.5:1" FontSize="14" />
+                    <Label Text="• Large text contrast ≥ 3:1" FontSize="14" />
+                    <Label Text="• Icons and graphics contrast ≥ 3:1" FontSize="14" />
                 </VerticalStackLayout>
             </Frame>
         </VerticalStackLayout>
