@@ -1,10 +1,13 @@
-﻿namespace CampusEats
+﻿using CampusEats.Views;
+
+namespace CampusEats;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        Routing.RegisterRoute("mainpage", typeof(MainPage));
+        Routing.RegisterRoute("detailpage", typeof(DetailPage));
     }
 }

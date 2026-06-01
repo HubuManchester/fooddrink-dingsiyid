@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:CampusEats.ViewModels"
+             x:Class="CampusEats.Views.LocationTestPage"
+             Title="Location Test">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            
+            <!-- Current location -->
+            <Frame CornerRadius="15" BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B5E20}">
+                <VerticalStackLayout>
+                    <Label Text="📍 Current Location" FontAttributes="Bold" FontSize="18" />
+                    <Label x:Name="LatitudeLabel" Text="Latitude: --" FontSize="14" />
+                    <Label x:Name="LongitudeLabel" Text="Longitude: --" FontSize="14" />
+                    <Button Text="Update Location" x:Name="UpdateLocationBtn" Clicked="OnUpdateLocationClicked" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Mock location -->
+            <Frame CornerRadius="15" BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0D47A1}">
+                <VerticalStackLayout>
+                    <Label Text="🎯 Test Location" FontAttributes="Bold" FontSize="18" />
+                    <Entry x:Name="LatEntry" Placeholder="Enter latitude (e.g., 39.9042)" Keyboard="Numeric" />
+                    <Entry x:Name="LonEntry" Placeholder="Enter longitude (e.g., 116.4074)" Keyboard="Numeric" />
+                    <Button Text="Set Mock Location" Clicked="OnSetMockLocationClicked" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Restaurant list -->
+            <Frame CornerRadius="15">
+                <VerticalStackLayout>
+                    <Label Text="🍽️ Restaurants sorted by distance (ascending)" FontAttributes="Bold" FontSize="16" />
+                    <Button Text="Refresh Restaurant List" Clicked="OnRefreshRestaurantsClicked" />
+                    <CollectionView x:Name="RestaurantsCollection" Margin="0,10,0,0">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="0,5" CornerRadius="8">
+                                    <StackLayout>
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="14" />
+                                        <Label Text="{Binding Cuisine}" FontSize="12" TextColor="Gray" />
+                                        <Label Text="{Binding Distance, StringFormat='Distance: {0:F3} km'}" FontSize="12" />
+                                        <Label Text="{Binding Latitude, StringFormat='Position: {0:F4}, {1:F4}'}" FontSize="10" TextColor="Gray" />
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Verification result -->
+            <Frame CornerRadius="15" BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#E65100}">
+                <VerticalStackLayout>
+                    <Label Text="✅ Verification Result" FontAttributes="Bold" FontSize="16" />
+                    <Label x:Name="VerificationLabel" Text="Waiting for test..." FontSize="12" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

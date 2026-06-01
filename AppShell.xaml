@@ -1,15 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="CampusEats.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CampusEats"
-    Shell.FlyoutBehavior="Disabled"
-    Title="CampusEats">
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:CampusEats.Views"
+       x:Class="CampusEats.AppShell"
+       Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- 底部 TabBar 导航 -->
+    <TabBar>
+        <!-- 首页 - 餐厅列表 -->
+        <ShellContent 
+            Title="餐厅" 
+            Icon="🍽️"
+            ContentTemplate="{DataTemplate views:MainPage}" 
+            Route="mainpage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="🍽️" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <!-- 食谱库页面 -->
+        <ShellContent 
+            Title="食谱" 
+            Icon="📖"
+            ContentTemplate="{DataTemplate views:RecipePage}" 
+            Route="recipepage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="📖" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <!-- 无障碍设置页面 -->
+        <ShellContent 
+            Title="无障碍" 
+            Icon="♿"
+            ContentTemplate="{DataTemplate views:AccessibilityPage}" 
+            Route="accessibilitypage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="♿" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <!-- 模拟测试页面 -->
+        <ShellContent 
+            Title="模拟" 
+            Icon="🎮"
+            ContentTemplate="{DataTemplate views:MockTestPage}" 
+            Route="mocktestpage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="🎮" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <!-- 位置测试页面 -->
+        <ShellContent 
+            Title="测试" 
+            Icon="🧪"
+            ContentTemplate="{DataTemplate views:LocationTestPage}" 
+            Route="locationtestpage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="🧪" />
+            </ShellContent.Icon>
+        </ShellContent>
+    </TabBar>
+
+    <!-- 详情页（非 TabBar 页面） -->
+    <ShellContent Title="餐厅详情" Route="detailpage" ContentTemplate="{DataTemplate views:DetailPage}" />
+    <ShellContent Title="食谱详情" Route="recipecdetailpage" ContentTemplate="{DataTemplate views:RecipeDetailPage}" />
 
 </Shell>

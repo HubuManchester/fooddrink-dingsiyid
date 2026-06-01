@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:CampusEats.ViewModels"
+             xmlns:converters="clr-namespace:CampusEats.Converters"
+             x:Class="CampusEats.Views.MockTestPage"
+             Title="Mock Function Test"
+             x:DataType="viewmodels:MockTestViewModel">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="PrimaryColor">#FF6B35</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <!-- Switch control -->
+            <Frame CornerRadius="15" BackgroundColor="{StaticResource CardBackground}">
+                <VerticalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="🎮" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="Mock Function Switch" FontSize="18" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="Enable mock data" VerticalOptions="Center"/>
+                        <Switch IsToggled="{Binding IsMockEnabled}" VerticalOptions="Center" 
+                                AutomationProperties.Name="Enable mock data switch"/>
+                    </HorizontalStackLayout>
+                    <Label Text="{Binding StatusMessage}" TextColor="Gray" FontSize="12"
+                           AutomationProperties.Name="Status message"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Simulate camera photo -->
+            <Frame CornerRadius="15" BackgroundColor="{StaticResource CardBackground}">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout>
+                        <Label Text="📷" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="Mock Photo Recognition" FontSize="16" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Button Text="Simulate photo and recognize food" 
+                            Command="{Binding MockCaptureCommand}"
+                            IsEnabled="{Binding IsMockEnabled}"
+                            AutomationProperties.Name="Mock photo button"/>
+                    
+                    <Label Text="Recognition result:" IsVisible="{Binding HasRecognitionResult}" FontAttributes="Bold"/>
+                    <Frame IsVisible="{Binding HasRecognitionResult}" BackgroundColor="{AppThemeBinding Light=#FFF8F0, Dark=#2D2D2D}" CornerRadius="10">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="{Binding RecognizedFoodName}" FontSize="16" FontAttributes="Bold"/>
+                            <Label Text="{Binding RecognizedCategory}" FontSize="14" TextColor="Gray"/>
+                            <Label Text="{Binding RecognizedCalories, StringFormat='Calories: {0} kcal'}" FontSize="14"/>
+                            <Label Text="{Binding RecognizedDescription}" FontSize="12" TextColor="Gray"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Simulate location -->
+            <Frame CornerRadius="15" BackgroundColor="{StaticResource CardBackground}">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout>
+                        <Label Text="📍" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="Mock Location" FontSize="16" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Button Text="Get current location" 
+                            Command="{Binding MockLocationCommand}"
+                            IsEnabled="{Binding IsMockEnabled}"
+                            AutomationProperties.Name="Get location button"/>
+                    
+                    <Label Text="{Binding CurrentLocation, StringFormat='Current location: {0}'}" 
+                           IsVisible="{Binding HasLocation}" 
+                           FontSize="14"/>
+                    
+                    <Button Text="Get nearby restaurants" 
+                            Command="{Binding MockNearbyRestaurantsCommand}"
+                            IsEnabled="{Binding IsMockEnabled}"
+                            AutomationProperties.Name="Get nearby restaurants button"/>
+                    
+                    <CollectionView ItemsSource="{Binding NearbyRestaurants}" IsVisible="{Binding HasNearbyRestaurants}"
+                                    AutomationProperties.Name="Nearby restaurant list">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="10" Margin="5" BackgroundColor="{AppThemeBinding Light=#FFF, Dark=#3D3D3D}">
+                                    <VerticalStackLayout>
+                                        <Label Text="{Binding Name}" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Cuisine, StringFormat='Cuisine: {0}'}" FontSize="12"/>
+                                        <Label Text="{Binding Distance, StringFormat='Distance: {0:F2} km'}" FontSize="12" TextColor="{StaticResource PrimaryColor}"/>
+                                        <Label Text="{Binding RatingStars, StringFormat='Rating: {0}'}" FontSize="12"/>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Simulate shake -->
+            <Frame CornerRadius="15" BackgroundColor="{StaticResource CardBackground}">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout>
+                        <Label Text="📱" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="Mock Shake to Recommend" FontSize="16" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Button Text="Simulate shake to get random recipe" 
+                            Command="{Binding MockShakeCommand}"
+                            IsEnabled="{Binding IsMockEnabled}"
+                            AutomationProperties.Name="Mock shake button"/>
+                    
+                    <Label Text="Recommended recipe:" IsVisible="{Binding HasShakeRecipe}" FontAttributes="Bold"/>
+                    <Frame IsVisible="{Binding HasShakeRecipe}" BackgroundColor="{AppThemeBinding Light=#FFF8F0, Dark=#2D2D2D}" CornerRadius="10">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="{Binding ShakedRecipe.Name}" FontSize="16" FontAttributes="Bold"/>
+                            <Label Text="{Binding ShakedRecipe.Category}" FontSize="14" TextColor="Gray"/>
+                            <Label Text="{Binding ShakedRecipe.Calories, StringFormat='Calories: {0} kcal'}" FontSize="14"/>
+                            <Label Text="{Binding ShakedRecipe.PrepTime, StringFormat='Preparation time: {0} mins'}" FontSize="14"/>
+                            <Label Text="{Binding ShakedRecipe.Description}" FontSize="12" TextColor="Gray"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
