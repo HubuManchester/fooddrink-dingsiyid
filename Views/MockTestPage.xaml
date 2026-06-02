@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:CampusEats.ViewModels"
+             xmlns:models="clr-namespace:CampusEats.Models"
              xmlns:converters="clr-namespace:CampusEats.Converters"
              x:Class="CampusEats.Views.MockTestPage"
              Title="Mock Function Test"
@@ -10,6 +11,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="PrimaryColor">#FF6B35</Color>
+            <Color x:Key="CardBackground">White</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -46,7 +48,7 @@
                             AutomationProperties.Name="Mock photo button"/>
                     
                     <Label Text="Recognition result:" IsVisible="{Binding HasRecognitionResult}" FontAttributes="Bold"/>
-                    <Frame IsVisible="{Binding HasRecognitionResult}" BackgroundColor="{AppThemeBinding Light=#FFF8F0, Dark=#2D2D2D}" CornerRadius="10">
+                    <Frame IsVisible="{Binding HasRecognitionResult}" BackgroundColor="#FFF8F0" CornerRadius="10">
                         <VerticalStackLayout Spacing="5">
                             <Label Text="{Binding RecognizedFoodName}" FontSize="16" FontAttributes="Bold"/>
                             <Label Text="{Binding RecognizedCategory}" FontSize="14" TextColor="Gray"/>
@@ -81,8 +83,8 @@
                     <CollectionView ItemsSource="{Binding NearbyRestaurants}" IsVisible="{Binding HasNearbyRestaurants}"
                                     AutomationProperties.Name="Nearby restaurant list">
                         <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Frame CornerRadius="10" Margin="5" BackgroundColor="{AppThemeBinding Light=#FFF, Dark=#3D3D3D}">
+                            <DataTemplate x:DataType="models:Restaurant">
+                                <Frame CornerRadius="10" Margin="5" BackgroundColor="White">
                                     <VerticalStackLayout>
                                         <Label Text="{Binding Name}" FontAttributes="Bold"/>
                                         <Label Text="{Binding Cuisine, StringFormat='Cuisine: {0}'}" FontSize="12"/>
@@ -109,7 +111,7 @@
                             AutomationProperties.Name="Mock shake button"/>
                     
                     <Label Text="Recommended recipe:" IsVisible="{Binding HasShakeRecipe}" FontAttributes="Bold"/>
-                    <Frame IsVisible="{Binding HasShakeRecipe}" BackgroundColor="{AppThemeBinding Light=#FFF8F0, Dark=#2D2D2D}" CornerRadius="10">
+                    <Frame IsVisible="{Binding HasShakeRecipe}" BackgroundColor="#FFF8F0" CornerRadius="10">
                         <VerticalStackLayout Spacing="5">
                             <Label Text="{Binding ShakedRecipe.Name}" FontSize="16" FontAttributes="Bold"/>
                             <Label Text="{Binding ShakedRecipe.Category}" FontSize="14" TextColor="Gray"/>

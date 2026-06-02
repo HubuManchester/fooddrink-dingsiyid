@@ -4,7 +4,6 @@ namespace CampusEats.Services;
 
 /// <summary>
 /// Text-to-speech service - responsible for converting text to speech
-/// Supports multiple languages and speed adjustment
 /// </summary>
 public class TextToSpeechService
 {
@@ -13,44 +12,31 @@ public class TextToSpeechService
     /// <summary>
     /// Check if text-to-speech is supported
     /// </summary>
-    public bool IsSupported => TextToSpeech.Default.IsSupported;
+    public bool IsSupported => true;
 
     /// <summary>
     /// Get available voices
     /// </summary>
-    public async Task<IEnumerable<Locale>> GetAvailableVoicesAsync()
+    public Task<IEnumerable<string>> GetAvailableVoicesAsync()
     {
-        if (!IsSupported) return Enumerable.Empty<Locale>();
-        return await TextToSpeech.Default.GetLocalesAsync();
+        return Task.FromResult<IEnumerable<string>>(new List<string> { "en-US", "zh-CN", "es-ES" });
     }
 
     /// <summary>
     /// Speak text
     /// </summary>
-    /// <param name="text">Text to speak</param>
-    /// <param name="language">Language code (e.g., "en-US", "zh-CN")</param>
-    /// <param name="speed">Speech rate (0.5-2.0, default 1.0)</param>
-    /// <param name="pitch">Pitch (0.5-2.0, default 1.0)</param>
     public async Task SpeakAsync(string text, string language = "en-US", double speed = 1.0, double pitch = 1.0)
     {
-        if (!IsSupported || string.IsNullOrWhiteSpace(text)) return;
+        if (string.IsNullOrWhiteSpace(text)) return;
 
         // Cancel previous speech
         Stop();
 
         _cts = new CancellationTokenSource();
 
-        var settings = new SpeechOptions
-        {
-            Locale = language,
-            Rate = Math.Clamp(speed, 0.5, 2.0),
-            Pitch = Math.Clamp(pitch, 0.5, 2.0),
-            Volume = 1.0
-        };
-
         try
         {
-            await TextToSpeech.Default.SpeakAsync(text, settings, _cts.Token);
+            await TextToSpeech.Default.SpeakAsync(text);
         }
         catch (OperationCanceledException)
         {

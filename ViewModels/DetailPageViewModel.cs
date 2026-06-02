@@ -142,14 +142,10 @@ public partial class DetailPageViewModel : ObservableObject
             // If permission denied, guide user to settings
             if (status == PermissionStatus.Denied)
             {
-                var result = await Application.Current!.MainPage!.DisplayAlert(
+                await Application.Current!.MainPage!.DisplayAlert(
                     "Permission Denied", 
-                    "Camera permission is required to take photos. Would you like to go to settings to enable it?", 
-                    "Yes", "No");
-                if (result)
-                {
-                    await Permissions.OpenAppSettingsAsync();
-                }
+                    "Camera permission is required to take photos. Please enable it in app settings manually.", 
+                    "OK");
                 return;
             }
             
@@ -180,10 +176,21 @@ public partial class DetailPageViewModel : ObservableObject
                 using var memoryStream = new MemoryStream();
                 await stream.CopyToAsync(memoryStream);
                 
-                // Create copy to trigger property change notification
-                var updatedRestaurant = Restaurant with
+                // Update restaurant image
+                var updatedRestaurant = new Restaurant
                 {
-                    ImageData = memoryStream.ToArray()
+                    Id = Restaurant.Id,
+                    Name = Restaurant.Name,
+                    Cuisine = Restaurant.Cuisine,
+                    Rating = Restaurant.Rating,
+                    Description = Restaurant.Description,
+                    Latitude = Restaurant.Latitude,
+                    Longitude = Restaurant.Longitude,
+                    ImageName = Restaurant.ImageName,
+                    IsFavorite = Restaurant.IsFavorite,
+                    CreatedAt = Restaurant.CreatedAt,
+                    ImageData = memoryStream.ToArray(),
+                    Distance = Restaurant.Distance
                 };
                 
                 await _databaseService.SaveRestaurantAsync(updatedRestaurant);

@@ -152,10 +152,44 @@ public class DatabaseService
         return await _database.Table<Restaurant>().Where(r => r.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<int> SaveRestaurantAsync(Restaurant restaurant)
+    public async Task<SaveResult> SaveRestaurantAsync(Restaurant restaurant)
     {
         await EnsureInitialized();
-        return restaurant.Id == 0 ? await _database.InsertAsync(restaurant) : await _database.UpdateAsync(restaurant);
+        
+        // Check for ID conflicts
+        if (restaurant.Id > 0)
+        {
+            var existing = await GetRestaurantByIdAsync(restaurant.Id);
+            if (existing != null)
+            {
+                return SaveResult.Conflict(existing, 
+                    $"Restaurant ID {restaurant.Id} already exists: '{existing.Name}' (Cuisine: {existing.Cuisine}, Rating: {existing.Rating:F1}). " +
+                    $"Use a different ID or update the existing restaurant.");
+            }
+        }
+        
+        // Check for name conflicts
+        var nameConflict = await _database.Table<Restaurant>()
+            .Where(r => r.Name == restaurant.Name && r.Id != restaurant.Id)
+            .FirstOrDefaultAsync();
+        
+        if (nameConflict != null)
+        {
+            return SaveResult.Conflict(nameConflict, 
+                $"Restaurant name '{restaurant.Name}' is already used by ID {nameConflict.Id}. " +
+                $"Please use a different name.");
+        }
+        
+        if (restaurant.Id == 0)
+        {
+            var rows = await _database.InsertAsync(restaurant);
+            return SaveResult.InsertSuccess(rows);
+        }
+        else
+        {
+            var rows = await _database.UpdateAsync(restaurant);
+            return SaveResult.UpdateSuccess(rows);
+        }
     }
 
     public async Task<int> UpdateRestaurantAsync(Restaurant restaurant)

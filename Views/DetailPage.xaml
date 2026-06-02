@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:CampusEats.ViewModels"
+             xmlns:models="clr-namespace:CampusEats.Models"
              xmlns:converters="clr-namespace:CampusEats.Converters"
              x:Class="CampusEats.Views.DetailPage"
              Title="{Binding Restaurant.Name}"
@@ -85,11 +86,11 @@
                         <CollectionView ItemsSource="{Binding Reviews}" HeightRequest="300"
                                         AutomationProperties.Name="Review list">
                             <CollectionView.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="models:Review">
                                     <VerticalStackLayout Padding="10,5">
                                         <Label Text="{Binding UserComment}" FontSize="14" 
                                                AutomationProperties.Name="Review content" />
-                                        <Label Text="{Binding Rating, StringFormat='⭐ {0}/5'}" FontSize="12" 
+                                        <Label Text="{Binding Rating, StringFormat='{}{0}/5'}" FontSize="12" 
                                                AutomationProperties.Name="Review rating" />
                                         <Label Text="{Binding CreatedAt, StringFormat='Posted: {0:yyyy-MM-dd}'}" FontSize="10" TextColor="Gray" 
                                                AutomationProperties.Name="Post time" />

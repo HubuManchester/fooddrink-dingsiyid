@@ -130,6 +130,17 @@ public partial class CrudTestViewModel : ObservableObject
         }
     }
 
+    private void Log(string message)
+    {
+        var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+        TestLog.Insert(0, $"[{timestamp}] {message}");
+        // Keep only last 50 logs
+        if (TestLog.Count > 50)
+        {
+            TestLog.RemoveAt(50);
+        }
+    }
+
     [RelayCommand]
     private async Task AddRestaurant()
     {
@@ -155,25 +166,386 @@ public partial class CrudTestViewModel : ObservableObject
                 ImageName = "food_placeholder.jpg"
             };
 
-            await _databaseService.SaveRestaurantAsync(restaurant);
+            // Use manual ID if specified
+            if (UseManualId && ManualRestaurantId.HasValue)
+            {
+                restaurant.Id = ManualRestaurantId.Value;
+                Log($"📝 Creating restaurant with manual ID: {restaurant.Id}, Name: {restaurant.Name}");
+            }
+            else
+            {
+                Log($"📝 Creating restaurant with auto ID, Name: {restaurant.Name}");
+            }
+
+            var result = await _databaseService.SaveRestaurantAsync(restaurant);
+            
+            if (result.Status == SaveStatus.Conflict)
+            {
+                Log($"⚠️  CONFLICT DETECTED!");
+                Log($"   {result.Message}");
+                if (result.ConflictingItem is Restaurant existingRestaurant)
+                {
+                    Log($"   Conflicting restaurant details:");
+                    Log($"     - ID: {existingRestaurant.Id}");
+                    Log($"     - Name: {existingRestaurant.Name}");
+                    Log($"     - Cuisine: {existingRestaurant.Cuisine}");
+                    Log($"     - Rating: {existingRestaurant.Rating:F1}");
+                }
+                StatusMessage = $"Conflict: {result.Message}";
+                
+                // Ask user how to proceed
+                var choice = await Application.Current!.MainPage!.DisplayAlert(
+                    "ID Conflict Detected",
+                    result.Message + "\n\nDo you want to update the existing restaurant?",
+                    "Yes, Update",
+                    "Cancel");
+                
+                if (choice)
+                {
+                    // Update the existing one
+                    restaurant.Id = ((Restaurant)result.ConflictingItem!).Id;
+                    var updateResult = await _databaseService.SaveRestaurantAsync(restaurant);
+                    Log($"✅ Updated existing restaurant, status: {updateResult.Status}");
+                    StatusMessage = "Restaurant updated successfully!";
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                Log($"✅ Save completed - Status: {result.Status}, Rows affected: {result.RowsAffected}");
+                Log($"   Restaurant ID after save: {restaurant.Id}");
+                StatusMessage = result.Message;
+            }
 
             // Clear form
             NewRestaurantName = string.Empty;
             NewRestaurantCuisine = string.Empty;
             NewRestaurantRating = 4.0;
             NewRestaurantDescription = string.Empty;
+            ManualRestaurantId = null;
 
             await LoadAllData();
             StatusMessage = "Restaurant added successfully!";
         }
         catch (Exception ex)
         {
+            Log($"❌ Error: {ex.Message}");
             StatusMessage = $"Add failed: {ex.Message}";
         }
         finally
         {
             IsBusy = false;
         }
+    }
+
+    [RelayCommand]
+    private async Task TestDuplicateId()
+    {
+        if (Restaurants.Count == 0)
+        {
+            Log("❌ No restaurants to test! Please load data first.");
+            return;
+        }
+
+        var testId = Restaurants[0].Id;
+        Log($"🧪 Starting duplicate ID test for ID: {testId}");
+        Log($"   Original restaurant: {Restaurants[0].Name}");
+
+        IsBusy = true;
+        try
+        {
+            // Try to add a new restaurant with the same ID
+            var duplicateRestaurant = new Restaurant
+            {
+                Id = testId,
+                Name = "DUPLICATE - This Should Overwrite",
+                Cuisine = "Test",
+                Rating = 1.0,
+                Description = "This is a duplicate ID test",
+                Latitude = 0,
+                Longitude = 0,
+                ImageName = "food_placeholder.jpg"
+            };
+
+            Log($"📝 Attempting to save with ID {testId}...");
+            var result = await _databaseService.SaveRestaurantAsync(duplicateRestaurant);
+            
+            Log($"✅ Save returned: {result}");
+            
+            await LoadAllData();
+            
+            var afterSave = await _databaseService.GetRestaurantByIdAsync(testId);
+            if (afterSave != null)
+            {
+                Log($"📋 After operation - Restaurant name: {afterSave.Name}");
+                Log($"⚠️  CONCLUSION: Data was OVERWRITTEN (Update), no error thrown!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log($"❌ Exception caught: {ex.Message}");
+            Log($"⚠️  CONCLUSION: Error was thrown!");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task TestEdgeCases()
+    {
+        Log("🧪 Starting comprehensive edge case testing...");
+        
+        IsBusy = true;
+        try
+        {
+            // Test 1: ID = 0
+            Log("\n=== Test 1: ID = 0 ===");
+            var test1 = new Restaurant { Name = "Test Zero ID", Id = 0, Cuisine = "Test" };
+            var result1 = await _databaseService.SaveRestaurantAsync(test1);
+            Log($"   Result: {result1}, New ID: {test1.Id}");
+
+            // Test 2: Negative ID
+            Log("\n=== Test 2: Negative ID ===");
+            var test2 = new Restaurant { Name = "Test Negative ID", Id = -999, Cuisine = "Test" };
+            var result2 = await _databaseService.SaveRestaurantAsync(test2);
+            Log($"   Result: {result2}, New ID: {test2.Id}");
+
+            // Test 3: Very large ID
+            Log("\n=== Test 3: Very Large ID ===");
+            var test3 = new Restaurant { Name = "Test Large ID", Id = 999999, Cuisine = "Test" };
+            var result3 = await _databaseService.SaveRestaurantAsync(test3);
+            Log($"   Result: {result3}, New ID: {test3.Id}");
+
+            // Test 4: Multiple sequential adds
+            Log("\n=== Test 4: Multiple Sequential Adds ===");
+            for (int i = 1; i <= 3; i++)
+            {
+                var test = new Restaurant { Name = $"Batch Test {i}", Cuisine = "Test" };
+                await _databaseService.SaveRestaurantAsync(test);
+                Log($"   Added: {test.Name}, ID: {test.Id}");
+            }
+
+            await LoadAllData();
+            Log("\n✅ All edge case tests completed!");
+        }
+        catch (Exception ex)
+        {
+            Log($"\n❌ Edge case test failed: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task TestNameConflict()
+    {
+        Log("🧪 Starting name conflict testing...");
+        if (Restaurants.Count == 0)
+        {
+            Log("❌ No restaurants to test! Please load data first.");
+            return;
+        }
+
+        IsBusy = true;
+        try
+        {
+            var existingName = Restaurants[0].Name;
+            Log($"📝 Attempting to add a new restaurant with existing name: '{existingName}'");
+
+            var conflictRestaurant = new Restaurant
+            {
+                Name = existingName,
+                Cuisine = "Test Cuisine",
+                Rating = 3.0,
+                Description = "This should trigger name conflict",
+                ImageName = "food_placeholder.jpg"
+            };
+
+            var result = await _databaseService.SaveRestaurantAsync(conflictRestaurant);
+
+            if (result.Status == SaveStatus.Conflict)
+            {
+                Log($"✅ Conflict detected correctly!");
+                Log($"   {result.Message}");
+                if (result.ConflictingItem is Restaurant conflict)
+                {
+                    Log($"   Existing: ID={conflict.Id}, Name={conflict.Name}");
+                }
+            }
+            else
+            {
+                Log($"⚠️ Unexpected: Save succeeded with status {result.Status}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log($"❌ Exception: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task TestUpdateNonExistent()
+    {
+        Log("🧪 Starting non-existent ID update test...");
+        IsBusy = true;
+        try
+        {
+            Log("📝 Attempting to update a non-existent restaurant (ID: 99999)...");
+            var ghost = new Restaurant
+            {
+                Id = 99999,
+                Name = "Ghost Restaurant",
+                Cuisine = "Ghost",
+                Rating = 1.0,
+                Description = "This should not exist"
+            };
+
+            var rows = await _databaseService.UpdateRestaurantAsync(ghost);
+            Log($"   Update returned: {rows} rows affected");
+            if (rows == 0)
+            {
+                Log("✅ Update correctly returned 0 rows for non-existent ID");
+            }
+            else
+            {
+                Log($"⚠️ Unexpected: Update affected {rows} rows");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log($"❌ Exception: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task TestDeleteNonExistent()
+    {
+        Log("🧪 Starting non-existent ID delete test...");
+        IsBusy = true;
+        try
+        {
+            Log("📝 Attempting to delete a non-existent restaurant (ID: 88888)...");
+            var rows = await _databaseService.DeleteRestaurantByIdAsync(88888);
+            Log($"   Delete returned: {rows} rows affected");
+            if (rows == 0)
+            {
+                Log("✅ Delete correctly returned 0 for non-existent ID");
+            }
+            else
+            {
+                Log($"⚠️ Unexpected: Delete affected {rows} rows");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log($"❌ Exception: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task TestEmptyValues()
+    {
+        Log("🧪 Testing empty/null values...");
+        IsBusy = true;
+        try
+        {
+            Log("\n=== Test: Empty Name ===");
+            var emptyName = new Restaurant { Name = "", Cuisine = "Test" };
+            try
+            {
+                var result = await _databaseService.SaveRestaurantAsync(emptyName);
+                Log($"   Status: {result.Status}, ID: {emptyName.Id}");
+            }
+            catch (Exception ex)
+            {
+                Log($"   Error: {ex.Message}");
+            }
+
+            Log("\n=== Test: Whitespace Name ===");
+            var wsName = new Restaurant { Name = "   ", Cuisine = "Test" };
+            try
+            {
+                var result = await _databaseService.SaveRestaurantAsync(wsName);
+                Log($"   Status: {result.Status}, ID: {wsName.Id}");
+            }
+            catch (Exception ex)
+            {
+                Log($"   Error: {ex.Message}");
+            }
+
+            Log("\n=== Test: Extreme Rating Values ===");
+            var extremeRating = new Restaurant { Name = "Extreme Rating", Cuisine = "Test", Rating = 999.0 };
+            var r = await _databaseService.SaveRestaurantAsync(extremeRating);
+            Log($"   Status: {r.Status}, ID: {extremeRating.Id}, Rating stored: {extremeRating.Rating}");
+        }
+        catch (Exception ex)
+        {
+            Log($"❌ Exception: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task TestPerformance()
+    {
+        Log("🧪 Performance test: Adding 50 restaurants...");
+        IsBusy = true;
+        try
+        {
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            for (int i = 0; i < 50; i++)
+            {
+                var r = new Restaurant
+                {
+                    Name = $"Perf Test {i}",
+                    Cuisine = "Performance",
+                    Rating = 4.0,
+                    Description = $"Bulk insert test #{i}"
+                };
+                await _databaseService.SaveRestaurantAsync(r);
+            }
+            stopwatch.Stop();
+            Log($"✅ Added 50 restaurants in {stopwatch.ElapsedMilliseconds}ms");
+            Log($"   Average: {stopwatch.ElapsedMilliseconds / 50.0:F2}ms per insert");
+            await LoadAllData();
+        }
+        catch (Exception ex)
+        {
+            Log($"❌ Exception: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private void ClearLog()
+    {
+        TestLog.Clear();
+        Log("Test log cleared");
     }
 
     [RelayCommand]

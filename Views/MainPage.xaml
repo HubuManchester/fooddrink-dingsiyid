@@ -10,7 +10,7 @@
 	<ContentPage.Resources>
 		<ResourceDictionary>
 			<Color x:Key="PrimaryColor">#FF6B35</Color>
-			<Color x:Key="CardBackground">{AppThemeBinding Light=#FFFFFF, Dark=#1f1f1f}</Color>
+			<Color x:Key="CardBackground">White</Color>
 		</ResourceDictionary>
 	</ContentPage.Resources>
 

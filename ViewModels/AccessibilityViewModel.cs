@@ -16,7 +16,7 @@ public partial class AccessibilityViewModel : ObservableObject
 
     // Theme related
     [ObservableProperty]
-    private string _themeDisplayName;
+    private string _themeDisplayName = string.Empty;
 
     // Font size related
     [ObservableProperty]
@@ -138,7 +138,10 @@ public partial class AccessibilityViewModel : ObservableObject
     partial void OnFontScaleChanged(double value)
     {
         // Apply font scaling
-        Application.Current?.Resources["DefaultFontSize"] = value * 14;
+        if (Application.Current != null)
+        {
+            Application.Current.Resources["DefaultFontSize"] = value * 14;
+        }
         UpdateFontScaleDisplay();
     }
 

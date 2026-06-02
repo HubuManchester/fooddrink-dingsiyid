@@ -1,4 +1,4 @@
-﻿using SQLite;
+using SQLite;
 
 namespace CampusEats.Models;
 
@@ -25,6 +25,9 @@ public class Restaurant
 
     [MaxLength(200)]
     public string ImageName { get; set; } = "food_placeholder.jpg";
+
+    public bool IsFavorite { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Ignore]
     public byte[]? ImageData { get; set; }

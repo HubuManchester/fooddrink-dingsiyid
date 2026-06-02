@@ -91,10 +91,11 @@
 
         <!-- Recipe list -->
         <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
-            <CollectionView ItemsSource="{Binding Recipes}" 
+            <CollectionView x:Name="RecipeCollection"
+                            ItemsSource="{Binding Recipes}" 
                             SelectionMode="Single"
                             SelectionChangedCommand="{Binding SelectRecipeCommand}"
-                            SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}"
+                            SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference RecipeCollection}}"
                             AutomationProperties.Name="Recipe list">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Recipe">
@@ -119,8 +120,11 @@
                                                AutomationProperties.Name="Recipe category" />
                                         <Label Text="{Binding RatingStars}" FontSize="12" TextColor="{StaticResource PrimaryColor}" 
                                                AutomationProperties.Name="Rating" />
-                                        <Label Text="{Binding Calories} calories | {Binding PrepTime} mins" FontSize="11" TextColor="Gray" 
-                                               AutomationProperties.Name="Nutrition info" />
+                                        <HorizontalStackLayout>
+                                            <Label Text="{Binding Calories, StringFormat='{}{0} calories'}" FontSize="11" TextColor="Gray" />
+                                            <Label Text=" | " FontSize="11" TextColor="Gray" />
+                                            <Label Text="{Binding PrepTime, StringFormat='{}{0} mins'}" FontSize="11" TextColor="Gray" />
+                                        </HorizontalStackLayout>
                                     </VerticalStackLayout>
                                 </Grid>
                             </Frame>

@@ -2,9 +2,16 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:CampusEats.ViewModels"
+             xmlns:converters="clr-namespace:CampusEats.Converters"
              x:Class="CampusEats.Views.RecipeDetailPage"
              Title="{Binding Recipe.Name}"
              x:DataType="viewmodels:RecipeDetailViewModel">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BoolToFavoriteConverter x:Key="BoolToFavoriteConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
@@ -39,7 +46,7 @@
                     <VerticalStackLayout>
                         <Label Text="⏱️" FontSize="24" />
                         <Label Text="Prep Time" FontSize="12" TextColor="Gray" />
-                        <Label Text="{Binding Recipe.PrepTime} min" FontSize="18" FontAttributes="Bold" />
+                        <Label Text="{Binding Recipe.PrepTime, StringFormat='{}{0} min'}" FontSize="18" FontAttributes="Bold" />
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
             </Frame>

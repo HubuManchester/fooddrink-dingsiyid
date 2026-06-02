@@ -42,13 +42,13 @@ public partial class RecipePageViewModel : ObservableObject
         SearchCommand = new AsyncRelayCommand(SearchRecipes);
         RefreshCommand = new AsyncRelayCommand(LoadRecipes);
         FilterCommand = new AsyncRelayCommand(FilterByCategory);
-        ToggleFavoriteCommand = new AsyncRelayCommand<Tuple<Recipe, bool>>(ToggleFavorite);
-        SelectRecipeCommand = new RelayCommand<Recipe>(SelectRecipe);
+        ToggleFavoriteCommand = new AsyncRelayCommand<Tuple<Recipe, bool>?>(ToggleFavorite);
+        SelectRecipeCommand = new RelayCommand<Recipe?>(SelectRecipe);
         CaptureAndRecognizeCommand = new AsyncRelayCommand(CaptureAndRecognize);
         ShakeToRecommendCommand = new AsyncRelayCommand(ShakeToRecommend);
 
-        LoadCategories();
-        LoadRecipes();
+        Task.Run(LoadCategories);
+        Task.Run(LoadRecipes);
     }
 
     public ICommand SearchCommand { get; }
@@ -153,17 +153,23 @@ public partial class RecipePageViewModel : ObservableObject
         }
     }
 
-    private async Task ToggleFavorite(Tuple<Recipe, bool> args)
+    private async Task ToggleFavorite(Tuple<Recipe, bool>? args)
     {
-        var recipe = args.Item1;
-        recipe.IsFavorite = args.Item2;
-        await _databaseService.SaveRecipeAsync(recipe);
+        if (args != null)
+        {
+            var recipe = args.Item1;
+            recipe.IsFavorite = args.Item2;
+            await _databaseService.SaveRecipeAsync(recipe);
+        }
     }
 
-    private void SelectRecipe(Recipe recipe)
+    private void SelectRecipe(Recipe? recipe)
     {
-        AppState.SelectedRecipe = recipe;
-        Shell.Current.GoToAsync("recipecdetailpage");
+        if (recipe != null)
+        {
+            AppState.SelectedRecipe = recipe;
+            Shell.Current.GoToAsync("recipecdetailpage");
+        }
     }
 
     private async Task CaptureAndRecognize()
