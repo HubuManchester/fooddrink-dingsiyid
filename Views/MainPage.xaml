@@ -10,7 +10,10 @@
 	<ContentPage.Resources>
 		<ResourceDictionary>
 			<Color x:Key="PrimaryColor">#FF6B35</Color>
-			<Color x:Key="CardBackground">White</Color>
+			<Color x:Key="CardBackgroundLight">#FFFFFF</Color>
+			<Color x:Key="CardBackgroundDark">#1f1f1f</Color>
+			<Color x:Key="TextColorLight">#000000</Color>
+			<Color x:Key="TextColorDark">#FFFFFF</Color>
 		</ResourceDictionary>
 	</ContentPage.Resources>
 
@@ -38,15 +41,24 @@
 				<CollectionView.ItemTemplate>
 					<DataTemplate x:DataType="models:Restaurant">
 						<Grid Padding="12,5">
-							<Frame CornerRadius="15" BackgroundColor="{StaticResource CardBackground}" Padding="10" Margin="0,5" HasShadow="True">
+							<Frame CornerRadius="15" Padding="10" Margin="0,5" HasShadow="True">
+								<Frame.BackgroundColor>
+									<AppThemeBinding Light="{StaticResource CardBackgroundLight}" Dark="{StaticResource CardBackgroundDark}" />
+								</Frame.BackgroundColor>
 								<Grid ColumnDefinitions="80, *">
 									<Image Source="{Binding ImageName}" HeightRequest="70" WidthRequest="70" Aspect="AspectFill" 
 										   AutomationProperties.Name="Restaurant image" />
 									<VerticalStackLayout Grid.Column="1" Padding="10,0">
-										<Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" 
-											   AutomationProperties.Name="Restaurant name" />
-										<Label Text="{Binding Cuisine}" FontSize="12" TextColor="Gray" 
-											   AutomationProperties.Name="Cuisine" />
+										<Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold">
+											<Label.TextColor>
+												<AppThemeBinding Light="{StaticResource TextColorLight}" Dark="{StaticResource TextColorDark}" />
+											</Label.TextColor>
+										</Label>
+										<Label Text="{Binding Cuisine}" FontSize="12">
+											<Label.TextColor>
+												<AppThemeBinding Light="#666666" Dark="#AAAAAA" />
+											</Label.TextColor>
+										</Label>
 										<Label Text="{Binding RatingStars}" FontSize="12" TextColor="{StaticResource PrimaryColor}" 
 											   AutomationProperties.Name="Rating" />
 										<Label Text="{Binding Distance, StringFormat='📍 {0:F1} km'}" FontSize="11" TextColor="{StaticResource PrimaryColor}" 
