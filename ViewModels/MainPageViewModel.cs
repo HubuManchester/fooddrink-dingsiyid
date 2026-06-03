@@ -46,16 +46,16 @@ public partial class MainPageViewModel : ObservableObject
         _hardwareManager.LocationUpdated += OnLocationUpdated;
         
         CuisineFilters.Add("All Cuisines");
-        RefreshCommand = new AsyncRelayCommand(LoadData);
+        RefreshCommand = new AsyncRelayCommand(LoadData, () => !IsRefreshing);
         Task.Run(async () => await LoadData());
     }
 
-    [RelayCommand]
     private async Task LoadData()
     {
-        IsRefreshing = true;
         try
         {
+            IsRefreshing = true;
+            
             await GetCurrentLocation();
             
             List<Restaurant> restaurantList;
@@ -103,9 +103,9 @@ public partial class MainPageViewModel : ObservableObject
             
             ApplyCuisineFilter();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            LocationStatus = "Unable to load restaurants. Please try again.";
+            LocationStatus = $"Unable to load restaurants: {ex.Message}";
         }
         finally
         {
@@ -159,7 +159,7 @@ public partial class MainPageViewModel : ObservableObject
                 LocationStatus = "Location permission denied";
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             if (_mockService.UseMockData)
             {
@@ -169,7 +169,7 @@ public partial class MainPageViewModel : ObservableObject
             }
             else
             {
-                LocationStatus = "Unable to get location. Please try again.";
+                LocationStatus = $"Unable to get location: {ex.Message}";
             }
         }
     }
@@ -207,8 +207,9 @@ public partial class MainPageViewModel : ObservableObject
                 await NavigateToDetail(recommended);
             }
         }
-        catch
+        catch (Exception ex)
         {
+            LocationStatus = $"Recommendation failed: {ex.Message}";
             await NavigateToDetail(recommended);
         }
     }
@@ -258,23 +259,30 @@ public partial class MainPageViewModel : ObservableObject
     {
         if (restaurant == null) return;
 
-        // Toggle favorite status using local storage
-        var favoriteIds = _localStorage.GetFavoriteRestaurants();
-        if (favoriteIds.Contains(restaurant.Id))
+        try
         {
-            favoriteIds.Remove(restaurant.Id);
-            restaurant.IsFavorite = false;
+            // Toggle favorite status using local storage
+            var favoriteIds = _localStorage.GetFavoriteRestaurants();
+            if (favoriteIds.Contains(restaurant.Id))
+            {
+                favoriteIds.Remove(restaurant.Id);
+                restaurant.IsFavorite = false;
+            }
+            else
+            {
+                favoriteIds.Add(restaurant.Id);
+                restaurant.IsFavorite = true;
+            }
+            _localStorage.SaveFavoriteRestaurants(favoriteIds);
+            
+            // Provide haptic feedback
+            if (Vibration.Default.IsSupported)
+                Vibration.Default.Vibrate(50);
         }
-        else
+        catch (Exception ex)
         {
-            favoriteIds.Add(restaurant.Id);
-            restaurant.IsFavorite = true;
+            LocationStatus = $"Failed to toggle favorite: {ex.Message}";
         }
-        _localStorage.SaveFavoriteRestaurants(favoriteIds);
-        
-        // Provide haptic feedback
-        if (Vibration.Default.IsSupported)
-            Vibration.Default.Vibrate(50);
     }
 
     [RelayCommand]
@@ -324,9 +332,9 @@ public partial class MainPageViewModel : ObservableObject
 
             LocationStatus = $"Restaurant '{name}' added successfully!";
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            LocationStatus = "Failed to add restaurant";
+            LocationStatus = $"Failed to add restaurant: {ex.Message}";
         }
     }
 
@@ -387,9 +395,9 @@ public partial class MainPageViewModel : ObservableObject
 
             LocationStatus = $"Restaurant '{name}' updated successfully!";
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            LocationStatus = "Failed to edit restaurant";
+            LocationStatus = $"Failed to edit restaurant: {ex.Message}";
         }
     }
 
@@ -428,25 +436,39 @@ public partial class MainPageViewModel : ObservableObject
 
             LocationStatus = $"Restaurant '{restaurant.Name}' deleted successfully!";
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            LocationStatus = "Failed to delete restaurant";
+            LocationStatus = $"Failed to delete restaurant: {ex.Message}";
         }
     }
 
     private async void OnShakeDetected(object? sender, ShakeDetectedEventArgs e)
     {
-        // Handle shake gesture for restaurant recommendation
-        if (Restaurants.Count > 0 && !IsRefreshing)
+        try
         {
-            await ShakeToRecommend();
+            // Handle shake gesture for restaurant recommendation
+            if (Restaurants.Count > 0 && !IsRefreshing)
+            {
+                await ShakeToRecommend();
+            }
+        }
+        catch (Exception ex)
+        {
+            LocationStatus = $"Shake detection error: {ex.Message}";
         }
     }
 
     private async void OnLocationUpdated(object? sender, LocationUpdatedEventArgs e)
     {
-        // Update location and reload nearby restaurants
-        _currentLocation = new Location(e.Latitude, e.Longitude);
-        await LoadData();
+        try
+        {
+            // Update location and reload nearby restaurants
+            _currentLocation = new Location(e.Latitude, e.Longitude);
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            LocationStatus = $"Location update error: {ex.Message}";
+        }
     }
 }

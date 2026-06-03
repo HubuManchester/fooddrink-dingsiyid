@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CampusEats.Models;
 using CampusEats.Services;
+using Microsoft.Maui.ApplicationModel;
 
 namespace CampusEats.ViewModels;
 
@@ -66,7 +67,7 @@ public partial class DetailPageViewModel : ObservableObject
         LoadRestaurant();
     }
 
-    private async void LoadRestaurant()
+    private void LoadRestaurant()
     {
         try
         {
@@ -74,8 +75,8 @@ public partial class DetailPageViewModel : ObservableObject
             if (Restaurant != null)
             {
                 PageTitle = Restaurant.Name;
-                await LoadReviews();
-                await LoadDishes();
+                _ = LoadReviews();
+                _ = LoadDishes();
             }
             else
             {
@@ -121,14 +122,21 @@ public partial class DetailPageViewModel : ObservableObject
     {
         if (Restaurant == null) return;
         
-        var allDishes = await _databaseService.GetDishesForRestaurantAsync(Restaurant.Id);
-        Dishes.Clear();
-        
-        var filtered = SelectedDishCategory == "All" 
-            ? allDishes 
-            : allDishes.Where(d => d.Category == SelectedDishCategory).ToList();
-        
-        foreach (var d in filtered) Dishes.Add(d);
+        try
+        {
+            var allDishes = await _databaseService.GetDishesForRestaurantAsync(Restaurant.Id);
+            Dishes.Clear();
+            
+            var filtered = SelectedDishCategory == "All" 
+                ? allDishes 
+                : allDishes.Where(d => d.Category == SelectedDishCategory).ToList();
+            
+            foreach (var d in filtered) Dishes.Add(d);
+        }
+        catch (Exception)
+        {
+            StatusMessage = "Failed to filter dishes";
+        }
     }
 
     private bool CanSubmitComment()
@@ -237,7 +245,7 @@ public partial class DetailPageViewModel : ObservableObject
             
             if (status == PermissionStatus.Denied)
             {
-                var openSettings = await SafeDisplayAlertAsync("Permission Required", 
+                bool openSettings = await SafeDisplayConfirmAsync("Permission Required", 
                     "Camera permission is needed to take photos. Would you like to open app settings to enable it?", 
                     "Yes", "No");
                 if (openSettings)
@@ -252,7 +260,7 @@ public partial class DetailPageViewModel : ObservableObject
                 status = await Permissions.RequestAsync<Permissions.Camera>();
                 if (status != PermissionStatus.Granted)
                 {
-                    var openSettings = await SafeDisplayAlertAsync("Permission Required", 
+                    bool openSettings = await SafeDisplayConfirmAsync("Permission Required", 
                         "Camera permission was not granted. Would you like to open app settings to enable it?", 
                         "Yes", "No");
                     if (openSettings)
@@ -323,26 +331,40 @@ public partial class DetailPageViewModel : ObservableObject
 
     private async Task GoBack()
     {
-        await Shell.Current.GoToAsync("..");
+        try
+        {
+            await Shell.Current.GoToAsync("..");
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Navigation failed: {ex.Message}";
+        }
     }
 
     private async Task OpenAppSettings()
     {
-        if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+        try
         {
-            #if ANDROID
-            var intent = new Android.Content.Intent(Android.Provider.Settings.ActionApplicationDetailsSettings);
-            intent.SetData(Android.Net.Uri.Parse($"package:{Android.App.Application.Context.PackageName}"));
-            Android.App.Application.Context.StartActivity(intent);
-            #endif
+            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+            {
+                #if ANDROID
+                var intent = new Android.Content.Intent(Android.Provider.Settings.ActionApplicationDetailsSettings);
+                intent.SetData(Android.Net.Uri.Parse($"package:{Android.App.Application.Context.PackageName}"));
+                Android.App.Application.Context.StartActivity(intent);
+                #endif
+            }
+            else if (DeviceInfo.Current.Platform == DevicePlatform.iOS)
+            {
+                await Launcher.OpenAsync("app-settings:");
+            }
+            else if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
+            {
+                await Launcher.OpenAsync("ms-settings:appsfeatures");
+            }
         }
-        else if (DeviceInfo.Current.Platform == DevicePlatform.iOS)
+        catch (Exception ex)
         {
-            await Launcher.OpenAsync("app-settings:");
-        }
-        else if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
-        {
-            await Launcher.OpenAsync("ms-settings:appsfeatures");
+            StatusMessage = $"Unable to open settings: {ex.Message}";
         }
     }
 
@@ -591,6 +613,27 @@ public partial class DetailPageViewModel : ObservableObject
         catch
         {
             StatusMessage = message;
+        }
+    }
+
+    private async Task<bool> SafeDisplayConfirmAsync(string title, string message, string accept, string cancel)
+    {
+        try
+        {
+            if (Application.Current?.MainPage != null)
+            {
+                return await Application.Current.MainPage.DisplayAlert(title, message, accept, cancel);
+            }
+            else
+            {
+                StatusMessage = message;
+                return false;
+            }
+        }
+        catch
+        {
+            StatusMessage = message;
+            return false;
         }
     }
 }
