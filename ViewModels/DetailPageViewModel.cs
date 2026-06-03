@@ -89,6 +89,15 @@ public partial class DetailPageViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Reload restaurant data when page appears
+    /// Called from OnAppearing to ensure correct restaurant is displayed
+    /// </summary>
+    public void ReloadRestaurant()
+    {
+        LoadRestaurant();
+    }
+
     private async Task LoadDishes()
     {
         if (Restaurant == null) return;
@@ -337,11 +346,22 @@ public partial class DetailPageViewModel : ObservableObject
     {
         try
         {
-            await Shell.Current.GoToAsync("..");
+            // Try to go back in navigation stack
+            if (Shell.Current.Navigation.NavigationStack.Count > 1)
+            {
+                await Shell.Current.GoToAsync("..");
+            }
+            else
+            {
+                // If no navigation stack, go back to main page (restaurants tab)
+                await Shell.Current.GoToAsync("///mainpage");
+            }
         }
         catch (Exception ex)
         {
             StatusMessage = $"Navigation failed: {ex.Message}";
+            // Fallback to main page
+            await Shell.Current.GoToAsync("///mainpage");
         }
     }
 

@@ -34,13 +34,13 @@ public class MockService
     private static readonly List<MockRestaurantData> MockRestaurants = new()
     {
         new MockRestaurantData { Id = 1, Name = "Hubei University Canteen", Cuisine = "Chinese Home", Rating = 4.2, Description = "Campus canteen offering affordable and diverse Chinese dishes.", Latitude = 30.5445, Longitude = 114.3545, ImageName = "rice_bowl.jpg" },
-        new MockRestaurantData { Id = 2, Name = "Wuchang Fish Restaurant", Cuisine = "Hubei Cuisine", Rating = 4.5, Description = "Specializes in Wuchang fish, a famous local delicacy.", Latitude = 30.5460, Longitude = 114.3560, ImageName = "sushi.jpg" },
-        new MockRestaurantData { Id = 3, Name = "Haidilao Hotpot", Cuisine = "Sichuan Hotpot", Rating = 4.3, Description = "Authentic Sichuan hotpot with spicy broth.", Latitude = 30.5430, Longitude = 114.3530, ImageName = "noodle_soup.jpg" },
+        new MockRestaurantData { Id = 2, Name = "Wuchang Fish Restaurant", Cuisine = "Hubei Cuisine", Rating = 4.5, Description = "Specializes in Wuchang fish, a famous local delicacy.", Latitude = 30.5450, Longitude = 114.3550, ImageName = "wuchang_fish.jpg" },
+        new MockRestaurantData { Id = 3, Name = "Haidilao Hotpot", Cuisine = "Sichuan Hotpot", Rating = 4.3, Description = "Authentic Sichuan hotpot with spicy broth.", Latitude = 30.5435, Longitude = 114.3535, ImageName = "hotpot.jpg" },
         new MockRestaurantData { Id = 4, Name = "Wuhan Hot Dry Noodles", Cuisine = "Hubei Noodles", Rating = 4.0, Description = "Authentic Wuhan hot dry noodles with sesame paste.", Latitude = 30.5455, Longitude = 114.3555, ImageName = "reganmian.jpg" },
-        new MockRestaurantData { Id = 5, Name = "McDonald's", Cuisine = "Western Fast Food", Rating = 4.1, Description = "Classic burgers and fries, quick and convenient.", Latitude = 30.5425, Longitude = 114.3525, ImageName = "mcdonalds.jpg" },
-        new MockRestaurantData { Id = 6, Name = "Luckin Coffee", Cuisine = "Coffee & Drinks", Rating = 4.4, Description = "Coconut latte, thick milk latte and various coffees.", Latitude = 30.5465, Longitude = 114.3570, ImageName = "luckin.jpg" },
+        new MockRestaurantData { Id = 5, Name = "McDonald's", Cuisine = "Western Fast Food", Rating = 4.1, Description = "Classic burgers and fries, quick and convenient.", Latitude = 30.5420, Longitude = 114.3520, ImageName = "mcdonalds.jpg" },
+        new MockRestaurantData { Id = 6, Name = "Luckin Coffee", Cuisine = "Coffee & Drinks", Rating = 4.4, Description = "Coconut latte, thick milk latte and various coffees.", Latitude = 30.5460, Longitude = 114.3560, ImageName = "luckin.jpg" },
         new MockRestaurantData { Id = 7, Name = "Mixue Ice Cream", Cuisine = "Desserts & Drinks", Rating = 4.2, Description = "Ice cream, milk tea at affordable prices.", Latitude = 30.5440, Longitude = 114.3540, ImageName = "mixue.jpg" },
-        new MockRestaurantData { Id = 8, Name = "Pizza House", Cuisine = "Italian", Rating = 4.3, Description = "Authentic Italian pizza, freshly baked.", Latitude = 30.5435, Longitude = 114.3565, ImageName = "pizza.jpg" }
+        new MockRestaurantData { Id = 8, Name = "Pizza House", Cuisine = "Italian", Rating = 4.3, Description = "Authentic Italian pizza, freshly baked.", Latitude = 30.5430, Longitude = 114.3560, ImageName = "pizza.jpg" }
     };
 
     private static readonly List<MockRecipeData> MockRecipes = new()

@@ -51,13 +51,17 @@ public partial class RecipePageViewModel : ObservableObject
         SearchCommand = new AsyncRelayCommand(SearchRecipes);
         RefreshCommand = new AsyncRelayCommand(LoadRecipes);
         FilterCommand = new AsyncRelayCommand<string?>(FilterByCategory);
-        ToggleFavoriteCommand = new AsyncRelayCommand<Tuple<Recipe, bool>?>(ToggleFavorite);
+        ToggleFavoriteCommand = new AsyncRelayCommand<Recipe?>(ToggleFavorite);
         SelectRecipeCommand = new AsyncRelayCommand<Recipe?>(SelectRecipe);
         CaptureAndRecognizeCommand = new AsyncRelayCommand(CaptureAndRecognize);
         ShakeToRecommendCommand = new AsyncRelayCommand(ShakeToRecommend);
 
-        Task.Run(LoadCategories);
-        Task.Run(LoadRecipes);
+        // Force mock data to ensure recipes are shown
+        _mockService.UseMockData = true;
+        
+        // Load data immediately
+        LoadCategories();
+        _ = LoadRecipes();
     }
 
     public ICommand SearchCommand { get; }
@@ -241,12 +245,10 @@ public partial class RecipePageViewModel : ObservableObject
         }
     }
 
-    private async Task ToggleFavorite(Tuple<Recipe, bool>? args)
+    private async Task ToggleFavorite(Recipe? recipe)
     {
-        if (args != null)
+        if (recipe != null)
         {
-            var recipe = args.Item1;
-            
             // Toggle favorite status using local storage
             var favoriteIds = _localStorage.GetFavoriteRecipes();
             if (favoriteIds.Contains(recipe.Id))
@@ -266,6 +268,16 @@ public partial class RecipePageViewModel : ObservableObject
             {
                 await _databaseService.SaveRecipeAsync(recipe);
             }
+            
+            // Update UI
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var index = Recipes.IndexOf(recipe);
+                if (index >= 0)
+                {
+                    Recipes[index] = recipe;
+                }
+            });
         }
     }
 

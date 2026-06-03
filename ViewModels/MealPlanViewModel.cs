@@ -68,16 +68,22 @@ public partial class MealPlanViewModel : ObservableObject
     {
         try
         {
-            var allItems = await _localStorage.GetMealPlanAsync();
+            var allItems = await _localStorage.GetMealPlanAsync() ?? new List<MealPlanItem>();
             
             // Ensure UI update on main thread
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 MealPlanItems.Clear();
                 
-                foreach (var item in allItems)
+                if (allItems != null)
                 {
-                    MealPlanItems.Add(item);
+                    foreach (var item in allItems)
+                    {
+                        if (item != null)
+                        {
+                            MealPlanItems.Add(item);
+                        }
+                    }
                 }
                 
                 CalculateTotalCalories();
@@ -87,6 +93,13 @@ public partial class MealPlanViewModel : ObservableObject
         {
             System.Diagnostics.Debug.WriteLine($"LoadMealPlan error: {ex.Message}");
             StatusMessage = "Failed to load meal plan";
+            
+            // Ensure UI update even on error
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                MealPlanItems.Clear();
+                CalculateTotalCalories();
+            });
         }
     }
 
@@ -94,8 +107,14 @@ public partial class MealPlanViewModel : ObservableObject
     {
         try
         {
+            if (Application.Current?.MainPage == null)
+            {
+                StatusMessage = "Application not ready";
+                return;
+            }
+
             var recipes = await _mockService.MockGetRecipesAsync();
-            if (recipes.Count == 0)
+            if (recipes == null || recipes.Count == 0)
             {
                 StatusMessage = "No recipes available";
                 return;
@@ -103,13 +122,21 @@ public partial class MealPlanViewModel : ObservableObject
 
             // Get a random recipe for demonstration
             var randomRecipe = recipes[new Random().Next(recipes.Count)];
+            if (randomRecipe == null)
+            {
+                StatusMessage = "Failed to select recipe";
+                return;
+            }
 
+            // Generate unique ID
+            int maxId = MealPlanItems.Any() ? MealPlanItems.Max(i => i.Id) : 0;
+            
             var newItem = new MealPlanItem
             {
-                Id = MealPlanItems.Count + 1,
-                RecipeName = randomRecipe.Name,
+                Id = maxId + 1,
+                RecipeName = randomRecipe.Name ?? "Unnamed Recipe",
                 RecipeId = randomRecipe.Id,
-                MealType = MealType,
+                MealType = MealType ?? "Dinner",
                 PlannedDate = SelectedDate,
                 Calories = randomRecipe.Calories,
                 CreatedAt = DateTime.UtcNow
@@ -138,30 +165,53 @@ public partial class MealPlanViewModel : ObservableObject
 
     private async Task RemoveMeal(MealPlanItem? item)
     {
-        if (item == null) return;
-
-        // Ensure UI update on main thread
-        MainThread.BeginInvokeOnMainThread(() =>
+        if (item == null)
         {
-            MealPlanItems.Remove(item);
-        });
-        
-        await SaveMealPlan();
-        
-        // Haptic feedback
-        if (Vibration.Default.IsSupported)
-            Vibration.Default.Vibrate(50);
+            StatusMessage = "Invalid meal item";
+            return;
+        }
 
-        StatusMessage = $"Removed {item.RecipeName}";
+        try
+        {
+            // Ensure UI update on main thread
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (MealPlanItems.Contains(item))
+                {
+                    MealPlanItems.Remove(item);
+                }
+            });
+            
+            await SaveMealPlan();
+            
+            // Haptic feedback
+            if (Vibration.Default.IsSupported)
+                Vibration.Default.Vibrate(50);
+
+            StatusMessage = $"Removed {item.RecipeName ?? "meal"}";
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"RemoveMeal error: {ex.Message}");
+            StatusMessage = "Failed to remove meal";
+        }
     }
 
     private async Task EditMeal(MealPlanItem? item)
     {
-        if (item == null) return;
+        if (item == null)
+        {
+            StatusMessage = "Invalid meal item";
+            return;
+        }
 
         try
         {
-            if (Application.Current?.MainPage == null) return;
+            if (Application.Current?.MainPage == null)
+            {
+                StatusMessage = "Application not ready";
+                return;
+            }
 
             // First, let user choose what to edit
             var editOption = await Application.Current.MainPage.DisplayActionSheet(
@@ -174,9 +224,9 @@ public partial class MealPlanViewModel : ObservableObject
             {
                 var newName = await Application.Current.MainPage.DisplayPromptAsync(
                     "Edit Recipe Name", "Enter new name:", "OK", "Cancel", 
-                    initialValue: item.RecipeName, maxLength: 50);
+                    initialValue: item.RecipeName ?? "", maxLength: 50);
                 
-                if (!string.IsNullOrEmpty(newName) && newName != "Cancel")
+                if (!string.IsNullOrEmpty(newName) && newName != "Cancel" && newName != item.RecipeName)
                 {
                     item.RecipeName = newName;
                     await SaveMealPlan();
@@ -192,7 +242,7 @@ public partial class MealPlanViewModel : ObservableObject
                 var newMealType = await Application.Current.MainPage.DisplayActionSheet(
                     "Select Meal Type", "Cancel", null, MealTypes.ToArray());
 
-                if (newMealType != "Cancel" && !string.IsNullOrEmpty(newMealType))
+                if (newMealType != "Cancel" && !string.IsNullOrEmpty(newMealType) && newMealType != item.MealType)
                 {
                     item.MealType = newMealType;
                     await SaveMealPlan();
@@ -200,7 +250,7 @@ public partial class MealPlanViewModel : ObservableObject
                     if (Vibration.Default.IsSupported)
                         Vibration.Default.Vibrate(50);
 
-                    StatusMessage = $"Updated {item.RecipeName} to {newMealType}";
+                    StatusMessage = $"Updated {item.RecipeName ?? "meal"} to {newMealType}";
                 }
             }
             else if (editOption == "Edit Calories")
@@ -211,7 +261,7 @@ public partial class MealPlanViewModel : ObservableObject
                 
                 if (!string.IsNullOrEmpty(newCaloriesStr) && newCaloriesStr != "Cancel")
                 {
-                    if (int.TryParse(newCaloriesStr, out int newCalories))
+                    if (int.TryParse(newCaloriesStr, out int newCalories) && newCalories >= 0 && newCalories != item.Calories)
                     {
                         item.Calories = newCalories;
                         await SaveMealPlan();
@@ -221,7 +271,7 @@ public partial class MealPlanViewModel : ObservableObject
 
                         StatusMessage = $"Updated calories to {newCalories}";
                     }
-                    else
+                    else if (!int.TryParse(newCaloriesStr, out _))
                     {
                         await Application.Current.MainPage.DisplayAlert("Error", "Please enter a valid number", "OK");
                     }

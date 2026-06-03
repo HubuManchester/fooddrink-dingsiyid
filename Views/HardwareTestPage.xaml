@@ -14,10 +14,8 @@
                    HorizontalOptions="Center" Margin="0, 0, 0, 10"
                    AutomationProperties.Name="Hardware test center page title" />
 
-            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
-                <Frame.BackgroundColor>
-                    <AppThemeBinding Light="{StaticResource LightSurface}" Dark="{StaticResource DarkSurface}" />
-                </Frame.BackgroundColor>
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}">
                 <VerticalStackLayout>
                     <Label Text="Test Status" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                            TextColor="{StaticResource PrimaryColor}"
@@ -29,10 +27,8 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
-                <Frame.BackgroundColor>
-                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                </Frame.BackgroundColor>
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                 <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                     <Label Text="Camera Recognition" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                            TextColor="{StaticResource PrimaryColor}"
@@ -72,10 +68,8 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
-                <Frame.BackgroundColor>
-                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                </Frame.BackgroundColor>
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                 <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                     <Label Text="Shake Detection" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                            TextColor="{StaticResource PrimaryColor}"
@@ -115,10 +109,8 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
-                <Frame.BackgroundColor>
-                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                </Frame.BackgroundColor>
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                 <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                     <Label Text="Text-to-Speech" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                            TextColor="{StaticResource PrimaryColor}"
@@ -143,10 +135,8 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
-                <Frame.BackgroundColor>
-                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                </Frame.BackgroundColor>
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                 <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                     <Label Text="Vibration" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                            TextColor="{StaticResource PrimaryColor}"
@@ -180,12 +170,10 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
-                <Frame.BackgroundColor>
-                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                </Frame.BackgroundColor>
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                 <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
-                    <Label Text="Location Services" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
+                    <Label Text="Location" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                            TextColor="{StaticResource PrimaryColor}"
                            AutomationProperties.Name="Location services section" />
                     <Label Text="Current location (Hubei University, Wuhan)"

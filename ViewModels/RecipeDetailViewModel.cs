@@ -40,6 +40,18 @@ public partial class RecipeDetailViewModel : ObservableObject
         Recipe = AppState.SelectedRecipe;
     }
 
+    /// <summary>
+    /// Reload recipe data when page appears
+    /// Called from OnAppearing to ensure correct recipe is displayed
+    /// </summary>
+    public void ReloadRecipe()
+    {
+        Recipe = AppState.SelectedRecipe;
+        OnPropertyChanged(nameof(Recipe));
+        OnPropertyChanged(nameof(IngredientsDisplay));
+        OnPropertyChanged(nameof(InstructionsDisplay));
+    }
+
     public ICommand ToggleFavoriteCommand { get; }
     public ICommand SpeakRecipeCommand { get; }
     public ICommand StopSpeakingCommand { get; }
@@ -142,14 +154,22 @@ public partial class RecipeDetailViewModel : ObservableObject
     {
         try
         {
-            // First try relative navigation
-            await Shell.Current.GoToAsync("..");
+            // Try to go back in navigation stack
+            if (Shell.Current.Navigation.NavigationStack.Count > 1)
+            {
+                await Shell.Current.GoToAsync("..");
+            }
+            else
+            {
+                // If no navigation stack, try to go to Recipes tab
+                // This handles the case where the page was navigated to using absolute path
+                await Shell.Current.GoToAsync("///recipepage");
+            }
         }
         catch
         {
-            // If relative navigation fails, navigate to hardware test page as fallback
-            // This handles the case when coming from hardware test page
-            await Shell.Current.GoToAsync("///hardwaretestpage");
+            // Fallback: navigate to main Recipes tab
+            await Shell.Current.GoToAsync("///recipepage");
         }
     }
 }

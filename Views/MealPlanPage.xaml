@@ -91,8 +91,8 @@
                                         </Label>
                                     </VerticalStackLayout>
                                     <Grid Grid.Column="1" RowSpan="2" ColumnDefinitions="Auto, Auto" VerticalOptions="Center" ColumnSpacing="{StaticResource SmallSpacing}">
-                                        <Button Text="Edit"
-                                                FontSize="{OnIdiom Phone=12, Tablet=14}"
+                                        <Button Text="✏️ Edit"
+                                                FontSize="{OnIdiom Phone=11, Tablet=13}"
                                                 TextColor="{StaticResource PrimaryColor}"
                                                 BackgroundColor="{StaticResource LightPrimary}"
                                                 CornerRadius="{StaticResource DefaultCornerRadius}"
@@ -100,21 +100,22 @@
                                                 BorderColor="{StaticResource PrimaryColor}"
                                                 Command="{Binding Source={x:Reference MealPlanPageView}, Path=BindingContext.EditMealCommand}"
                                                 CommandParameter="{Binding .}"
-                                                WidthRequest="{OnIdiom Phone=56, Tablet=64}" 
+                                                WidthRequest="{OnIdiom Phone=70, Tablet=80}" 
                                                 HeightRequest="{OnIdiom Phone=44, Tablet=50}"
-                                                Padding="6,4"
+                                                Padding="8,4"
                                                 MinimumHeightRequest="{StaticResource ButtonMinHeight}"
                                                 AutomationProperties.Name="Edit meal" />
-                                        <Button Text="Delete"
-                                                FontSize="{OnIdiom Phone=12, Tablet=14}"
+                                        <Button Text="🗑️ Delete"
+                                                Grid.Column="1"
+                                                FontSize="{OnIdiom Phone=11, Tablet=13}"
                                                 TextColor="White"
                                                 BackgroundColor="{StaticResource ErrorColor}"
                                                 CornerRadius="{StaticResource DefaultCornerRadius}"
                                                 Command="{Binding Source={x:Reference MealPlanPageView}, Path=BindingContext.RemoveMealCommand}"
                                                 CommandParameter="{Binding .}"
-                                                WidthRequest="{OnIdiom Phone=56, Tablet=64}" 
+                                                WidthRequest="{OnIdiom Phone=70, Tablet=80}" 
                                                 HeightRequest="{OnIdiom Phone=44, Tablet=50}"
-                                                Padding="6,4"
+                                                Padding="8,4"
                                                 MinimumHeightRequest="{StaticResource ButtonMinHeight}"
                                                 AutomationProperties.Name="Remove meal from plan" />
                                     </Grid>

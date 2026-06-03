@@ -18,7 +18,7 @@
                 </LinearGradientBrush>
             </Grid.Background>
             <VerticalStackLayout>
-                <Label Text="🍽�?Campus Eats" FontSize="{DynamicResource LargeTitleFontSize}" FontAttributes="Bold" TextColor="White"
+                <Label Text="🍽️ Campus Eats" FontSize="{DynamicResource LargeTitleFontSize}" FontAttributes="Bold" TextColor="White"
                        LineBreakMode="WordWrap" MaxLines="0"
                        AutomationProperties.Name="Campus Eats application title" />
                 <Label x:Name="LocationLabel" Text="{Binding LocationStatus}" FontSize="{DynamicResource DefaultFontSize}" TextColor="White" Opacity="0.95"
@@ -33,16 +33,20 @@
 
         <!-- Action Bar -->
         <ScrollView Grid.Row="1" Orientation="Horizontal" BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}" Padding="{StaticResource MediumMargin}" Margin="0,0,0,8">
-            <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
-                <Picker Title="Filter" ItemsSource="{Binding CuisineFilters}" SelectedItem="{Binding SelectedCuisine}"
-                        WidthRequest="{OnIdiom Phone=120, Tablet=140}" MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+            <HorizontalStackLayout Spacing="{StaticResource DefaultSpacing}">
+                <Picker Title="Select Cuisine" ItemsSource="{Binding CuisineFilters}" SelectedItem="{Binding SelectedCuisine}"
+                        WidthRequest="{OnIdiom Phone=130, Tablet=150, Desktop=180}" MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                        FontSize="{OnIdiom Phone=13, Tablet=14, Desktop=16}"
                         AutomationProperties.Name="Filter restaurants by cuisine type" />
-                <Button Text="🔄 Refresh" Command="{Binding RefreshCommand}" WidthRequest="{OnIdiom Phone=85, Tablet=100}"
-                        AutomationProperties.Name="Refresh restaurant list" />
-                <Button Text="�?Shake" Command="{Binding ShakeToRecommendCommand}" WidthRequest="{OnIdiom Phone=75, Tablet=90}"
-                        AutomationProperties.Name="Shake device to recommend random restaurant" />
-                <Button Text="+ Add" Command="{Binding AddRestaurantCommand}" WidthRequest="{OnIdiom Phone=70, Tablet=85}"
-                        AutomationProperties.Name="Add new restaurant" />
+                <Button Text="🔄 Refresh" Command="{Binding RefreshCommand}" WidthRequest="{OnIdiom Phone=85, Tablet=100, Desktop=110}"
+                        FontSize="{OnIdiom Phone=12, Tablet=13, Desktop=14}"
+                        AutomationProperties.Name="Refresh restaurant list - Reload restaurant data" />
+                <Button Text="🎲 Random" Command="{Binding ShakeToRecommendCommand}" WidthRequest="{OnIdiom Phone=85, Tablet=100, Desktop=110}"
+                        FontSize="{OnIdiom Phone=12, Tablet=13, Desktop=14}"
+                        AutomationProperties.Name="Random restaurant - Get random recommendation" />
+                <Button Text="➕ Add" Command="{Binding AddRestaurantCommand}" WidthRequest="{OnIdiom Phone=75, Tablet=90, Desktop=100}"
+                        FontSize="{OnIdiom Phone=12, Tablet=13, Desktop=14}"
+                        AutomationProperties.Name="Add restaurant - Create new entry" />
             </HorizontalStackLayout>
         </ScrollView>
 

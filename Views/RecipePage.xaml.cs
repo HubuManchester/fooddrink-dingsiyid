@@ -16,10 +16,14 @@ public partial class RecipePage : ContentPage
 
     private void OnFavoriteClicked(object sender, EventArgs e)
     {
-        if (sender is Button button && button.BindingContext is Recipe recipe)
+        if (sender is ImageButton button && button.BindingContext is Recipe recipe)
         {
-            recipe.IsFavorite = !recipe.IsFavorite;
-            _viewModel.ToggleFavoriteCommand.Execute(Tuple.Create(recipe, recipe.IsFavorite));
+            _viewModel.ToggleFavoriteCommand.Execute(recipe);
         }
+    }
+
+    private void OnSearchButtonPressed(object sender, EventArgs e)
+    {
+        _viewModel.SearchCommand.Execute(null);
     }
 }

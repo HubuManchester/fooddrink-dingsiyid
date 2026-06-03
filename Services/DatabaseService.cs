@@ -32,19 +32,22 @@ public class DatabaseService
             var restaurantCount = await _database.Table<Restaurant>().CountAsync();
             if (restaurantCount == 0)
             {
-                await SeedSampleRestaurants();
+                try { await SeedSampleRestaurants(); }
+                catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"Seed restaurants error: {ex}"); }
             }
 
             var recipeCount = await _database.Table<Recipe>().CountAsync();
             if (recipeCount == 0)
             {
-                await SeedSampleRecipes();
+                try { await SeedSampleRecipes(); }
+                catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"Seed recipes error: {ex}"); }
             }
 
             var dishCount = await _database.Table<Dish>().CountAsync();
             if (dishCount == 0)
             {
-                await SeedSampleDishes();
+                try { await SeedSampleDishes(); }
+                catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"Seed dishes error: {ex}"); }
             }
 
             _initialized = true;

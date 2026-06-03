@@ -119,7 +119,12 @@ public partial class MainPageViewModel : ObservableObject
                 CuisineFilters.Add(cuisine);
             }
             
-            ApplyCuisineFilter();
+            // Ensure we display all restaurants immediately
+            Restaurants.Clear();
+            foreach (var restaurant in _allRestaurants)
+            {
+                Restaurants.Add(restaurant);
+            }
         }
         catch (Exception ex)
         {
@@ -248,7 +253,7 @@ public partial class MainPageViewModel : ObservableObject
         try
         {
             AppState.SelectedRestaurant = restaurant;
-            await Shell.Current.GoToAsync("detailpage");
+            await Shell.Current.GoToAsync("///detailpage");
         }
         catch (Exception ex)
         {

@@ -17,9 +17,11 @@
 
     <VerticalStackLayout>
         <SearchBar
+            x:Name="RecipeSearchBar"
             Text="{Binding SearchText}"
             Placeholder="Search recipes..."
             SearchCommand="{Binding SearchCommand}"
+            SearchButtonPressed="OnSearchButtonPressed"
             AutomationProperties.Name="Search recipes by name or ingredients" />
 
         <ScrollView Orientation="Horizontal" Padding="{StaticResource DefaultMargin}">
@@ -43,18 +45,24 @@
             AutomationProperties.Name="Current operation status message" />
 
         <ScrollView Orientation="Horizontal" Padding="{StaticResource DefaultMargin}">
-            <HorizontalStackLayout Spacing="{StaticResource MediumSpacing}">
-                <Button Text="All Categories" Command="{Binding FilterCommand}" CommandParameter="All"
+            <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
+                <Button Text="All" Command="{Binding FilterCommand}" CommandParameter="All"
+                        WidthRequest="{OnIdiom Phone=60, Tablet=70}"
                         AutomationProperties.Name="Show all recipe categories" />
                 <Button Text="Staples" Command="{Binding FilterCommand}" CommandParameter="Staples"
+                        WidthRequest="{OnIdiom Phone=75, Tablet=90}"
                         AutomationProperties.Name="Show staple food recipes" />
-                <Button Text="Desserts" Command="{Binding FilterCommand}" CommandParameter="Desserts"
-                        AutomationProperties.Name="Show dessert recipes" />
                 <Button Text="Vegetarian" Command="{Binding FilterCommand}" CommandParameter="Vegetarian"
+                        WidthRequest="{OnIdiom Phone=85, Tablet=100}"
                         AutomationProperties.Name="Show vegetarian recipes" />
-                <Button Text="Soups" Command="{Binding FilterCommand}" CommandParameter="Soups"
-                        AutomationProperties.Name="Show soup recipes" />
+                <Button Text="Desserts" Command="{Binding FilterCommand}" CommandParameter="Desserts"
+                        WidthRequest="{OnIdiom Phone=75, Tablet=90}"
+                        AutomationProperties.Name="Show dessert recipes" />
+                <Button Text="Beverages" Command="{Binding FilterCommand}" CommandParameter="Beverages"
+                        WidthRequest="{OnIdiom Phone=85, Tablet=100}"
+                        AutomationProperties.Name="Show beverage recipes" />
                 <Button Text="Favorites" Command="{Binding FilterCommand}" CommandParameter="Favorites"
+                        WidthRequest="{OnIdiom Phone=80, Tablet=95}"
                         AutomationProperties.Name="Show favorite recipes" />
             </HorizontalStackLayout>
         </ScrollView>
