@@ -1,4 +1,5 @@
 using SQLite;
+using CampusEats.Services;
 
 namespace CampusEats.Models;
 
@@ -36,13 +37,47 @@ public class Restaurant
     public double Distance { get; set; }
 
     [Ignore]
-    public string RatingStars => GenerateStars(Rating);
-
-    private static string GenerateStars(double rating)
+    public string ImagePath
     {
-        int full = (int)Math.Floor(rating);
-        bool half = (rating - full) >= 0.5;
-        int empty = 5 - full - (half ? 1 : 0);
-        return new string('★', full) + (half ? "½" : "") + new string('☆', empty);
+        get
+        {
+            if (!string.IsNullOrEmpty(ImageName) && ImageName != "food_placeholder.jpg")
+                return ImageName;
+            return GetCuisineDefaultImage();
+        }
+    }
+
+    [Ignore]
+    public string FavoriteIcon => IsFavorite ? "★" : "☆";
+
+    [Ignore]
+    public string RatingStars => StringHelper.GenerateStars(Rating);
+
+    private string GetCuisineDefaultImage()
+    {
+        return Cuisine.ToLower() switch
+        {
+            "chinese" => "restaurant_chinese.jpg",
+            "italian" => "restaurant_italian.jpg",
+            "japanese" => "restaurant_japanese.jpg",
+            "mexican" => "restaurant_mexican.jpg",
+            "indian" => "restaurant_indian.jpg",
+            "thai" => "restaurant_thai.jpg",
+            "american" => "restaurant_american.jpg",
+            "korean" => "restaurant_korean.jpg",
+            "french" => "restaurant_french.jpg",
+            "vietnamese" => "restaurant_vietnamese.jpg",
+            "fast food" => "restaurant_fastfood.jpg",
+            "seafood" => "restaurant_seafood.jpg",
+            "vegetarian" => "restaurant_vegetarian.jpg",
+            "cafe" => "restaurant_cafe.jpg",
+            "bakery" => "restaurant_bakery.jpg",
+            "barbecue" => "restaurant_barbecue.jpg",
+            "sushi" => "restaurant_sushi.jpg",
+            "pizza" => "restaurant_pizza.jpg",
+            "burger" => "restaurant_burger.jpg",
+            "noodles" => "restaurant_noodles.jpg",
+            _ => "food_placeholder.jpg"
+        };
     }
 }

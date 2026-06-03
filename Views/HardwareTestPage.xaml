@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:CampusEats.ViewModels"
+             x:Class="CampusEats.Views.HardwareTestPage"
+             x:Name="HardwareTestPageView"
+             Title="Hardware Test"
+             x:DataType="viewmodels:HardwareTestViewModel">
+
+    <ScrollView MaximumWidthRequest="{OnIdiom Phone=600, Tablet=800}">
+        <VerticalStackLayout Padding="{StaticResource DefaultMargin}" Spacing="{StaticResource DefaultSpacing}">
+            <Label Text="Hardware Test Center" FontSize="{DynamicResource TitleFontSize}" FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                   HorizontalOptions="Center" Margin="0, 0, 0, 10"
+                   AutomationProperties.Name="Hardware test center page title" />
+
+            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+                <Frame.BackgroundColor>
+                    <AppThemeBinding Light="{StaticResource LightSurface}" Dark="{StaticResource DarkSurface}" />
+                </Frame.BackgroundColor>
+                <VerticalStackLayout>
+                    <Label Text="Test Status" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryColor}"
+                           AutomationProperties.Name="Test status indicator" />
+                    <Label Text="{Binding StatusMessage}" FontSize="{DynamicResource SmallFontSize}"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                           Margin="0, 8, 0, 0"
+                           AutomationProperties.Name="Current test status message" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+                <Frame.BackgroundColor>
+                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
+                </Frame.BackgroundColor>
+                <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
+                    <Label Text="Camera Recognition" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryColor}"
+                           AutomationProperties.Name="Camera recognition section" />
+                    <Label Text="Simulate taking a photo to recognize food ingredients"
+                           FontSize="{DynamicResource SmallFontSize}"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                           Margin="0, 4, 0, 12"
+                           AutomationProperties.Name="Camera recognition instructions" />
+
+                    <Image x:Name="CameraPreview"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                           Aspect="AspectFill"
+                           HeightRequest="{OnIdiom Phone=150, Tablet=250}"
+                           AutomationProperties.Name="Camera preview area" />
+
+                    <Button Text="Take Photo and Recognize"
+                            Command="{Binding CaptureAndRecognizeCommand}"
+                            BackgroundColor="{StaticResource PrimaryColor}"
+                            TextColor="White" Margin="0, 12, 0, 0"
+                            AutomationProperties.Name="Take photo and recognize food ingredients" />
+
+                    <Frame CornerRadius="{StaticResource DefaultCornerRadius}" Padding="{StaticResource DefaultMargin}" Margin="0, 12, 0, 0"
+                           IsVisible="{Binding HasRecognitionResult}"
+                           BackgroundColor="{AppThemeBinding Light=#FFF8F4, Dark=#2d2d2d}">
+                        <VerticalStackLayout>
+                            <Label Text="Recognition Result" FontSize="{DynamicResource SmallFontSize}" FontAttributes="Bold"
+                                   AutomationProperties.Name="Recognition result header" />
+                            <Label Text="{Binding RecognizedFoodName}" FontSize="{DynamicResource MediumFontSize}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" Margin="0, 4, 0, 0"
+                                   AutomationProperties.Name="Recognized food name" />
+                            <Label Text="{Binding RecognizedFoodInfo}" FontSize="{DynamicResource SmallFontSize}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" Margin="0, 4, 0, 0"
+                                   AutomationProperties.Name="Recognized food information" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+                <Frame.BackgroundColor>
+                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
+                </Frame.BackgroundColor>
+                <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
+                    <Label Text="Shake Detection" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryColor}"
+                           AutomationProperties.Name="Shake detection section" />
+                    <Label Text="Shake your device or tap the button to get a random recipe recommendation"
+                           FontSize="{DynamicResource SmallFontSize}"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                           Margin="0, 4, 0, 12"
+                           AutomationProperties.Name="Shake detection instructions" />
+
+                    <Label Text="Tip: Enable shake detection in real app usage"
+                           FontSize="{DynamicResource SmallFontSize}" FontAttributes="Italic"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                           HorizontalOptions="Center" Margin="0, 0, 0, 12"
+                           AutomationProperties.Name="Shake detection tip" />
+
+                    <Button Text="Shake and Recommend"
+                            Command="{Binding ShakeAndRecommendCommand}"
+                            BackgroundColor="{StaticResource SecondaryColor}"
+                            TextColor="White"
+                            AutomationProperties.Name="Shake device for random recipe" />
+
+                    <Frame CornerRadius="{StaticResource DefaultCornerRadius}" Padding="{StaticResource DefaultMargin}" Margin="0, 12, 0, 0"
+                           IsVisible="{Binding HasShakeResult}"
+                           BackgroundColor="{AppThemeBinding Light=#F0FFF4, Dark=#1a2f1a}">
+                        <VerticalStackLayout>
+                            <Label Text="Random Recipe" FontSize="{DynamicResource SmallFontSize}" FontAttributes="Bold"
+                                   AutomationProperties.Name="Random recipe header" />
+                            <Label Text="{Binding ShakeRecipeName}" FontSize="{DynamicResource MediumFontSize}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" Margin="0, 4, 0, 0"
+                                   AutomationProperties.Name="Random recipe name" />
+                            <Label Text="{Binding ShakeRecipeInfo}" FontSize="{DynamicResource SmallFontSize}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" Margin="0, 4, 0, 0"
+                                   AutomationProperties.Name="Random recipe information" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+                <Frame.BackgroundColor>
+                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
+                </Frame.BackgroundColor>
+                <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
+                    <Label Text="Text-to-Speech" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryColor}"
+                           AutomationProperties.Name="Text to speech section" />
+                    <Label Text="Tap to hear the text being read aloud"
+                           FontSize="{DynamicResource SmallFontSize}"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                           Margin="0, 4, 0, 12"
+                           AutomationProperties.Name="Text to speech instructions" />
+
+                    <Button Text="Speak Welcome Message"
+                            Command="{Binding TestSpeechCommand}"
+                            BackgroundColor="#9C27B0"
+                            TextColor="White"
+                            AutomationProperties.Name="Test text to speech voice" />
+
+                    <Button Text="Stop Speaking"
+                            Command="{Binding StopSpeechCommand}"
+                            BackgroundColor="{StaticResource Gray600}"
+                            TextColor="White" Margin="0, 8, 0, 0"
+                            AutomationProperties.Name="Stop speech playback" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+                <Frame.BackgroundColor>
+                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
+                </Frame.BackgroundColor>
+                <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
+                    <Label Text="Vibration" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryColor}"
+                           AutomationProperties.Name="Vibration feedback section" />
+                    <Label Text="Test haptic feedback patterns"
+                           FontSize="{DynamicResource SmallFontSize}"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                           Margin="0, 4, 0, 12"
+                           AutomationProperties.Name="Vibration feedback instructions" />
+
+                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="{StaticResource SmallSpacing}">
+                        <Button Text="Short" Grid.Column="0"
+                                Command="{Binding VibrateShortCommand}"
+                                BackgroundColor="{StaticResource PrimaryColor}"
+                                TextColor="White"
+                                MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                                AutomationProperties.Name="Short vibration pattern" />
+                        <Button Text="Medium" Grid.Column="1"
+                                Command="{Binding VibrateMediumCommand}"
+                                BackgroundColor="#FF9800"
+                                TextColor="White"
+                                MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                                AutomationProperties.Name="Medium vibration pattern" />
+                        <Button Text="Long" Grid.Column="2"
+                                Command="{Binding VibrateLongCommand}"
+                                BackgroundColor="#F44336"
+                                TextColor="White"
+                                MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                                AutomationProperties.Name="Long vibration pattern" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+                <Frame.BackgroundColor>
+                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
+                </Frame.BackgroundColor>
+                <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
+                    <Label Text="Location Services" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryColor}"
+                           AutomationProperties.Name="Location services section" />
+                    <Label Text="Current location (Hubei University, Wuhan)"
+                           FontSize="{DynamicResource SmallFontSize}"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                           Margin="0, 4, 0, 12"
+                           AutomationProperties.Name="Current simulated location" />
+
+                    <Button Text="Get Current Location"
+                            Command="{Binding GetLocationCommand}"
+                            BackgroundColor="#2196F3"
+                            TextColor="White"
+                            AutomationProperties.Name="Get current location coordinates" />
+
+                    <Frame CornerRadius="{StaticResource DefaultCornerRadius}" Padding="{StaticResource DefaultMargin}" Margin="0, 12, 0, 0"
+                           IsVisible="{Binding HasLocation}"
+                           BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0d1b2a}">
+                        <VerticalStackLayout>
+                            <Label Text="Current Coordinates:" FontSize="{DynamicResource SmallFontSize}" FontAttributes="Bold"
+                                   AutomationProperties.Name="Coordinates header" />
+                            <Label FontSize="{DynamicResource SmallFontSize}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                                   AutomationProperties.Name="Latitude value">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Latitude: " />
+                                        <Span Text="{Binding CurrentLatitude, StringFormat='{}{0:F6}'}" FontAttributes="Bold" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label FontSize="{DynamicResource SmallFontSize}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                                   AutomationProperties.Name="Longitude value">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Longitude: " />
+                                        <Span Text="{Binding CurrentLongitude, StringFormat='{}{0:F6}'}" FontAttributes="Bold" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="🚀 Run All Hardware Tests"
+                    Command="{Binding RunAllTestsCommand}"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White" FontSize="{DynamicResource MediumFontSize}"
+                    MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                    AutomationProperties.Name="Run all hardware tests sequentially" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

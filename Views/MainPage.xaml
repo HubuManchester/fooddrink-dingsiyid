@@ -4,78 +4,105 @@
              xmlns:viewmodels="clr-namespace:CampusEats.ViewModels"
              xmlns:models="clr-namespace:CampusEats.Models"
              x:Class="CampusEats.Views.MainPage"
+             x:Name="MainPageView"
              Title="Campus Eats"
              x:DataType="viewmodels:MainPageViewModel">
 
-	<ContentPage.Resources>
-		<ResourceDictionary>
-			<Color x:Key="PrimaryColor">#FF6B35</Color>
-			<Color x:Key="CardBackgroundLight">#FFFFFF</Color>
-			<Color x:Key="CardBackgroundDark">#1f1f1f</Color>
-			<Color x:Key="TextColorLight">#000000</Color>
-			<Color x:Key="TextColorDark">#FFFFFF</Color>
-		</ResourceDictionary>
-	</ContentPage.Resources>
+    <Grid RowDefinitions="Auto, Auto, *">
+        <VerticalStackLayout Grid.Row="0" BackgroundColor="{StaticResource PrimaryColor}" Padding="{StaticResource LargeMargin}">
+            <Label Text="Campus Eats" FontSize="{DynamicResource LargeTitleFontSize}" FontAttributes="Bold" TextColor="White"
+                   LineBreakMode="WordWrap" MaxLines="0"
+                   AutomationProperties.Name="Campus Eats application title" />
+            <Label Text="{Binding LocationStatus}" FontSize="{DynamicResource DefaultFontSize}" TextColor="White" Opacity="0.9"
+                   LineBreakMode="WordWrap" MaxLines="0"
+                   AutomationProperties.Name="Current location status" />
+        </VerticalStackLayout>
 
-	<Grid RowDefinitions="Auto, Auto, *">
-		<VerticalStackLayout Grid.Row="0" BackgroundColor="{StaticResource PrimaryColor}" Padding="20,30,20,15">
-			<Label Text="🍜 Campus Eats" FontSize="28" FontAttributes="Bold" TextColor="White" 
-				   AutomationProperties.Name="Campus Eats app title" />
-			<Label Text="{Binding LocationStatus}" FontSize="14" TextColor="White" Opacity="0.9" 
-				   AutomationProperties.Name="Current location status" />
-		</VerticalStackLayout>
+        <ScrollView Grid.Row="1" Orientation="Horizontal" Padding="{StaticResource MediumMargin}">
+            <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
+                <Picker Title="Filter" ItemsSource="{Binding CuisineFilters}" SelectedItem="{Binding SelectedCuisine}"
+                        WidthRequest="{OnIdiom Phone=120, Tablet=140}" MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                        AutomationProperties.Name="Filter restaurants by cuisine type" />
+                <Button Text="Shake" Command="{Binding ShakeToRecommendCommand}" WidthRequest="{OnIdiom Phone=60, Tablet=80}"
+                        AutomationProperties.Name="Shake device to recommend random restaurant" />
+                <Button Text="Refresh" Command="{Binding RefreshCommand}" WidthRequest="{OnIdiom Phone=70, Tablet=80}"
+                        AutomationProperties.Name="Refresh restaurant list" />
+                <Button Text="Add" Command="{Binding AddRestaurantCommand}" WidthRequest="{OnIdiom Phone=60, Tablet=70}"
+                        AutomationProperties.Name="Add new restaurant" />
+            </HorizontalStackLayout>
+        </ScrollView>
 
-		<HorizontalStackLayout Grid.Row="1" Padding="15" Spacing="10">
-			<Button Text="🎲 Shake to Recommend" Command="{Binding ShakeToRecommendCommand}" HorizontalOptions="Fill" 
-					AutomationProperties.Name="Shake to recommend random restaurant" />
-			<Button Text="🔄 Refresh" Command="{Binding RefreshCommand}" 
-					AutomationProperties.Name="Refresh restaurant list" />
-		</HorizontalStackLayout>
-
-		<RefreshView Grid.Row="2" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
-			<CollectionView ItemsSource="{Binding Restaurants}" 
-							SelectionMode="Single"
-							SelectionChangedCommand="{Binding SelectRestaurantCommand}"
-							SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}"
-							AutomationProperties.Name="Restaurant list">
-				<CollectionView.ItemTemplate>
-					<DataTemplate x:DataType="models:Restaurant">
-						<Grid Padding="12,5">
-							<Frame CornerRadius="15" Padding="10" Margin="0,5" HasShadow="True">
-								<Frame.BackgroundColor>
-									<AppThemeBinding Light="{StaticResource CardBackgroundLight}" Dark="{StaticResource CardBackgroundDark}" />
-								</Frame.BackgroundColor>
-								<Grid ColumnDefinitions="80, *">
-									<Image Source="{Binding ImageName}" HeightRequest="70" WidthRequest="70" Aspect="AspectFill" 
-										   AutomationProperties.Name="Restaurant image" />
-									<VerticalStackLayout Grid.Column="1" Padding="10,0">
-										<Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold">
-											<Label.TextColor>
-												<AppThemeBinding Light="{StaticResource TextColorLight}" Dark="{StaticResource TextColorDark}" />
-											</Label.TextColor>
-										</Label>
-										<Label Text="{Binding Cuisine}" FontSize="12">
-											<Label.TextColor>
-												<AppThemeBinding Light="#666666" Dark="#AAAAAA" />
-											</Label.TextColor>
-										</Label>
-										<Label Text="{Binding RatingStars}" FontSize="12" TextColor="{StaticResource PrimaryColor}" 
-											   AutomationProperties.Name="Rating" />
-										<Label Text="{Binding Distance, StringFormat='📍 {0:F1} km'}" FontSize="11" TextColor="{StaticResource PrimaryColor}" 
-											   AutomationProperties.Name="Distance" />
-									</VerticalStackLayout>
-								</Grid>
-							</Frame>
-						</Grid>
-					</DataTemplate>
-				</CollectionView.ItemTemplate>
-				<CollectionView.EmptyView>
-					<VerticalStackLayout Padding="40" HorizontalOptions="Center">
-						<Label Text="🍽️ No Restaurants" FontSize="20" HorizontalOptions="Center" />
-						<Label Text="Pull to refresh or check location settings" FontSize="14" TextColor="Gray" HorizontalOptions="Center" />
-					</VerticalStackLayout>
-				</CollectionView.EmptyView>
-			</CollectionView>
-		</RefreshView>
-	</Grid>
+        <RefreshView Grid.Row="2" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+            <CollectionView x:Name="RestaurantCollection"
+                            ItemsSource="{Binding Restaurants}"
+                            AutomationProperties.Name="Restaurant list, scroll to browse">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Restaurant">
+                        <Grid Padding="{StaticResource DefaultMargin}">
+                            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}" HasShadow="True">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference MainPageView}, Path=BindingContext.SelectRestaurantCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <Frame.BackgroundColor>
+                                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
+                                </Frame.BackgroundColor>
+                                <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto">
+                                    <Image Source="{Binding ImagePath}" Aspect="AspectFill"
+                                           HeightRequest="{OnIdiom Phone=60, Tablet=80}" WidthRequest="{OnIdiom Phone=60, Tablet=80}"
+                                           AutomationProperties.Name="Restaurant image" />
+                                    <VerticalStackLayout Grid.Column="1" Padding="{StaticResource SmallMargin}" Spacing="{StaticResource SmallSpacing}">
+                                        <Label Text="{Binding Name}" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
+                                               LineBreakMode="WordWrap" MaxLines="2">
+                                            <Label.TextColor>
+                                                <AppThemeBinding Light="{StaticResource LightText}" Dark="{StaticResource DarkText}" />
+                                            </Label.TextColor>
+                                        </Label>
+                                        <Label Text="{Binding Cuisine}" FontSize="{DynamicResource SmallFontSize}"
+                                               LineBreakMode="WordWrap" MaxLines="1">
+                                            <Label.TextColor>
+                                                <AppThemeBinding Light="{StaticResource LightTextSecondary}" Dark="{StaticResource DarkTextSecondary}}" />
+                                            </Label.TextColor>
+                                        </Label>
+                                        <Label Text="{Binding RatingStars}" FontSize="{DynamicResource SmallFontSize}" TextColor="{StaticResource PrimaryColor}"
+                                               AutomationProperties.Name="Restaurant rating stars" />
+                                        <Label Text="{Binding Distance, StringFormat='{0:F1} km'}" FontSize="{DynamicResource ExtraSmallFontSize}" TextColor="{StaticResource PrimaryColor}"
+                                               AutomationProperties.Name="Distance from current location in kilometers" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" Spacing="{StaticResource SmallSpacing}">
+                                        <Button Text="{Binding FavoriteIcon}" FontSize="24" BackgroundColor="Transparent" 
+                                                Command="{Binding Source={x:Reference MainPageView}, Path=BindingContext.ToggleFavoriteCommand}"
+                                                CommandParameter="{Binding .}" WidthRequest="44" HeightRequest="44"
+                                                AutomationProperties.Name="Toggle restaurant favorite status" />
+                                        <ImageButton Source="edit_icon.png" Command="{Binding Source={x:Reference MainPageView}, Path=BindingContext.EditRestaurantCommand}"
+                                                     CommandParameter="{Binding .}" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40"
+                                                     AutomationProperties.Name="Edit restaurant" />
+                                        <ImageButton Source="delete_icon.png" Command="{Binding Source={x:Reference MainPageView}, Path=BindingContext.DeleteRestaurantCommand}"
+                                                     CommandParameter="{Binding .}" BackgroundColor="Transparent" WidthRequest="40" HeightRequest="40"
+                                                     AutomationProperties.Name="Delete restaurant" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="{StaticResource ExtraLargeMargin}" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="No Restaurants" FontSize="{DynamicResource HeaderFontSize}" HorizontalOptions="Center"
+                               LineBreakMode="WordWrap" MaxLines="0">
+                            <Label.TextColor>
+                                <AppThemeBinding Light="{StaticResource LightText}" Dark="{StaticResource DarkText}" />
+                            </Label.TextColor>
+                        </Label>
+                        <Label Text="Pull down to refresh or check location settings" FontSize="{DynamicResource DefaultFontSize}"
+                               HorizontalOptions="Center" LineBreakMode="WordWrap" MaxLines="0">
+                            <Label.TextColor>
+                                <AppThemeBinding Light="{StaticResource LightTextSecondary}" Dark="{StaticResource DarkTextSecondary}" />
+                            </Label.TextColor>
+                        </Label>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
 </ContentPage>

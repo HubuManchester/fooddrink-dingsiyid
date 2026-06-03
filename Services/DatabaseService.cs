@@ -1,4 +1,4 @@
-﻿using SQLite;
+using SQLite;
 using CampusEats.Models;
 
 namespace CampusEats.Services;
@@ -7,7 +7,7 @@ public class DatabaseService
 {
     private readonly SQLiteAsyncConnection _database;
     private bool _initialized;
-    private readonly SemaphoreSlim _initLock = new SemaphoreSlim(1, 1);
+    private readonly SemaphoreSlim _initLock = new(1, 1);
 
     public DatabaseService()
     {
@@ -18,15 +18,16 @@ public class DatabaseService
     private async Task EnsureInitialized()
     {
         if (_initialized) return;
-        
+
         await _initLock.WaitAsync();
         try
         {
             if (_initialized) return;
-            
+
             await _database.CreateTableAsync<Restaurant>();
             await _database.CreateTableAsync<Review>();
             await _database.CreateTableAsync<Recipe>();
+            await _database.CreateTableAsync<Dish>();
 
             var restaurantCount = await _database.Table<Restaurant>().CountAsync();
             if (restaurantCount == 0)
@@ -39,7 +40,13 @@ public class DatabaseService
             {
                 await SeedSampleRecipes();
             }
-            
+
+            var dishCount = await _database.Table<Dish>().CountAsync();
+            if (dishCount == 0)
+            {
+                await SeedSampleDishes();
+            }
+
             _initialized = true;
         }
         finally
@@ -50,86 +57,67 @@ public class DatabaseService
 
     private async Task SeedSampleRestaurants()
     {
+        // Coordinates around Wuhan Hubei University: 30.5447, 114.3549
         var restaurants = new List<Restaurant>
         {
-            new Restaurant
+            new()
             {
-                Name = "McDonald's",
-                Cuisine = "Burgers & Fast Food",
-                Rating = 4.3,
-                Description = "Famous Big Mac, crispy fries, and Coca-Cola. Quick and tasty.",
-                Latitude = 53.472,
-                Longitude = -2.234,
-                ImageName = "mcdonalds.jpg"
-            },
-            new Restaurant
-            {
-                Name = "Hot Dry Noodles",
-                Cuisine = "Hubei Noodles",
-                Rating = 4.6,
-                Description = "Traditional Wuhan hot dry noodles with sesame paste, pickled vegetables, and chili oil.",
-                Latitude = 53.473,
-                Longitude = -2.236,
+                Name = "Wuhan Hot Dry Noodles",
+                Cuisine = "Hubei Cuisine",
+                Rating = 4.8,
+                Description = "Traditional Wuhan hot dry noodles with sesame paste, pickled vegetables, and chili oil. Authentic local flavor with unique aroma and taste.",
+                Latitude = 30.5435,
+                Longitude = 114.3535,
                 ImageName = "reganmian.jpg"
             },
-            new Restaurant
+            new()
+            {
+                Name = "Luojia Hill Canteen",
+                Cuisine = "Chinese Home Style",
+                Rating = 4.5,
+                Description = "Hubei University campus canteen offering authentic Hubei dishes at affordable prices, popular among students.",
+                Latitude = 30.5447,
+                Longitude = 114.3549,
+                ImageName = "rice_bowl.jpg"
+            },
+            new()
+            {
+                Name = "McDonald's",
+                Cuisine = "Western Fast Food",
+                Rating = 4.3,
+                Description = "Classic Big Mac burger, crispy fries, refreshing Coca-Cola. Fast service with quality guarantee.",
+                Latitude = 30.5460,
+                Longitude = 114.3560,
+                ImageName = "mcdonalds.jpg"
+            },
+            new()
             {
                 Name = "Luckin Coffee",
                 Cuisine = "Coffee & Drinks",
                 Rating = 4.4,
-                Description = "Popular coconut latte, thick milk latte, and pastries.",
-                Latitude = 53.474,
-                Longitude = -2.235,
+                Description = "Coconut latte, thick milk latte, tiramisu and various coffee drinks, perfect for study breaks.",
+                Latitude = 30.5450,
+                Longitude = 114.3550,
                 ImageName = "luckin.jpg"
             },
-            new Restaurant
+            new()
             {
-                Name = "Mixue Ice Cream & Tea",
-                Cuisine = "Bubble Tea & Desserts",
-                Rating = 4.2,
-                Description = "Affordable milk tea, lemonade, and soft serve ice cream.",
-                Latitude = 53.471,
-                Longitude = -2.233,
-                ImageName = "mixue.jpg"
-            },
-            new Restaurant
-            {
-                Name = "Rice Bowl House",
-                Cuisine = "Rice Dishes",
-                Rating = 4.5,
-                Description = "Various rice bowls with braised pork, chicken, or vegetables.",
-                Latitude = 53.470,
-                Longitude = -2.237,
-                ImageName = "rice_bowl.jpg"
-            },
-            new Restaurant
-            {
-                Name = "Noodle Soup King",
-                Cuisine = "Noodle Soups",
-                Rating = 4.1,
-                Description = "Hand-pulled noodles in rich broth, topped with beef or pork.",
-                Latitude = 53.475,
-                Longitude = -2.238,
+                Name = "Wuhan Duck Neck",
+                Cuisine = "Specialty Snacks",
+                Rating = 4.6,
+                Description = "Spicy duck neck, famous Wuhan snack with numbing spicy flavor, unforgettable taste.",
+                Latitude = 30.5470,
+                Longitude = 114.3570,
                 ImageName = "noodle_soup.jpg"
             },
-            new Restaurant
+            new()
             {
-                Name = "Pizza Corner",
-                Cuisine = "Pizza",
+                Name = "Tokyo Sushi",
+                Cuisine = "Japanese Cuisine",
                 Rating = 4.7,
-                Description = "Italian style thin crust pizza with fresh mozzarella.",
-                Latitude = 53.476,
-                Longitude = -2.232,
-                ImageName = "pizza.jpg"
-            },
-            new Restaurant
-            {
-                Name = "Sushi Master",
-                Cuisine = "Japanese Sushi",
-                Rating = 4.8,
-                Description = "Fresh salmon, tuna, and avocado rolls. Served with wasabi and ginger.",
-                Latitude = 53.477,
-                Longitude = -2.231,
+                Description = "Fresh sushi and sashimi using premium ingredients, chef with 30 years of experience.",
+                Latitude = 30.5480,
+                Longitude = 114.3580,
                 ImageName = "sushi.jpg"
             }
         };
@@ -141,10 +129,10 @@ public class DatabaseService
     }
 
     public async Task<List<Restaurant>> GetRestaurantsAsync()
-{
-    await EnsureInitialized();
-    return await _database.Table<Restaurant>().ToListAsync();
-}
+    {
+        await EnsureInitialized();
+        return await _database.Table<Restaurant>().ToListAsync();
+    }
 
     public async Task<Restaurant> GetRestaurantByIdAsync(int id)
     {
@@ -155,40 +143,29 @@ public class DatabaseService
     public async Task<SaveResult> SaveRestaurantAsync(Restaurant restaurant)
     {
         await EnsureInitialized();
-        
-        // Check for ID conflicts
+
         if (restaurant.Id > 0)
         {
-            var existing = await GetRestaurantByIdAsync(restaurant.Id);
-            if (existing != null)
-            {
-                return SaveResult.Conflict(existing, 
-                    $"Restaurant ID {restaurant.Id} already exists: '{existing.Name}' (Cuisine: {existing.Cuisine}, Rating: {existing.Rating:F1}). " +
-                    $"Use a different ID or update the existing restaurant.");
-            }
-        }
-        
-        // Check for name conflicts
-        var nameConflict = await _database.Table<Restaurant>()
-            .Where(r => r.Name == restaurant.Name && r.Id != restaurant.Id)
-            .FirstOrDefaultAsync();
-        
-        if (nameConflict != null)
-        {
-            return SaveResult.Conflict(nameConflict, 
-                $"Restaurant name '{restaurant.Name}' is already used by ID {nameConflict.Id}. " +
-                $"Please use a different name.");
-        }
-        
-        if (restaurant.Id == 0)
-        {
-            var rows = await _database.InsertAsync(restaurant);
-            return SaveResult.InsertSuccess(rows);
+            // Update existing restaurant
+            var rows = await _database.UpdateAsync(restaurant);
+            return SaveResult.UpdateSuccess(rows);
         }
         else
         {
-            var rows = await _database.UpdateAsync(restaurant);
-            return SaveResult.UpdateSuccess(rows);
+            // Insert new restaurant
+            var nameConflict = await _database.Table<Restaurant>()
+                .Where(r => r.Name == restaurant.Name)
+                .FirstOrDefaultAsync();
+
+            if (nameConflict != null)
+            {
+                return SaveResult.Conflict(nameConflict,
+                    $"Restaurant name '{restaurant.Name}' is already used by ID {nameConflict.Id}. " +
+                    $"Please use a different name.");
+            }
+
+            var rows = await _database.InsertAsync(restaurant);
+            return SaveResult.InsertSuccess(rows);
         }
     }
 
@@ -201,7 +178,6 @@ public class DatabaseService
     public async Task<int> DeleteRestaurantAsync(Restaurant restaurant)
     {
         await EnsureInitialized();
-        // Delete all reviews for this restaurant first
         var reviews = await _database.Table<Review>().Where(r => r.RestaurantId == restaurant.Id).ToListAsync();
         foreach (var review in reviews)
         {
@@ -262,7 +238,7 @@ public class DatabaseService
     {
         var recipes = new List<Recipe>
         {
-            new Recipe
+            new()
             {
                 Name = "Tomato Egg Stir Fry",
                 Category = "Staples",
@@ -274,7 +250,7 @@ public class DatabaseService
                 Calories = 280,
                 PrepTime = 15
             },
-            new Recipe
+            new()
             {
                 Name = "Braised Pork",
                 Category = "Staples",
@@ -286,7 +262,7 @@ public class DatabaseService
                 Calories = 450,
                 PrepTime = 70
             },
-            new Recipe
+            new()
             {
                 Name = "Vegetable Salad",
                 Category = "Vegetarian",
@@ -298,7 +274,7 @@ public class DatabaseService
                 Calories = 150,
                 PrepTime = 10
             },
-            new Recipe
+            new()
             {
                 Name = "Tiramisu",
                 Category = "Desserts",
@@ -310,7 +286,7 @@ public class DatabaseService
                 Calories = 350,
                 PrepTime = 60
             },
-            new Recipe
+            new()
             {
                 Name = "Hot and Sour Soup",
                 Category = "Soups",
@@ -322,7 +298,7 @@ public class DatabaseService
                 Calories = 120,
                 PrepTime = 20
             },
-            new Recipe
+            new()
             {
                 Name = "Bubble Tea",
                 Category = "Beverages",
@@ -370,7 +346,7 @@ public class DatabaseService
     {
         await EnsureInitialized();
         return await _database.Table<Recipe>()
-            .Where(r => r.Name.Contains(searchText) || 
+            .Where(r => r.Name.Contains(searchText) ||
                         r.Description.Contains(searchText) ||
                         r.Ingredients.Contains(searchText))
             .OrderByDescending(r => r.CreatedAt)
@@ -400,6 +376,255 @@ public class DatabaseService
         await EnsureInitialized();
         var recipes = await _database.Table<Recipe>().ToListAsync();
         return recipes.Select(r => r.Category).Distinct().ToList();
+    }
+
+    #endregion
+
+    #region Dish Methods
+
+    private async Task SeedSampleDishes()
+    {
+        var dishes = new List<Dish>
+        {
+            new()
+            {
+                RestaurantId = 1,
+                Name = "Traditional Hot Dry Noodles",
+                Description = "Wuhan specialty hot dry noodles with sesame paste, pickled vegetables, chili oil and green onions. Authentic local flavor, perfect breakfast choice.",
+                Price = 8.50,
+                Category = "Main Course",
+                IsSpicy = true,
+                SpiceLevel = 2
+            },
+            new()
+            {
+                RestaurantId = 1,
+                Name = "Beef Hot Dry Noodles",
+                Description = "Hot dry noodles topped with tender sliced beef, spicy and delicious.",
+                Price = 12.00,
+                Category = "Main Course",
+                IsSpicy = true,
+                SpiceLevel = 3
+            },
+            new()
+            {
+                RestaurantId = 2,
+                Name = "Rice Bowl Combo",
+                Description = "Rice with your choice of two dishes and complimentary soup. A complete and satisfying meal at an affordable price. This is a longer description to test text wrapping behavior in various screen orientations.",
+                Price = 6.50,
+                Category = "Combo",
+                IsSpicy = false
+            },
+            new()
+            {
+                RestaurantId = 2,
+                Name = "Egg Fried Rice",
+                Description = "Classic Chinese egg fried rice with fresh vegetables. A simple yet delicious vegetarian option.",
+                Price = 5.00,
+                Category = "Main Course",
+                IsVegetarian = true
+            },
+            new()
+            {
+                RestaurantId = 2,
+                Name = "Spicy Tofu",
+                Description = "Home-style spicy braised tofu with Sichuan peppercorns.",
+                Price = 4.00,
+                Category = "Side Dish",
+                IsSpicy = true,
+                SpiceLevel = 2,
+                IsVegetarian = true
+            },
+            new()
+            {
+                RestaurantId = 3,
+                Name = "Big Mac",
+                Description = "Two all-beef patties, special sauce, lettuce, cheese, pickles, onions on a sesame seed bun.",
+                Price = 18.00,
+                Category = "Burger"
+            },
+            new()
+            {
+                RestaurantId = 3,
+                Name = "McNuggets",
+                Description = "Crispy chicken nuggets with your choice of dipping sauce.",
+                Price = 12.00,
+                Category = "Appetizer"
+            },
+            new()
+            {
+                RestaurantId = 3,
+                Name = "French Fries",
+                Description = "Golden crispy fries.",
+                Price = 6.00,
+                Category = "Side Dish"
+            },
+            new()
+            {
+                RestaurantId = 4,
+                Name = "Coconut Latte",
+                Description = "Rich espresso with coconut milk and ice.",
+                Price = 15.00,
+                Category = "Coffee"
+            },
+            new()
+            {
+                RestaurantId = 4,
+                Name = "Thick Milk Latte",
+                Description = "Creamy latte with extra milk foam.",
+                Price = 14.00,
+                Category = "Coffee"
+            },
+            new()
+            {
+                RestaurantId = 4,
+                Name = "Matcha Croissant",
+                Description = "Flaky croissant filled with matcha cream.",
+                Price = 8.00,
+                Category = "Pastry"
+            },
+            new()
+            {
+                RestaurantId = 5,
+                Name = "International Platter",
+                Description = "A grand platter featuring appetizers from around the world including Italian bruschetta, Japanese edamame, Mexican guacamole, Greek tzatziki, Indian samosas, and Chinese spring rolls. This substantial dish is perfect for sharing among friends and family, offering a culinary journey across multiple continents in a single meal.",
+                Price = 58.00,
+                Category = "Appetizer"
+            },
+            new()
+            {
+                RestaurantId = 5,
+                Name = "World Pasta Combo",
+                Description = "Choose from penne, spaghetti, or fettuccine with your choice of sauces including Bolognese, Carbonara, Marinara, Pesto, or Alfredo. Comes with garlic bread and a choice of soup or salad. Served with complimentary beverages.",
+                Price = 28.00,
+                Category = "Main Course"
+            },
+            new()
+            {
+                RestaurantId = 6,
+                Name = "Spicy Duck Neck",
+                Description = "Spicy duck neck, a famous Wuhan snack that's absolutely addictive and full of flavor. MUST TRY!",
+                Price = 15.00,
+                Category = "Specialty",
+                IsSpicy = true,
+                SpiceLevel = 4
+            },
+            new()
+            {
+                RestaurantId = 6,
+                Name = "Spicy Chicken Giblets",
+                Description = "Sichuan style spicy chicken giblets with peanuts and dried chili.",
+                Price = 22.00,
+                Category = "Main Course",
+                IsSpicy = true,
+                SpiceLevel = 3
+            },
+            new()
+            {
+                RestaurantId = 7,
+                Name = "Margherita Pizza",
+                Description = "Classic Italian pizza with tomato sauce, fresh mozzarella, and basil. Rated best seller!",
+                Price = 15.00,
+                Category = "Pizza"
+            },
+            new()
+            {
+                RestaurantId = 7,
+                Name = "Pepperoni Pizza",
+                Description = "Double pepperoni with mozzarella cheese. Special 20% OFF for students!",
+                Price = 18.00,
+                Category = "Pizza"
+            },
+            new()
+            {
+                RestaurantId = 8,
+                Name = "Sushi Platter",
+                Description = "Fresh sashimi and sushi made with premium ingredients imported directly from Tsukiji Fish Market in Tokyo.",
+                Price = 68.00,
+                Category = "Sushi"
+            },
+            new()
+            {
+                RestaurantId = 8,
+                Name = "Sashimi Combo",
+                Description = "Premium tuna, bonito, and sweet shrimp sashimi. Chef's special selection.",
+                Price = 45.00,
+                Category = "Sashimi"
+            },
+            new()
+            {
+                RestaurantId = 9,
+                Name = "Bibimbap",
+                Description = "Mixed rice bowl with vegetables, beef, egg, and spicy gochujang sauce. Korean traditional dish that's both healthy and delicious.",
+                Price = 18.00,
+                Category = "Korean"
+            },
+            new()
+            {
+                RestaurantId = 9,
+                Name = "Kimchi Jjigae",
+                Description = "Traditional Korean kimchi stew with pork.",
+                Price = 15.00,
+                Category = "Korean",
+                IsSpicy = true,
+                SpiceLevel = 2
+            },
+            new()
+            {
+                RestaurantId = 10,
+                Name = "Long Description Test",
+                Description = "This is an extremely long dish description designed specifically for testing text truncation and wrapping behavior across different screen orientations and font scaling levels. The dish features a complex preparation method involving multiple cooking techniques including marinating, slow cooking, grilling, and sauce reduction. Ingredients include premium meats, fresh vegetables, aromatic herbs, and specialty spices sourced from different regions around the world.",
+                Price = 88.00,
+                Category = "Test"
+            },
+            new()
+            {
+                RestaurantId = 10,
+                Name = "Multi-language Mix",
+                Description = "This dish description contains multiple languages and emoji for testing purposes.",
+                Price = 66.00,
+                Category = "Test"
+            }
+        };
+
+        foreach (var d in dishes)
+        {
+            await _database.InsertAsync(d);
+        }
+    }
+
+    public async Task<List<Dish>> GetDishesForRestaurantAsync(int restaurantId)
+    {
+        await EnsureInitialized();
+        return await _database.Table<Dish>()
+            .Where(d => d.RestaurantId == restaurantId)
+            .OrderBy(d => d.Category)
+            .ThenBy(d => d.Name)
+            .ToListAsync();
+    }
+
+    public async Task<Dish?> GetDishByIdAsync(int id)
+    {
+        await EnsureInitialized();
+        return await _database.Table<Dish>().Where(d => d.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<int> SaveDishAsync(Dish dish)
+    {
+        await EnsureInitialized();
+        return dish.Id == 0 ? await _database.InsertAsync(dish) : await _database.UpdateAsync(dish);
+    }
+
+    public async Task<int> DeleteDishAsync(Dish dish)
+    {
+        await EnsureInitialized();
+        return await _database.DeleteAsync(dish);
+    }
+
+    public async Task<int> DeleteDishByIdAsync(int dishId)
+    {
+        await EnsureInitialized();
+        return await _database.DeleteAsync<Dish>(dishId);
     }
 
     #endregion

@@ -14,18 +14,9 @@ public partial class RecipePage : ContentPage
         BindingContext = _viewModel;
     }
 
-    private void OnCategoryClicked(object sender, EventArgs e)
-    {
-        if (sender is Button button && button.CommandParameter is string category)
-        {
-            _viewModel.SelectedCategory = category;
-            _viewModel.FilterCommand.Execute(null);
-        }
-    }
-
     private void OnFavoriteClicked(object sender, EventArgs e)
     {
-        if (sender is ImageButton button && button.BindingContext is Recipe recipe)
+        if (sender is Button button && button.BindingContext is Recipe recipe)
         {
             recipe.IsFavorite = !recipe.IsFavorite;
             _viewModel.ToggleFavoriteCommand.Execute(Tuple.Create(recipe, recipe.IsFavorite));

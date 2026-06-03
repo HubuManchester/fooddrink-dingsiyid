@@ -137,10 +137,17 @@ public partial class AccessibilityViewModel : ObservableObject
     /// </summary>
     partial void OnFontScaleChanged(double value)
     {
-        // Apply font scaling
+        // Apply font scaling to all font size resources
         if (Application.Current != null)
         {
+            Application.Current.Resources["ExtraSmallFontSize"] = value * 10;
+            Application.Current.Resources["SmallFontSize"] = value * 12;
             Application.Current.Resources["DefaultFontSize"] = value * 14;
+            Application.Current.Resources["MediumFontSize"] = value * 16;
+            Application.Current.Resources["LargeFontSize"] = value * 18;
+            Application.Current.Resources["HeaderFontSize"] = value * 20;
+            Application.Current.Resources["TitleFontSize"] = value * 24;
+            Application.Current.Resources["LargeTitleFontSize"] = value * 28;
         }
         UpdateFontScaleDisplay();
     }
@@ -174,7 +181,7 @@ public partial class AccessibilityViewModel : ObservableObject
     /// </summary>
     private async Task TestTts()
     {
-        if (TtsEnabled && _ttsService.IsSupported)
+        if (TtsEnabled && TextToSpeechService.IsSupported)
         {
             await _ttsService.SpeakAsync("Welcome to Campus Eats, this is a text-to-speech test.");
         }

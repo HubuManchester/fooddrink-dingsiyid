@@ -5,125 +5,108 @@
              xmlns:models="clr-namespace:CampusEats.Models"
              xmlns:converters="clr-namespace:CampusEats.Converters"
              x:Class="CampusEats.Views.RecipePage"
+             x:Name="RecipePageView"
              Title="Recipe Library"
              x:DataType="viewmodels:RecipePageViewModel">
 
     <ContentPage.Resources>
-        <ResourceDictionary>
-            <Color x:Key="PrimaryColor">#FF6B35</Color>
-            <converters:BoolToFavoriteConverter x:Key="BoolToFavoriteConverter" />
-            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
-            <converters:StringNotNullToBoolConverter x:Key="StringNotNullToBoolConverter" />
-        </ResourceDictionary>
+        <converters:BoolToFavoriteConverter x:Key="BoolToFavoriteConverter" />
+        <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        <converters:StringNotNullToBoolConverter x:Key="StringNotNullToBoolConverter" />
     </ContentPage.Resources>
 
     <VerticalStackLayout>
-        <!-- Search bar -->
-        <SearchBar 
-            Text="{Binding SearchText}" 
-            Placeholder="Search recipes..." 
+        <SearchBar
+            Text="{Binding SearchText}"
+            Placeholder="Search recipes..."
             SearchCommand="{Binding SearchCommand}"
-            AutomationProperties.Name="Recipe search" />
+            AutomationProperties.Name="Search recipes by name or ingredients" />
 
-        <!-- Function buttons -->
-        <HorizontalStackLayout Padding="10" Spacing="10">
-            <Button 
-                Text="📷 Photo Recognition" 
-                Command="{Binding CaptureAndRecognizeCommand}"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
-                AutomationProperties.Name="Photo recognition button" />
-            <Button 
-                Text="🎲 Shake to Recommend" 
-                Command="{Binding ShakeToRecommendCommand}"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
-                AutomationProperties.Name="Shake button" />
-        </HorizontalStackLayout>
-
-        <!-- Status message -->
-        <Label 
-            Text="{Binding StatusMessage}" 
-            IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotNullToBoolConverter}}"
-            Padding="10"
-            HorizontalOptions="Center"
-            FontAttributes="Italic"
-            TextColor="{StaticResource PrimaryColor}"
-            AutomationProperties.Name="Status message" />
-
-        <!-- Category filter -->
-        <ScrollView Orientation="Horizontal" Padding="10">
-            <HorizontalStackLayout Spacing="10">
-                <Button 
-                    Text="{Binding SelectedCategory}" 
-                    Command="{Binding FilterCommand}"
-                    AutomationProperties.Name="Current category" />
-                <Button 
-                    Text="All" 
-                    Clicked="OnCategoryClicked" 
-                    CommandParameter="All"
-                    AutomationProperties.Name="View all" />
-                <Button 
-                    Text="🍚 Staples" 
-                    Clicked="OnCategoryClicked" 
-                    CommandParameter="Staples"
-                    AutomationProperties.Name="Staples category" />
-                <Button 
-                    Text="🍰 Desserts" 
-                    Clicked="OnCategoryClicked" 
-                    CommandParameter="Desserts"
-                    AutomationProperties.Name="Desserts category" />
-                <Button 
-                    Text="🥗 Vegetarian" 
-                    Clicked="OnCategoryClicked" 
-                    CommandParameter="Vegetarian"
-                    AutomationProperties.Name="Vegetarian category" />
-                <Button 
-                    Text="🍲 Soups" 
-                    Clicked="OnCategoryClicked" 
-                    CommandParameter="Soups"
-                    AutomationProperties.Name="Soups category" />
-                <Button 
-                    Text="❤️ Favorites" 
-                    Clicked="OnCategoryClicked" 
-                    CommandParameter="Favorites"
-                    AutomationProperties.Name="Favorites category" />
+        <ScrollView Orientation="Horizontal" Padding="{StaticResource DefaultMargin}">
+            <HorizontalStackLayout Spacing="{StaticResource MediumSpacing}">
+                <Button Text="Photo Recognition" Command="{Binding CaptureAndRecognizeCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                        AutomationProperties.Name="Take photo to recognize food ingredients" />
+                <Button Text="Shake to Recommend" Command="{Binding ShakeToRecommendCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                        AutomationProperties.Name="Shake device for random recipe recommendation" />
             </HorizontalStackLayout>
         </ScrollView>
 
-        <!-- Recipe list -->
+        <Label
+            Text="{Binding StatusMessage}"
+            IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotNullToBoolConverter}}"
+            Padding="{StaticResource DefaultMargin}"
+            HorizontalOptions="Center"
+            FontAttributes="Italic"
+            TextColor="{StaticResource PrimaryColor}"
+            AutomationProperties.Name="Current operation status message" />
+
+        <ScrollView Orientation="Horizontal" Padding="{StaticResource DefaultMargin}">
+            <HorizontalStackLayout Spacing="{StaticResource MediumSpacing}">
+                <Button Text="All Categories" Command="{Binding FilterCommand}" CommandParameter="All"
+                        AutomationProperties.Name="Show all recipe categories" />
+                <Button Text="Staples" Command="{Binding FilterCommand}" CommandParameter="Staples"
+                        AutomationProperties.Name="Show staple food recipes" />
+                <Button Text="Desserts" Command="{Binding FilterCommand}" CommandParameter="Desserts"
+                        AutomationProperties.Name="Show dessert recipes" />
+                <Button Text="Vegetarian" Command="{Binding FilterCommand}" CommandParameter="Vegetarian"
+                        AutomationProperties.Name="Show vegetarian recipes" />
+                <Button Text="Soups" Command="{Binding FilterCommand}" CommandParameter="Soups"
+                        AutomationProperties.Name="Show soup recipes" />
+                <Button Text="Favorites" Command="{Binding FilterCommand}" CommandParameter="Favorites"
+                        AutomationProperties.Name="Show favorite recipes" />
+            </HorizontalStackLayout>
+        </ScrollView>
+
         <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
             <CollectionView x:Name="RecipeCollection"
-                            ItemsSource="{Binding Recipes}" 
-                            SelectionMode="Single"
-                            SelectionChangedCommand="{Binding SelectRecipeCommand}"
-                            SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference RecipeCollection}}"
-                            AutomationProperties.Name="Recipe list">
+                            ItemsSource="{Binding Recipes}"
+                            SelectionMode="None"
+                            AutomationProperties.Name="Recipe collection, scroll to browse all recipes">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Recipe">
-                        <Grid Padding="12,5">
-                            <Frame CornerRadius="15" Padding="10" Margin="0,5" HasShadow="True">
-                                <Grid ColumnDefinitions="100, *">
-                                    <Image Source="{Binding ImageName}" HeightRequest="90" WidthRequest="90" Aspect="AspectFill" 
-                                           AutomationProperties.Name="Recipe image" />
-                                    <VerticalStackLayout Grid.Column="1" Padding="10,0">
-                                        <HorizontalStackLayout>
-                                            <Label Text="{Binding CategoryIcon}" FontSize="16" />
-                                            <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" 
+                        <Grid Padding="{StaticResource DefaultMargin}" MaximumWidthRequest="{OnIdiom Phone=600, Tablet=800}">
+                            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}" HasShadow="True">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:Reference RecipePageView}, Path=BindingContext.SelectRecipeCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="{OnIdiom Phone=90, Tablet=120}" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding ImageName}" Aspect="AspectFill"
+                                           HeightRequest="{OnIdiom Phone=90, Tablet=120}"
+                                           WidthRequest="{OnIdiom Phone=90, Tablet=120}"
+                                           AutomationProperties.Name="Recipe image thumbnail" />
+                                    <VerticalStackLayout Grid.Column="1" Padding="{StaticResource SmallMargin}">
+                                        <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
+                                            <Label Text="{Binding CategoryIcon}" FontSize="{DynamicResource MediumFontSize}" />
+                                            <Label Text="{Binding Name}" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                                                    AutomationProperties.Name="Recipe name" />
-                                            <Button 
-                                                Text="{Binding IsFavorite, Converter={StaticResource BoolToFavoriteConverter}}" 
-                                                WidthRequest="32" 
-                                                HeightRequest="32"
-                                                Clicked="OnFavoriteClicked"
-                                                AutomationProperties.Name="Favorite button" />
+                                            <ImageButton Source="{Binding IsFavorite, Converter={StaticResource BoolToFavoriteConverter}}"
+                                                         WidthRequest="{OnIdiom Phone=28, Tablet=32}" HeightRequest="{OnIdiom Phone=28, Tablet=32}"
+                                                         Clicked="OnFavoriteClicked"
+                                                         AutomationProperties.Name="Toggle recipe favorite status" />
                                         </HorizontalStackLayout>
-                                        <Label Text="{Binding Category}" FontSize="12" TextColor="Gray" 
+                                        <Label Text="{Binding Category}" FontSize="{DynamicResource SmallFontSize}"
+                                               TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
                                                AutomationProperties.Name="Recipe category" />
-                                        <Label Text="{Binding RatingStars}" FontSize="12" TextColor="{StaticResource PrimaryColor}" 
-                                               AutomationProperties.Name="Rating" />
-                                        <HorizontalStackLayout>
-                                            <Label Text="{Binding Calories, StringFormat='{}{0} calories'}" FontSize="11" TextColor="Gray" />
-                                            <Label Text=" | " FontSize="11" TextColor="Gray" />
-                                            <Label Text="{Binding PrepTime, StringFormat='{}{0} mins'}" FontSize="11" TextColor="Gray" />
+                                        <Label Text="{Binding RatingStars}" FontSize="{DynamicResource SmallFontSize}"
+                                               TextColor="{StaticResource PrimaryColor}"
+                                               AutomationProperties.Name="Recipe rating" />
+                                        <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
+                                            <Label Text="{Binding Calories, StringFormat='{}{0} cal'}"
+                                                   FontSize="{DynamicResource ExtraSmallFontSize}"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" />
+                                            <Label Text="|" FontSize="{DynamicResource ExtraSmallFontSize}"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" />
+                                            <Label Text="{Binding PrepTime, StringFormat='{}{0} min'}"
+                                                   FontSize="{DynamicResource ExtraSmallFontSize}"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" />
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
                                 </Grid>
@@ -132,9 +115,9 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>
-                    <VerticalStackLayout Padding="40" HorizontalOptions="Center">
-                        <Label Text="📖" FontSize="48" HorizontalOptions="Center" />
-                        <Label Text="No recipes available" FontSize="16" HorizontalOptions="Center" />
+                    <VerticalStackLayout Padding="{StaticResource ExtraLargeMargin}" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="No recipes found" FontSize="{DynamicResource MediumFontSize}" HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" />
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
             </CollectionView>

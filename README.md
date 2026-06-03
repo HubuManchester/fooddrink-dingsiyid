@@ -1,4 +1,4 @@
-﻿# CampusEats
+# CampusEats
 
 A campus restaurant finder app built with .NET MAUI.
 

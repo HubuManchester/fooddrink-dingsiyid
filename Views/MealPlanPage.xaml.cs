@@ -2,9 +2,9 @@ using CampusEats.ViewModels;
 
 namespace CampusEats.Views;
 
-public partial class RecipeDetailPage : ContentPage
+public partial class MealPlanPage : ContentPage
 {
-    public RecipeDetailPage(RecipeDetailViewModel viewModel)
+    public MealPlanPage(MealPlanViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;

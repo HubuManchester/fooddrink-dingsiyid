@@ -12,6 +12,8 @@ public partial class RecipePageViewModel : ObservableObject
     private readonly DatabaseService _databaseService;
     private readonly MockService _mockService;
     private readonly TextToSpeechService _ttsService;
+    private readonly LocalStorageService _localStorage;
+    private readonly HardwareManager _hardwareManager;
 
     [ObservableProperty]
     private ObservableCollection<Recipe> recipes = new();
@@ -34,16 +36,23 @@ public partial class RecipePageViewModel : ObservableObject
     [ObservableProperty]
     private string statusMessage = string.Empty;
 
-    public RecipePageViewModel(DatabaseService databaseService, MockService mockService, TextToSpeechService ttsService)
+    public RecipePageViewModel(DatabaseService databaseService, MockService mockService, TextToSpeechService ttsService, LocalStorageService localStorage, HardwareManager hardwareManager)
     {
         _databaseService = databaseService;
         _mockService = mockService;
         _ttsService = ttsService;
+        _localStorage = localStorage;
+        _hardwareManager = hardwareManager;
+        
+        // Subscribe to hardware events
+        _hardwareManager.ShakeDetected += OnShakeDetected;
+        _hardwareManager.FoodRecognized += OnFoodRecognized;
+        
         SearchCommand = new AsyncRelayCommand(SearchRecipes);
         RefreshCommand = new AsyncRelayCommand(LoadRecipes);
-        FilterCommand = new AsyncRelayCommand(FilterByCategory);
+        FilterCommand = new AsyncRelayCommand<string?>(FilterByCategory);
         ToggleFavoriteCommand = new AsyncRelayCommand<Tuple<Recipe, bool>?>(ToggleFavorite);
-        SelectRecipeCommand = new RelayCommand<Recipe?>(SelectRecipe);
+        SelectRecipeCommand = new AsyncRelayCommand<Recipe?>(SelectRecipe);
         CaptureAndRecognizeCommand = new AsyncRelayCommand(CaptureAndRecognize);
         ShakeToRecommendCommand = new AsyncRelayCommand(ShakeToRecommend);
 
@@ -62,8 +71,14 @@ public partial class RecipePageViewModel : ObservableObject
     private async void LoadCategories()
     {
         var cats = await _databaseService.GetCategoriesAsync();
-        Categories = new List<string> { "All", "Favorites" };
-        Categories.AddRange(cats);
+        var newCategories = new List<string> { "All", "Favorites" };
+        newCategories.AddRange(cats);
+        
+        // Ensure UI update on main thread
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Categories = newCategories;
+        });
     }
 
     private async Task LoadRecipes()
@@ -71,16 +86,31 @@ public partial class RecipePageViewModel : ObservableObject
         IsRefreshing = true;
         try
         {
-            var recipeList = await _databaseService.GetRecipesAsync();
-            Recipes.Clear();
-            foreach (var r in recipeList)
+            List<Recipe> recipeList;
+            
+            if (_mockService.UseMockData)
             {
-                Recipes.Add(r);
+                // Use mock data for testing
+                recipeList = await _mockService.MockGetRecipesAsync();
             }
+            else
+            {
+                recipeList = await _databaseService.GetRecipesAsync();
+            }
+            
+            // Ensure UI update on main thread
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Recipes.Clear();
+                foreach (var r in recipeList)
+                {
+                    Recipes.Add(r);
+                }
+            });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Ignore errors
+            System.Diagnostics.Debug.WriteLine($"LoadRecipes error: {ex.Message}");
         }
         finally
         {
@@ -93,23 +123,51 @@ public partial class RecipePageViewModel : ObservableObject
         IsRefreshing = true;
         try
         {
+            List<Recipe> recipeList;
+            
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                await LoadRecipes();
+                // Use LoadRecipes logic
+                if (_mockService.UseMockData)
+                {
+                    recipeList = await _mockService.MockGetRecipesAsync();
+                }
+                else
+                {
+                    recipeList = await _databaseService.GetRecipesAsync();
+                }
             }
             else
             {
-                var recipeList = await _databaseService.SearchRecipesAsync(SearchText);
+                if (_mockService.UseMockData)
+                {
+                    // Search in mock data
+                    var allRecipes = await _mockService.MockGetRecipesAsync();
+                    recipeList = allRecipes.Where(r => 
+                        r.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                        r.Category.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                        r.Ingredients.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
+                else
+                {
+                    recipeList = await _databaseService.SearchRecipesAsync(SearchText);
+                }
+            }
+            
+            // Ensure UI update on main thread
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
                 Recipes.Clear();
                 foreach (var r in recipeList)
                 {
                     Recipes.Add(r);
                 }
-            }
+            });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Ignore errors
+            System.Diagnostics.Debug.WriteLine($"SearchRecipes error: {ex.Message}");
         }
         finally
         {
@@ -117,35 +175,65 @@ public partial class RecipePageViewModel : ObservableObject
         }
     }
 
-    private async Task FilterByCategory()
+    private async Task FilterByCategory(string? category = null)
     {
         IsRefreshing = true;
         try
         {
+            // Use parameter if provided, otherwise use SelectedCategory
+            string filterCategory = category ?? SelectedCategory ?? "All";
+            
             List<Recipe> recipeList;
 
-            if (SelectedCategory == "All")
+            if (_mockService.UseMockData)
             {
-                recipeList = await _databaseService.GetRecipesAsync();
-            }
-            else if (SelectedCategory == "Favorites")
-            {
-                recipeList = await _databaseService.GetFavoriteRecipesAsync();
+                // Use mock data
+                var allRecipes = await _mockService.MockGetRecipesAsync();
+                
+                if (filterCategory == "All")
+                {
+                    recipeList = allRecipes;
+                }
+                else if (filterCategory == "Favorites")
+                {
+                    recipeList = allRecipes.Where(r => r.IsFavorite).ToList();
+                }
+                else
+                {
+                    recipeList = allRecipes.Where(r => r.Category == filterCategory).ToList();
+                }
             }
             else
             {
-                recipeList = await _databaseService.GetRecipesByCategoryAsync(SelectedCategory);
+                // Use database
+                if (filterCategory == "All")
+                {
+                    recipeList = await _databaseService.GetRecipesAsync();
+                }
+                else if (filterCategory == "Favorites")
+                {
+                    recipeList = await _databaseService.GetFavoriteRecipesAsync();
+                }
+                else
+                {
+                    recipeList = await _databaseService.GetRecipesByCategoryAsync(filterCategory);
+                }
             }
 
-            Recipes.Clear();
-            foreach (var r in recipeList)
+            // Ensure UI update on main thread
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                Recipes.Add(r);
-            }
+                SelectedCategory = filterCategory;
+                Recipes.Clear();
+                foreach (var r in recipeList)
+                {
+                    Recipes.Add(r);
+                }
+            });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Ignore errors
+            System.Diagnostics.Debug.WriteLine($"FilterByCategory error: {ex.Message}");
         }
         finally
         {
@@ -158,17 +246,35 @@ public partial class RecipePageViewModel : ObservableObject
         if (args != null)
         {
             var recipe = args.Item1;
-            recipe.IsFavorite = args.Item2;
-            await _databaseService.SaveRecipeAsync(recipe);
+            
+            // Toggle favorite status using local storage
+            var favoriteIds = _localStorage.GetFavoriteRecipes();
+            if (favoriteIds.Contains(recipe.Id))
+            {
+                favoriteIds.Remove(recipe.Id);
+                recipe.IsFavorite = false;
+            }
+            else
+            {
+                favoriteIds.Add(recipe.Id);
+                recipe.IsFavorite = true;
+            }
+            _localStorage.SaveFavoriteRecipes(favoriteIds);
+            
+            // Also save to database if not using mock data
+            if (!_mockService.UseMockData)
+            {
+                await _databaseService.SaveRecipeAsync(recipe);
+            }
         }
     }
 
-    private void SelectRecipe(Recipe? recipe)
+    private async Task SelectRecipe(Recipe? recipe)
     {
         if (recipe != null)
         {
             AppState.SelectedRecipe = recipe;
-            Shell.Current.GoToAsync("recipecdetailpage");
+            await Shell.Current.GoToAsync("///recipedetailpage");
         }
     }
 
@@ -235,7 +341,7 @@ public partial class RecipePageViewModel : ObservableObject
                 if (goToDetail)
                 {
                     AppState.SelectedRecipe = matchedRecipe;
-                    await Shell.Current.GoToAsync("recipecdetailpage");
+                    await Shell.Current.GoToAsync("///recipedetailpage");
                 }
 
                 StatusMessage = $"Recognized: {mockResult.FoodName}";
@@ -286,7 +392,7 @@ public partial class RecipePageViewModel : ObservableObject
                             };
                             
                             AppState.SelectedRecipe = matchedRecipe;
-                            await Shell.Current.GoToAsync("recipecdetailpage");
+                            await Shell.Current.GoToAsync("///recipedetailpage");
                         }
 
                         StatusMessage = $"Recognized: {mockResult.FoodName}";
@@ -354,7 +460,7 @@ public partial class RecipePageViewModel : ObservableObject
             if (goToDetail)
             {
                 AppState.SelectedRecipe = recommended;
-                await Shell.Current.GoToAsync("recipecdetailpage");
+                await Shell.Current.GoToAsync("///recipedetailpage");
             }
 
             StatusMessage = $"Recommended: {recommended.Name}";
@@ -366,6 +472,51 @@ public partial class RecipePageViewModel : ObservableObject
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private async void OnShakeDetected(object? sender, ShakeDetectedEventArgs e)
+    {
+        // Handle shake gesture for recipe recommendation
+        if (Recipes.Count > 0 && !IsBusy)
+        {
+            await ShakeToRecommend();
+        }
+    }
+
+    private async void OnFoodRecognized(object? sender, FoodRecognizedEventArgs e)
+    {
+        // Handle food recognition result
+        if (e.Result.Success)
+        {
+            StatusMessage = $"Food recognized: {e.Result.FoodName}";
+            
+            // Find matching recipe or create new one
+            var recipeList = await _databaseService.SearchRecipesAsync(e.Result.FoodName);
+            var matchedRecipe = recipeList.FirstOrDefault() ?? new Recipe
+            {
+                Name = e.Result.FoodName,
+                Category = e.Result.Category,
+                Rating = 4.5,
+                Description = e.Result.Description,
+                Calories = e.Result.Calories,
+                PrepTime = 30,
+                Ingredients = "See details",
+                Instructions = "See details",
+                ImageData = e.Result.ImageData,
+                CreatedAt = DateTime.UtcNow
+            };
+            
+            // Speak the recognition result
+            await _ttsService.SpeakAsync($"I found {e.Result.FoodName}. It has {e.Result.Calories} calories.");
+            
+            // Navigate to recipe detail
+            AppState.SelectedRecipe = matchedRecipe;
+            await Shell.Current.GoToAsync("///recipedetailpage");
+        }
+        else
+        {
+            StatusMessage = $"Recognition failed: {e.Result.ErrorMessage}";
         }
     }
 }

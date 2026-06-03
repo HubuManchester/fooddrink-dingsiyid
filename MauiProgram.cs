@@ -37,6 +37,9 @@ public static class MauiProgram
         // Database service - provides SQLite local data storage
         builder.Services.AddSingleton<DatabaseService>();
         
+        // Local storage service - provides Preferences-based lightweight storage
+        builder.Services.AddSingleton<LocalStorageService>();
+        
         // Theme service - manages dark/light mode switching
         builder.Services.AddSingleton<ThemeService>();
         
@@ -51,6 +54,9 @@ public static class MauiProgram
         
         // Mock service - provides simulated camera, location and food recognition
         builder.Services.AddSingleton<MockService>();
+        
+        // Hardware manager - unified hardware service integrating camera, shake, location, TTS, vibration
+        builder.Services.AddSingleton<HardwareManager>();
 
         // ========== View model registration (Transient) ==========
         // Main page view model
@@ -71,8 +77,11 @@ public static class MauiProgram
         // Mock test page view model
         builder.Services.AddTransient<MockTestViewModel>();
         
-        // CRUD test page view model
-        builder.Services.AddTransient<CrudTestViewModel>();
+        // Meal plan page view model
+        builder.Services.AddTransient<MealPlanViewModel>();
+        
+        // Hardware test page view model
+        builder.Services.AddTransient<HardwareTestViewModel>();
 
         // ========== View registration ==========
         // Main page (singleton, maintains state)
@@ -84,8 +93,8 @@ public static class MauiProgram
         builder.Services.AddTransient<RecipePage>();
         builder.Services.AddTransient<RecipeDetailPage>();
         builder.Services.AddTransient<MockTestPage>();
-        builder.Services.AddTransient<LocationTestPage>();
-        builder.Services.AddTransient<CrudTestPage>();
+        builder.Services.AddTransient<MealPlanPage>();
+        builder.Services.AddTransient<HardwareTestPage>();
 
 #if DEBUG
         // Add logging in debug mode

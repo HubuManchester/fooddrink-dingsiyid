@@ -3,69 +3,64 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:CampusEats.Views"
        x:Class="CampusEats.AppShell"
-       Shell.FlyoutBehavior="Disabled">
+       Shell.FlyoutBehavior="Disabled"
+       AutomationProperties.Name="Campus Eats main navigation">
 
-    <TabBar>
-        <ShellContent 
-            Title="Restaurants" 
-            Icon="🍽️"
-            ContentTemplate="{DataTemplate views:MainPage}" 
-            Route="mainpage">
+    <TabBar AutomationProperties.Name="Main tab navigation">
+        <ShellContent
+            Title="Restaurants"
+            ContentTemplate="{DataTemplate views:MainPage}"
+            Route="mainpage"
+            AutomationProperties.Name="Restaurants tab, view nearby restaurants">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="OpenSansRegular" Glyph="🍽️" />
-            </ShellContent.Icon>
-        </ShellContent>
-
-        <ShellContent 
-            Title="Recipes" 
-            Icon="📖"
-            ContentTemplate="{DataTemplate views:RecipePage}" 
-            Route="recipepage">
-            <ShellContent.Icon>
-                <FontImageSource FontFamily="OpenSansRegular" Glyph="📖" />
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="R" />
             </ShellContent.Icon>
         </ShellContent>
 
-        <ShellContent 
-            Title="Accessibility" 
-            Icon="♿"
-            ContentTemplate="{DataTemplate views:AccessibilityPage}" 
-            Route="accessibilitypage">
+        <ShellContent
+            Title="Recipes"
+            ContentTemplate="{DataTemplate views:RecipePage}"
+            Route="recipepage"
+            AutomationProperties.Name="Recipes tab, browse recipe library">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="OpenSansRegular" Glyph="♿" />
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="Rc" />
             </ShellContent.Icon>
         </ShellContent>
 
-        <ShellContent 
-            Title="Mock Test" 
-            Icon="🎮"
-            ContentTemplate="{DataTemplate views:MockTestPage}" 
-            Route="mocktestpage">
+        <ShellContent
+            Title="Meal Plan"
+            ContentTemplate="{DataTemplate views:MealPlanPage}"
+            Route="mealplanpage"
+            AutomationProperties.Name="Meal plan tab, manage daily meals">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="OpenSansRegular" Glyph="🎮" />
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="M" />
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent 
-            Title="Location Test" 
-            Icon="🧪"
-            ContentTemplate="{DataTemplate views:LocationTestPage}" 
-            Route="locationtestpage">
+
+        <ShellContent
+            Title="Accessibility"
+            ContentTemplate="{DataTemplate views:AccessibilityPage}"
+            Route="accessibilitypage"
+            AutomationProperties.Name="Accessibility settings tab">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="OpenSansRegular" Glyph="🧪" />
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="A" />
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent 
-            Title="CRUD Test" 
-            Icon="🗄️"
-            ContentTemplate="{DataTemplate views:CrudTestPage}" 
-            Route="crudtestpage">
+
+        <ShellContent
+            Title="Hardware"
+            ContentTemplate="{DataTemplate views:HardwareTestPage}"
+            Route="hardwaretestpage"
+            AutomationProperties.Name="Hardware test tab">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="OpenSansRegular" Glyph="🗄️" />
+                <FontImageSource FontFamily="OpenSansRegular" Glyph="H" />
             </ShellContent.Icon>
         </ShellContent>
     </TabBar>
 
-    <ShellContent Title="Restaurant Details" Route="detailpage" ContentTemplate="{DataTemplate views:DetailPage}" />
-    <ShellContent Title="Recipe Details" Route="recipecdetailpage" ContentTemplate="{DataTemplate views:RecipeDetailPage}" />
+    <ShellContent Title="Restaurant Details" Route="detailpage" ContentTemplate="{DataTemplate views:DetailPage}"
+                  AutomationProperties.Name="Restaurant details page" />
+    <ShellContent Title="Recipe Details" Route="recipedetailpage" ContentTemplate="{DataTemplate views:RecipeDetailPage}"
+                  AutomationProperties.Name="Recipe details page" />
 
 </Shell>
