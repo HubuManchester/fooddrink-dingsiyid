@@ -9,6 +9,7 @@
 
     <ContentPage.Resources>
         <converters:BoolToFavoriteConverter x:Key="BoolToFavoriteConverter" />
+        <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
@@ -134,10 +135,18 @@
                         AutomationProperties.Name="Add recipe to meal plan" />
             </HorizontalStackLayout>
 
-            <Button Text="Speak Recipe" Command="{Binding SpeakRecipeCommand}"
-                    BackgroundColor="{StaticResource SecondaryColor}" TextColor="White"
-                    MinimumHeightRequest="{StaticResource ButtonMinHeight}"
-                    AutomationProperties.Name="Read recipe aloud using text to speech" />
+            <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
+                <Button Text="Speak Recipe" Command="{Binding SpeakRecipeCommand}"
+                        BackgroundColor="{StaticResource SecondaryColor}" TextColor="White"
+                        MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                        IsEnabled="{Binding IsSpeaking, Converter={StaticResource InvertedBoolConverter}}"
+                        AutomationProperties.Name="Read recipe aloud using text to speech" />
+                <Button Text="Stop Speaking" Command="{Binding StopSpeakingCommand}"
+                        BackgroundColor="{StaticResource ErrorColor}" TextColor="White"
+                        MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                        IsVisible="{Binding IsSpeaking}"
+                        AutomationProperties.Name="Stop text-to-speech" />
+            </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

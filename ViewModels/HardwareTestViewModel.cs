@@ -136,10 +136,10 @@ public partial class HardwareTestViewModel : ObservableObject
                     "View Recipe", "Skip");
 
                 if (viewRecipe)
-                {
-                    AppState.SelectedRecipe = recipe;
-                    await Shell.Current.GoToAsync("recipedetailpage");
-                }
+            {
+                AppState.SelectedRecipe = recipe;
+                await Shell.Current.GoToAsync("///recipedetailpage");
+            }
             }
             else
             {

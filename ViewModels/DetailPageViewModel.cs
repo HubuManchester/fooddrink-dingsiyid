@@ -243,7 +243,8 @@ public partial class DetailPageViewModel : ObservableObject
         {
             var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
             
-            if (status == PermissionStatus.Denied)
+            // Handle Denied and Restricted status
+            if (status == PermissionStatus.Denied || status == PermissionStatus.Restricted)
             {
                 bool openSettings = await SafeDisplayConfirmAsync("Permission Required", 
                     "Camera permission is needed to take photos. Would you like to open app settings to enable it?", 
@@ -255,9 +256,12 @@ public partial class DetailPageViewModel : ObservableObject
                 return;
             }
             
+            // Request permission if not granted
             if (status != PermissionStatus.Granted)
             {
                 status = await Permissions.RequestAsync<Permissions.Camera>();
+                
+                // Check again after request
                 if (status != PermissionStatus.Granted)
                 {
                     bool openSettings = await SafeDisplayConfirmAsync("Permission Required", 
@@ -313,7 +317,7 @@ public partial class DetailPageViewModel : ObservableObject
         {
             StatusMessage = "Camera permission error";
             await SafeDisplayAlertAsync("Permission Error", 
-                "Unable to access camera due to permission restrictions.");
+                "Unable to access camera due to permission restrictions. Please go to Settings > Privacy to enable camera access.");
         }
         catch (NotImplementedException)
         {
@@ -321,11 +325,11 @@ public partial class DetailPageViewModel : ObservableObject
             await SafeDisplayAlertAsync("Not Supported", 
                 "Camera functionality is not available on this platform.");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             StatusMessage = "Photo capture failed";
             await SafeDisplayAlertAsync("Error", 
-                "An error occurred while capturing photo. Please try again.");
+                $"An error occurred while capturing photo: {ex.Message}. Please try again.");
         }
     }
 

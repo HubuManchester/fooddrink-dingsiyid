@@ -41,13 +41,29 @@ public partial class MainPageViewModel : ObservableObject
         _localStorage = localStorage;
         _hardwareManager = hardwareManager;
         
+        // Force using mock data to verify UI works correctly
+        // Remove this line if database is properly initialized
+        _mockService.UseMockData = true;
+        
         // Subscribe to hardware events
         _hardwareManager.ShakeDetected += OnShakeDetected;
         _hardwareManager.LocationUpdated += OnLocationUpdated;
         
         CuisineFilters.Add("All Cuisines");
         RefreshCommand = new AsyncRelayCommand(LoadData, () => !IsRefreshing);
-        Task.Run(async () => await LoadData());
+        _ = InitializeDataAsync();
+    }
+    
+    private async Task InitializeDataAsync()
+    {
+        try
+        {
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            LocationStatus = $"Initialization failed: {ex.Message}";
+        }
     }
 
     private async Task LoadData()

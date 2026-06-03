@@ -311,7 +311,7 @@ public partial class RecipePageViewModel : ObservableObject
 
                 if (matchedRecipe == null)
                 {
-                    // Create new temporary recipe
+                    // Create new temporary recipe with more meaningful content
                     matchedRecipe = new Recipe
                     {
                         Name = mockResult.FoodName,
@@ -320,8 +320,8 @@ public partial class RecipePageViewModel : ObservableObject
                         Description = mockResult.Description,
                         Calories = mockResult.Calories,
                         PrepTime = 30,
-                        Ingredients = "See details",
-                        Instructions = "See details",
+                        Ingredients = "This food was recognized but no recipe is available in our database. Please check back later for recipe details.",
+                        Instructions = "Recipe instructions will be available soon. Meanwhile, you can search for similar recipes or check our recipe section.",
                         ImageName = "food_placeholder.jpg",
                         ImageData = mockResult.MockImage,
                         CreatedAt = DateTime.UtcNow
@@ -385,8 +385,8 @@ public partial class RecipePageViewModel : ObservableObject
                                 Description = mockResult.Description,
                                 Calories = mockResult.Calories,
                                 PrepTime = 30,
-                                Ingredients = "See details",
-                                Instructions = "See details",
+                                Ingredients = "This food was recognized but no recipe is available in our database. Please check back later for recipe details.",
+                                Instructions = "Recipe instructions will be available soon. Meanwhile, you can search for similar recipes or check our recipe section.",
                                 ImageName = "food_placeholder.jpg",
                                 CreatedAt = DateTime.UtcNow
                             };

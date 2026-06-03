@@ -4,53 +4,62 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Food and Drink Theme Colors - Peach & Pink Theme -->
-    <Color x:Key="PrimaryColor">#FF9F7E</Color>      <!-- Soft Peach / Light Orange -->
-    <Color x:Key="PrimaryColorDark">#E8866A</Color> <!-- Darker Peach -->
-    <Color x:Key="PrimaryColorLight">#FFC4B0</Color> <!-- Lighter Peach -->
+    <!-- Warm Peach & Pink Theme - Beautiful Food Colors -->
+    
+    <!-- Primary Colors - Soft Peach / Light Orange -->
+    <Color x:Key="PrimaryColor">#FFB39D</Color>       <!-- Warm Light Peach -->
+    <Color x:Key="PrimaryColorDark">#FF9A7A</Color>  <!-- Warm Orange-Peach -->
+    <Color x:Key="PrimaryColorLight">#FFE8DF</Color> <!-- Very Soft Peach -->
+    <Color x:Key="LightPrimary">#FFF5F0</Color>      <!-- Pale Peach Background -->
 
     <!-- Secondary Colors - Soft Pink -->
-    <Color x:Key="SecondaryColor">#FFB3C1</Color>    <!-- Soft Pink -->
-    <Color x:Key="SecondaryColorDark">#E89AAC</Color><!-- Darker Pink -->
+    <Color x:Key="SecondaryColor">#FFC2D1</Color>    <!-- Soft Blush Pink -->
+    <Color x:Key="SecondaryColorDark">#FFA5B8</Color><!-- Warm Pink -->
+    <Color x:Key="SecondaryColorLight">#FFE8EF</Color><!-- Pale Pink -->
 
-    <!-- Accent Colors -->
-    <Color x:Key="AccentOrange">#FF9500</Color>
-    <Color x:Key="AccentGreen">#34C759</Color>
-    <Color x:Key="AccentRed">#FF3B30</Color>
-    <Color x:Key="AccentBlue">#007AFF</Color>
-    <Color x:Key="AccentPink">#FF6B8A</Color>       <!-- Rose Pink Accent -->
+    <!-- Accent Colors - Warm Orange & Coral -->
+    <Color x:Key="AccentOrange">#FFA04D</Color>      <!-- Warm Orange -->
+    <Color x:Key="AccentCoral">#FF7F7F</Color>       <!-- Soft Coral -->
+    <Color x:Key="AccentPeach">#FFB39D</Color>       <!-- Peach Accent -->
+    <Color x:Key="AccentPink">#FFB6C1</Color>        <!-- Soft Pink -->
+    <Color x:Key="AccentCream">#FFF5E6</Color>       <!-- Cream Background -->
+    
+    <!-- Success & Error Colors -->
+    <Color x:Key="SuccessColor">#FF9F87</Color>      <!-- Warm Coral Green -->
+    <Color x:Key="ErrorColor">#FF7F7F</Color>        <!-- Soft Red/Pink -->
+    <Color x:Key="WarningColor">#FFC470</Color>      <!-- Warm Yellow-Orange -->
 
     <!-- Light Theme Colors -->
-    <Color x:Key="LightBackground">#FFFFFF</Color>
-    <Color x:Key="LightSurface">#F5F5F5</Color>
-    <Color x:Key="LightCard">#FFFFFF</Color>
-    <Color x:Key="LightText">#1C1C1E</Color>
-    <Color x:Key="LightTextSecondary">#666666</Color>
-    <Color x:Key="LightBorder">#E0E0E0</Color>
+    <Color x:Key="LightBackground">#FFFDFB</Color>   <!-- Warm White -->
+    <Color x:Key="LightSurface">#FFF8F5</Color>      <!-- Very Light Peach -->
+    <Color x:Key="LightCard">#FFFFFF</Color>         <!-- Pure White -->
+    <Color x:Key="LightText">#4A3728</Color>         <!-- Warm Dark Brown -->
+    <Color x:Key="LightTextSecondary">#8B7355</Color><!-- Warm Gray-Brown -->
+    <Color x:Key="LightBorder">#FFE4D4</Color>       <!-- Soft Peach Border -->
 
     <!-- Dark Theme Colors -->
-    <Color x:Key="DarkBackground">#1C1C1E</Color>
-    <Color x:Key="DarkSurface">#2C2C2E</Color>
-    <Color x:Key="DarkCard">#2C2C2E</Color>
-    <Color x:Key="DarkText">#FFFFFF</Color>
-    <Color x:Key="DarkTextSecondary">#AAAAAA</Color>
-    <Color x:Key="DarkBorder">#3A3A3C</Color>
+    <Color x:Key="DarkBackground">#2D1F1A</Color>   <!-- Warm Dark Brown -->
+    <Color x:Key="DarkSurface">#3D2A22</Color>      <!-- Warm Brown -->
+    <Color x:Key="DarkCard">#4A3528</Color>         <!-- Medium Brown -->
+    <Color x:Key="DarkText">#FFE8DF</Color>          <!-- Soft Peach Text -->
+    <Color x:Key="DarkTextSecondary">#C4A796</Color><!-- Warm Gray-Pink -->
+    <Color x:Key="DarkBorder">#5C4033</Color>       <!-- Brown Border -->
 
     <!-- Neutral Colors -->
-    <Color x:Key="White">White</Color>
-    <Color x:Key="Black">Black</Color>
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#1A1A1A</Color>
     <Color x:Key="Transparent">Transparent</Color>
 
     <!-- Gray Scale -->
-    <Color x:Key="Gray100">#F5F5F5</Color>
-    <Color x:Key="Gray200">#E0E0E0</Color>
-    <Color x:Key="Gray300">#CCCCCC</Color>
-    <Color x:Key="Gray400">#AAAAAA</Color>
-    <Color x:Key="Gray500">#888888</Color>
-    <Color x:Key="Gray600">#666666</Color>
-    <Color x:Key="Gray700">#444444</Color>
-    <Color x:Key="Gray800">#333333</Color>
-    <Color x:Key="Gray900">#1C1C1E</Color>
+    <Color x:Key="Gray100">#FFF8F5</Color>
+    <Color x:Key="Gray200">#FFE4D4</Color>
+    <Color x:Key="Gray300">#FFD4BF</Color>
+    <Color x:Key="Gray400">#C4A796</Color>
+    <Color x:Key="Gray500">#8B7355</Color>
+    <Color x:Key="Gray600">#6B5344</Color>
+    <Color x:Key="Gray700">#4A3728</Color>
+    <Color x:Key="Gray800">#3D2A22</Color>
+    <Color x:Key="Gray900">#2D1F1A</Color>
 
     <!-- Brushes - Light Theme -->
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
