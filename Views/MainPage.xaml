@@ -38,14 +38,11 @@
                         WidthRequest="{OnIdiom Phone=130, Tablet=150, Desktop=180}" MinimumHeightRequest="{StaticResource ButtonMinHeight}"
                         FontSize="{OnIdiom Phone=13, Tablet=14, Desktop=16}"
                         AutomationProperties.Name="Filter restaurants by cuisine type" />
-                <Button Text="🔄 Refresh" Command="{Binding RefreshCommand}" WidthRequest="{OnIdiom Phone=85, Tablet=100, Desktop=110}"
-                        FontSize="{OnIdiom Phone=12, Tablet=13, Desktop=14}"
+                <Button Text="🔄 Refresh" Command="{Binding RefreshCommand}"
                         AutomationProperties.Name="Refresh restaurant list - Reload restaurant data" />
-                <Button Text="🎲 Random" Command="{Binding ShakeToRecommendCommand}" WidthRequest="{OnIdiom Phone=85, Tablet=100, Desktop=110}"
-                        FontSize="{OnIdiom Phone=12, Tablet=13, Desktop=14}"
+                <Button Text="🎲 Random" Command="{Binding ShakeToRecommendCommand}"
                         AutomationProperties.Name="Random restaurant - Get random recommendation" />
-                <Button Text="➕ Add" Command="{Binding AddRestaurantCommand}" WidthRequest="{OnIdiom Phone=75, Tablet=90, Desktop=100}"
-                        FontSize="{OnIdiom Phone=12, Tablet=13, Desktop=14}"
+                <Button Text="➕ Add" Command="{Binding AddRestaurantCommand}"
                         AutomationProperties.Name="Add restaurant - Create new entry" />
             </HorizontalStackLayout>
         </ScrollView>
@@ -92,23 +89,38 @@
                                                    TextColor="{StaticResource PrimaryColor}"
                                                    AutomationProperties.Name="Distance from current location in kilometers" />
                                         </VerticalStackLayout>
-                                        <VerticalStackLayout Grid.Column="2" Spacing="{StaticResource SmallSpacing}" HorizontalOptions="End">
-                                            <Button Text="{Binding FavoriteIcon}" FontSize="22" BackgroundColor="Transparent" 
+                                        <VerticalStackLayout Grid.Column="2" Spacing="{StaticResource SmallSpacing}" HorizontalOptions="End" VerticalOptions="Center">
+                                            <Button Text="{Binding FavoriteIcon}" 
+                                                    FontSize="{OnIdiom Phone=24, Tablet=28, Desktop=22}" 
+                                                    BackgroundColor="Transparent" 
                                                     TextColor="{StaticResource AccentPink}"
                                                     Command="{Binding Source={x:Reference MainPageView}, Path=BindingContext.ToggleFavoriteCommand}"
-                                                    CommandParameter="{Binding .}" WidthRequest="40" HeightRequest="40"
+                                                    CommandParameter="{Binding .}" 
+                                                    WidthRequest="{OnIdiom Phone=44, Tablet=50, Desktop=40}" 
+                                                    HeightRequest="{OnIdiom Phone=44, Tablet=50, Desktop=40}"
+                                                    VerticalOptions="Center"
                                                     AutomationProperties.Name="Toggle restaurant favorite status" />
-                                            <Button Text="✏️" FontSize="16" BackgroundColor="{StaticResource LightPrimary}" 
+                                            <Button Text="✏️" 
+                                                    FontSize="{OnIdiom Phone=18, Tablet=20, Desktop=16}" 
+                                                    BackgroundColor="{StaticResource LightPrimary}" 
                                                     TextColor="{StaticResource PrimaryColor}"
                                                     Command="{Binding Source={x:Reference MainPageView}, Path=BindingContext.EditRestaurantCommand}"
-                                                    CommandParameter="{Binding .}" WidthRequest="36" HeightRequest="36"
+                                                    CommandParameter="{Binding .}" 
+                                                    WidthRequest="{OnIdiom Phone=40, Tablet=44, Desktop=36}" 
+                                                    HeightRequest="{OnIdiom Phone=40, Tablet=44, Desktop=36}"
                                                     CornerRadius="8" Padding="0"
+                                                    VerticalOptions="Center"
                                                     AutomationProperties.Name="Edit restaurant" />
-                                            <Button Text="🗑️" FontSize="16" BackgroundColor="{StaticResource LightPrimary}" 
+                                            <Button Text="🗑️" 
+                                                    FontSize="{OnIdiom Phone=18, Tablet=20, Desktop=16}" 
+                                                    BackgroundColor="{StaticResource LightPrimary}" 
                                                     TextColor="{StaticResource ErrorColor}"
                                                     Command="{Binding Source={x:Reference MainPageView}, Path=BindingContext.DeleteRestaurantCommand}"
-                                                    CommandParameter="{Binding .}" WidthRequest="36" HeightRequest="36"
+                                                    CommandParameter="{Binding .}" 
+                                                    WidthRequest="{OnIdiom Phone=40, Tablet=44, Desktop=36}" 
+                                                    HeightRequest="{OnIdiom Phone=40, Tablet=44, Desktop=36}"
                                                     CornerRadius="8" Padding="0"
+                                                    VerticalOptions="Center"
                                                     AutomationProperties.Name="Delete restaurant" />
                                         </VerticalStackLayout>
                                     </Grid>

@@ -128,17 +128,37 @@ public partial class HardwareManager : INotifyPropertyChanged
                     {
                         Title = "Capture Food Photo"
                     });
+                    
                     if (photo != null)
                     {
-                        using (var stream = await photo.OpenReadAsync())
+                        try
                         {
-                            using (var ms = new MemoryStream())
+                            using (var stream = await photo.OpenReadAsync())
                             {
-                                await stream.CopyToAsync(ms);
-                                imageData = ms.ToArray();
+                                if (stream != null)
+                                {
+                                    using (var ms = new MemoryStream())
+                                    {
+                                        await stream.CopyToAsync(ms);
+                                        imageData = ms.ToArray();
+                                    }
+                                    CurrentStatus = "🔍 Analyzing image...";
+                                }
+                                else
+                                {
+                                    CurrentStatus = "⚠️ Photo stream is null, using mock recognition.";
+                                }
                             }
                         }
-                        CurrentStatus = "🔍 Analyzing image...";
+                        catch (Exception streamEx)
+                        {
+                            // Stream processing failed, fall back to mock data
+                            CurrentStatus = $"⚠️ Failed to process photo: {streamEx.Message}. Using mock recognition.";
+                        }
+                    }
+                    else
+                    {
+                        CurrentStatus = "📸 Photo capture cancelled, using mock recognition.";
                     }
                 }
                 catch (Exception ex)

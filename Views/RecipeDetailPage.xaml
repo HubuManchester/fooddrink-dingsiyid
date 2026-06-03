@@ -31,9 +31,11 @@
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
                                AutomationProperties.Name="Recipe name" />
                         <ImageButton Source="{Binding Recipe.IsFavorite, Converter={StaticResource BoolToFavoriteConverter}}"
-                                WidthRequest="{OnIdiom Phone=40, Tablet=44}" HeightRequest="{OnIdiom Phone=40, Tablet=44}"
+                                WidthRequest="{OnIdiom Phone=44, Tablet=50, Desktop=40}" 
+                                HeightRequest="{OnIdiom Phone=44, Tablet=50, Desktop=40}"
                                 Command="{Binding ToggleFavoriteCommand}"
                                 BackgroundColor="Transparent"
+                                VerticalOptions="Center"
                                 AutomationProperties.Name="Toggle recipe favorite status" />
                     </HorizontalStackLayout>
                     <Label Text="{Binding Recipe.Category}" FontSize="{DynamicResource SmallFontSize}"
@@ -127,23 +129,31 @@
             <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
                 <Button Text="Add to Shopping List" Command="{Binding AddToShoppingListCommand}"
                         BackgroundColor="#2ECC71" TextColor="White"
-                        MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                        FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                        MinimumWidthRequest="{OnIdiom Phone=130, Tablet=150, Desktop=170}"
+                        HeightRequest="{StaticResource ButtonMinHeight}"
                         AutomationProperties.Name="Add ingredients to shopping list" />
                 <Button Text="Add to Meal Plan" Command="{Binding AddToMealPlanCommand}"
                         BackgroundColor="#3498DB" TextColor="White"
-                        MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                        FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                        MinimumWidthRequest="{OnIdiom Phone=120, Tablet=140, Desktop=160}"
+                        HeightRequest="{StaticResource ButtonMinHeight}"
                         AutomationProperties.Name="Add recipe to meal plan" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
                 <Button Text="Speak Recipe" Command="{Binding SpeakRecipeCommand}"
                         BackgroundColor="{StaticResource SecondaryColor}" TextColor="White"
-                        MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                        FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                        MinimumWidthRequest="{OnIdiom Phone=110, Tablet=120, Desktop=140}"
+                        HeightRequest="{StaticResource ButtonMinHeight}"
                         IsEnabled="{Binding IsSpeaking, Converter={StaticResource InvertedBoolConverter}}"
                         AutomationProperties.Name="Read recipe aloud using text to speech" />
                 <Button Text="Stop Speaking" Command="{Binding StopSpeakingCommand}"
                         BackgroundColor="{StaticResource ErrorColor}" TextColor="White"
-                        MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                        FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                        MinimumWidthRequest="{OnIdiom Phone=100, Tablet=110, Desktop=130}"
+                        HeightRequest="{StaticResource ButtonMinHeight}"
                         IsVisible="{Binding IsSpeaking}"
                         AutomationProperties.Name="Stop text-to-speech" />
             </HorizontalStackLayout>

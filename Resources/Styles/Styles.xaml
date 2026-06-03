@@ -2,7 +2,11 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:CampusEats.Converters">
+
+    <!-- Converters -->
+    <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
 
     <!-- ActivityIndicator -->
     <Style TargetType="ActivityIndicator">
@@ -39,9 +43,29 @@
         <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="BorderWidth" Value="0"/>
         <Setter Property="CornerRadius" Value="{StaticResource LargeCornerRadius}"/>
-        <Setter Property="Padding" Value="20,14"/>
-        <Setter Property="MinimumHeightRequest" Value="{StaticResource ButtonMinHeight}"/>
-        <Setter Property="MinimumWidthRequest" Value="{StaticResource ButtonMinWidth}"/>
+        <Setter Property="Padding">
+            <OnIdiom>
+                <OnIdiom.Phone>16,8</OnIdiom.Phone>
+                <OnIdiom.Tablet>24,12</OnIdiom.Tablet>
+                <OnIdiom.Desktop>14,6</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
+        <Setter Property="MinimumHeightRequest">
+            <OnIdiom>
+                <OnIdiom.Phone>44</OnIdiom.Phone>
+                <OnIdiom.Tablet>60</OnIdiom.Tablet>
+                <OnIdiom.Desktop>36</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
+        <Setter Property="MinimumWidthRequest">
+            <OnIdiom>
+                <OnIdiom.Phone>72</OnIdiom.Phone>
+                <OnIdiom.Tablet>90</OnIdiom.Tablet>
+                <OnIdiom.Desktop>80</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -71,8 +95,29 @@
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
         <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="CornerRadius" Value="{StaticResource LargeCornerRadius}"/>
-        <Setter Property="Padding" Value="20,14"/>
-        <Setter Property="MinimumHeightRequest" Value="{StaticResource ButtonMinHeight}"/>
+        <Setter Property="Padding">
+            <OnIdiom>
+                <OnIdiom.Phone>16,8</OnIdiom.Phone>
+                <OnIdiom.Tablet>24,12</OnIdiom.Tablet>
+                <OnIdiom.Desktop>14,6</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
+        <Setter Property="MinimumHeightRequest">
+            <OnIdiom>
+                <OnIdiom.Phone>44</OnIdiom.Phone>
+                <OnIdiom.Tablet>60</OnIdiom.Tablet>
+                <OnIdiom.Desktop>36</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
+        <Setter Property="MinimumWidthRequest">
+            <OnIdiom>
+                <OnIdiom.Phone>72</OnIdiom.Phone>
+                <OnIdiom.Tablet>90</OnIdiom.Tablet>
+                <OnIdiom.Desktop>80</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
     </Style>
 
     <!-- Outline Button Style -->
@@ -85,8 +130,29 @@
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
         <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="CornerRadius" Value="{StaticResource LargeCornerRadius}"/>
-        <Setter Property="Padding" Value="20,14"/>
-        <Setter Property="MinimumHeightRequest" Value="{StaticResource ButtonMinHeight}"/>
+        <Setter Property="Padding">
+            <OnIdiom>
+                <OnIdiom.Phone>16,8</OnIdiom.Phone>
+                <OnIdiom.Tablet>24,12</OnIdiom.Tablet>
+                <OnIdiom.Desktop>14,6</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
+        <Setter Property="MinimumHeightRequest">
+            <OnIdiom>
+                <OnIdiom.Phone>44</OnIdiom.Phone>
+                <OnIdiom.Tablet>60</OnIdiom.Tablet>
+                <OnIdiom.Desktop>36</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
+        <Setter Property="MinimumWidthRequest">
+            <OnIdiom>
+                <OnIdiom.Phone>72</OnIdiom.Phone>
+                <OnIdiom.Tablet>90</OnIdiom.Tablet>
+                <OnIdiom.Desktop>80</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
     </Style>
 
     <!-- CheckBox -->
@@ -111,9 +177,15 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
+        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}" />
-        <Setter Property="MinimumHeightRequest" Value="80"/>
+        <Setter Property="MinimumHeightRequest">
+            <OnIdiom>
+                <OnIdiom.Phone>80</OnIdiom.Phone>
+                <OnIdiom.Tablet>100</OnIdiom.Tablet>
+                <OnIdiom.Desktop>70</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
     </Style>
 
     <!-- Entry -->
@@ -121,9 +193,15 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
+        <Setter Property="FontSize" Value="{DynamicResource MediumFontSize}"/>
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}" />
-        <Setter Property="MinimumHeightRequest" Value="{StaticResource ButtonMinHeight}"/>
+        <Setter Property="MinimumHeightRequest">
+            <OnIdiom>
+                <OnIdiom.Phone>44</OnIdiom.Phone>
+                <OnIdiom.Tablet>50</OnIdiom.Tablet>
+                <OnIdiom.Desktop>36</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
     </Style>
 
     <!-- Frame -->
@@ -221,8 +299,14 @@
         <Setter Property="TitleColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
-        <Setter Property="MinimumHeightRequest" Value="{StaticResource ButtonMinHeight}"/>
+        <Setter Property="FontSize" Value="{DynamicResource MediumFontSize}"/>
+        <Setter Property="MinimumHeightRequest">
+            <OnIdiom>
+                <OnIdiom.Phone>44</OnIdiom.Phone>
+                <OnIdiom.Tablet>50</OnIdiom.Tablet>
+                <OnIdiom.Desktop>36</OnIdiom.Desktop>
+            </OnIdiom>
+        </Setter>
     </Style>
 
     <!-- ProgressBar -->

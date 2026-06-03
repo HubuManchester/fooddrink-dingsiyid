@@ -18,7 +18,7 @@
     <VerticalStackLayout>
         <SearchBar
             x:Name="RecipeSearchBar"
-            Text="{Binding SearchText}"
+            Text="{Binding SearchText, Mode=TwoWay}"
             Placeholder="Search recipes..."
             SearchCommand="{Binding SearchCommand}"
             SearchButtonPressed="OnSearchButtonPressed"
@@ -28,9 +28,15 @@
             <HorizontalStackLayout Spacing="{StaticResource MediumSpacing}">
                 <Button Text="Photo Recognition" Command="{Binding CaptureAndRecognizeCommand}"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                        FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                        MinimumWidthRequest="{OnIdiom Phone=150, Tablet=170, Desktop=190}"
+                        HeightRequest="{StaticResource ButtonMinHeight}"
                         AutomationProperties.Name="Take photo to recognize food ingredients" />
                 <Button Text="Shake to Recommend" Command="{Binding ShakeToRecommendCommand}"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                        FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                        MinimumWidthRequest="{OnIdiom Phone=140, Tablet=160, Desktop=180}"
+                        HeightRequest="{StaticResource ButtonMinHeight}"
                         AutomationProperties.Name="Shake device for random recipe recommendation" />
             </HorizontalStackLayout>
         </ScrollView>
@@ -91,12 +97,16 @@
                                            WidthRequest="{OnIdiom Phone=90, Tablet=120}"
                                            AutomationProperties.Name="Recipe image thumbnail" />
                                     <VerticalStackLayout Grid.Column="1" Padding="{StaticResource SmallMargin}">
-                                        <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
-                                            <Label Text="{Binding CategoryIcon}" FontSize="{DynamicResource MediumFontSize}" />
+                                        <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}" VerticalOptions="Center">
+                                            <Label Text="{Binding CategoryIcon}" FontSize="{DynamicResource MediumFontSize}" VerticalOptions="Center" />
                                             <Label Text="{Binding Name}" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
+                                                   VerticalOptions="Center"
                                                    AutomationProperties.Name="Recipe name" />
                                             <ImageButton Source="{Binding IsFavorite, Converter={StaticResource BoolToFavoriteConverter}}"
-                                                         WidthRequest="{OnIdiom Phone=28, Tablet=32}" HeightRequest="{OnIdiom Phone=28, Tablet=32}"
+                                                         WidthRequest="{OnIdiom Phone=32, Tablet=40, Desktop=28}" 
+                                                         HeightRequest="{OnIdiom Phone=32, Tablet=40, Desktop=28}"
+                                                         BackgroundColor="Transparent"
+                                                         VerticalOptions="Center"
                                                          Clicked="OnFavoriteClicked"
                                                          AutomationProperties.Name="Toggle recipe favorite status" />
                                         </HorizontalStackLayout>

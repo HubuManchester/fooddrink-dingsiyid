@@ -9,16 +9,10 @@
              x:DataType="viewmodels:MealPlanViewModel">
 
     <Grid RowDefinitions="Auto, Auto, Auto, *, Auto">
-        <!-- Header Section -->
-        <Grid Grid.Row="0" BackgroundColor="{StaticResource SecondaryColor}" Padding="{StaticResource LargeMargin}">
-            <Grid.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="{StaticResource SecondaryColor}" Offset="0" />
-                    <GradientStop Color="{StaticResource PrimaryColor}" Offset="1" />
-                </LinearGradientBrush>
-            </Grid.Background>
+        <!-- Header Section with solid color background -->
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource PrimaryColor}" Padding="16">
             <VerticalStackLayout>
-                <Label Text="🥗 My Meal Plan" FontSize="{DynamicResource TitleFontSize}" FontAttributes="Bold" TextColor="White"
+                <Label Text="🥗 My Meal Plan" FontSize="24" FontAttributes="Bold" TextColor="White"
                        AutomationProperties.Name="Meal plan page title" />
                 <DatePicker x:Name="DatePicker"
                             Date="{Binding SelectedDate}"
@@ -26,141 +20,140 @@
                             Margin="0, 8, 0, 0"
                             TextColor="White"
                             BackgroundColor="Transparent"
-                            MinimumHeightRequest="{StaticResource ButtonMinHeight}"
+                            MinimumHeightRequest="44"
                             AutomationProperties.Name="Select date for meal plan" />
             </VerticalStackLayout>
         </Grid>
 
-        <!-- Action Bar -->
-        <HorizontalStackLayout Grid.Row="1" Margin="{StaticResource LargeMargin}" Spacing="{StaticResource DefaultSpacing}" VerticalOptions="Center">
-            <Picker
-                    Title="Meal Type"
-                    ItemsSource="{Binding MealTypes}"
-                    SelectedItem="{Binding MealType}"
-                    WidthRequest="{OnIdiom Phone=120, Tablet=150}"
-                    MinimumHeightRequest="{StaticResource ButtonMinHeight}"
-                    AutomationProperties.Name="Select meal type" />
-            <Button Text="+ Add Meal"
+        <!-- Summary Section -->
+        <Grid Grid.Row="1" Margin="16" ColumnDefinitions="*, *, *" VerticalOptions="Center">
+            <Button Grid.Column="0" Text="📅 Today" Command="{Binding GoToTodayCommand}"
                     Style="{StaticResource SecondaryButton}"
-                    Command="{Binding AddMealCommand}"
-                    AutomationProperties.Name="Add meal to plan" />
-        </HorizontalStackLayout>
+                    FontSize="14"
+                    MinimumHeightRequest="44"
+                    AutomationProperties.Name="Go to today" />
+            <Button Grid.Column="1" Text="← Prev" Command="{Binding PreviousDayCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    FontSize="14"
+                    MinimumHeightRequest="44"
+                    AutomationProperties.Name="Previous day" />
+            <Button Grid.Column="2" Text="Next →" Command="{Binding NextDayCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    FontSize="14"
+                    MinimumHeightRequest="44"
+                    AutomationProperties.Name="Next day" />
+        </Grid>
 
-        <!-- Calories Card -->
-        <Frame Grid.Row="2"
-               CornerRadius="16"
-               Padding="{StaticResource LargeMargin}"
-               Margin="{StaticResource LargeMargin}"
-               HasShadow="True" 
-               BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}">
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="{StaticResource DefaultSpacing}">
-                <Label Text="🔥 Daily Calories:" FontSize="{DynamicResource MediumFontSize}"
-                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                       AutomationProperties.Name="Daily calories consumed" />
-                <Label Text="{Binding TotalCalories}" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
-                       TextColor="{StaticResource AccentOrange}"
-                       AutomationProperties.Name="Total calories value" />
-            </HorizontalStackLayout>
-        </Frame>
+        <!-- Add Meal Button -->
+        <Button Grid.Row="2" Text="+ Add Meal"
+                Style="{StaticResource SecondaryButton}"
+                Command="{Binding AddMealCommand}"
+                FontSize="14"
+                WidthRequest="200"
+                HeightRequest="50"
+                Margin="16"
+                AutomationProperties.Name="Add meal to plan" />
 
         <!-- Meal List -->
-        <RefreshView Grid.Row="3" Margin="{StaticResource MediumMargin}" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
-            <CollectionView ItemsSource="{Binding MealPlanItems}"
-                            AutomationProperties.Name="Meal plan items list">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:MealPlanItem">
-                        <Border StrokeShape="RoundRectangle 16"
-                               Margin="0, 0, 0, 16"
-                               Padding="0"
-                               BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
-                            <Grid Padding="{StaticResource DefaultMargin}" ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
-                                    <VerticalStackLayout Grid.Column="0">
-                                        <Label Text="{Binding RecipeName}" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
-                                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                                               AutomationProperties.Name="Recipe name" />
-                                        <Label FontSize="{DynamicResource SmallFontSize}"
-                                               TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                                               AutomationProperties.Name="Meal type and date">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="{Binding MealType}" />
-                                                    <Span Text=" - " />
-                                                    <Span Text="{Binding PlannedDate, StringFormat='{}{0:MMM dd}'}" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                    </VerticalStackLayout>
-                                    <Grid Grid.Column="1" RowSpan="2" ColumnDefinitions="Auto, Auto" VerticalOptions="Center" ColumnSpacing="{StaticResource SmallSpacing}">
-                                        <Button Text="✏️ Edit"
-                                                FontSize="{OnIdiom Phone=11, Tablet=13}"
-                                                TextColor="{StaticResource PrimaryColor}"
-                                                BackgroundColor="{StaticResource LightPrimary}"
-                                                CornerRadius="{StaticResource DefaultCornerRadius}"
-                                                BorderWidth="1"
-                                                BorderColor="{StaticResource PrimaryColor}"
-                                                Command="{Binding Source={x:Reference MealPlanPageView}, Path=BindingContext.EditMealCommand}"
-                                                CommandParameter="{Binding .}"
-                                                WidthRequest="{OnIdiom Phone=70, Tablet=80}" 
-                                                HeightRequest="{OnIdiom Phone=44, Tablet=50}"
-                                                Padding="8,4"
-                                                MinimumHeightRequest="{StaticResource ButtonMinHeight}"
-                                                AutomationProperties.Name="Edit meal" />
-                                        <Button Text="🗑️ Delete"
-                                                Grid.Column="1"
-                                                FontSize="{OnIdiom Phone=11, Tablet=13}"
-                                                TextColor="White"
-                                                BackgroundColor="{StaticResource ErrorColor}"
-                                                CornerRadius="{StaticResource DefaultCornerRadius}"
-                                                Command="{Binding Source={x:Reference MealPlanPageView}, Path=BindingContext.RemoveMealCommand}"
-                                                CommandParameter="{Binding .}"
-                                                WidthRequest="{OnIdiom Phone=70, Tablet=80}" 
-                                                HeightRequest="{OnIdiom Phone=44, Tablet=50}"
-                                                Padding="8,4"
-                                                MinimumHeightRequest="{StaticResource ButtonMinHeight}"
-                                                AutomationProperties.Name="Remove meal from plan" />
-                                    </Grid>
-                                    <Label Grid.Column="0" Grid.Row="2" FontSize="{DynamicResource SmallFontSize}"
-                                           TextColor="{StaticResource PrimaryColor}"
-                                           AutomationProperties.Name="Calories">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="🍎 " />
-                                                <Span Text="{Binding Calories}" />
-                                                <Span Text=" calories" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-                <CollectionView.EmptyView>
-                    <VerticalStackLayout Padding="{StaticResource ExtraLargeMargin}" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Frame BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}" 
-                               CornerRadius="16" 
-                               Padding="{StaticResource ExtraLargeMargin}">
-                            <VerticalStackLayout HorizontalOptions="Center">
-                                <Label Text="🍳" FontSize="64" HorizontalOptions="Center" Margin="0,0,0,16" />
-                                <Label Text="No Meals Planned" FontSize="{DynamicResource HeaderFontSize}" HorizontalOptions="Center" FontAttributes="Bold"
-                                       LineBreakMode="WordWrap" MaxLines="0">
-                                    <Label.TextColor>
-                                        <AppThemeBinding Light="{StaticResource LightText}" Dark="{StaticResource DarkText}" />
-                                    </Label.TextColor>
-                                </Label>
-                                <Label Text="Tap + Add Meal to create your first meal plan" 
-                                       FontSize="{DynamicResource DefaultFontSize}"
-                                       HorizontalOptions="Center" LineBreakMode="WordWrap" MaxLines="0" Margin="0,8,0,0">
-                                    <Label.TextColor>
-                                        <AppThemeBinding Light="{StaticResource LightTextSecondary}" Dark="{StaticResource DarkTextSecondary}" />
-                                    </Label.TextColor>
-                                </Label>
-                            </VerticalStackLayout>
-                        </Frame>
+        <RefreshView Grid.Row="3" Margin="16" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+            <ScrollView>
+                <VerticalStackLayout Spacing="12">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="12"
+                                        IsVisible="{Binding MealPlans.Count, Converter={StaticResource CountToBoolConverter}}">
+                        <Label Text="Total Calories:" FontSize="14" 
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                               HorizontalOptions="Center" />
+                        <Label Text="{Binding TotalCalories, StringFormat='{}{0} kcal'}" 
+                               FontSize="28" FontAttributes="Bold" 
+                               TextColor="{StaticResource AccentOrange}"
+                               HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                </CollectionView.EmptyView>
-            </CollectionView>
+
+                    <CollectionView ItemsSource="{Binding MealPlans}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:MealPlanItem">
+                                <Border StrokeShape="RoundRectangle 8" Padding="12" Margin="0, 4"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
+                                    <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                            <Label Text="{Binding RecipeName}" FontSize="16" FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                                                   AutomationProperties.Name="Meal recipe name" />
+                                            <Label FontSize="12"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                                                   AutomationProperties.Name="Meal planned date">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="Date: " />
+                                                        <Span Text="{Binding PlannedDate, StringFormat='{}{0:MMM dd, yyyy}'}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label Text="{Binding MealType, StringFormat='Meal Type: {0}'}" FontSize="12"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                                                   AutomationProperties.Name="Meal type" />
+                                            <Label Text="{Binding Calories, StringFormat='Calories: {0} kcal'}" FontSize="12"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                                                   AutomationProperties.Name="Meal calories" />
+                                        </VerticalStackLayout>
+
+                                        <Grid Grid.Column="1" RowSpan="2" ColumnDefinitions="Auto, Auto" VerticalOptions="Center" ColumnSpacing="8">
+                                            <Button Text="✏️ Edit"
+                                                    FontSize="12"
+                                                    TextColor="{StaticResource PrimaryColor}"
+                                                    BackgroundColor="{StaticResource LightPrimary}"
+                                                    CornerRadius="8"
+                                                    BorderWidth="1"
+                                                    BorderColor="{StaticResource PrimaryColor}"
+                                                    Command="{Binding Source={x:Reference MealPlanPageView}, Path=BindingContext.EditMealCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    WidthRequest="70" 
+                                                    HeightRequest="44"
+                                                    Padding="8,4"
+                                                    MinimumHeightRequest="44"
+                                                    AutomationProperties.Name="Edit meal" />
+                                            <Button Text="🗑️ Delete"
+                                                    Grid.Column="1"
+                                                    FontSize="12"
+                                                    TextColor="White"
+                                                    BackgroundColor="{StaticResource ErrorColor}"
+                                                    CornerRadius="8"
+                                                    Command="{Binding Source={x:Reference MealPlanPageView}, Path=BindingContext.RemoveMealCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    WidthRequest="70" 
+                                                    HeightRequest="44"
+                                                    Padding="8,4"
+                                                    MinimumHeightRequest="44"
+                                                    AutomationProperties.Name="Delete meal" />
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Empty State -->
+                    <VerticalStackLayout Padding="24" HorizontalOptions="Center" VerticalOptions="Center"
+                                        IsVisible="{Binding MealPlans.Count, Converter={StaticResource CountToBoolConverter}, ConverterParameter=invert}">
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}" 
+                                StrokeShape="RoundRectangle 16" Padding="24">
+                            <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
+                                <Label Text="🍽️ No meals planned" FontSize="20" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                                       HorizontalOptions="Center"
+                                       AutomationProperties.Name="No meals planned message" />
+                                <Label Text="Tap the + Add Meal button to add your first meal" FontSize="14"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                                       HorizontalOptions="Center"
+                                       AutomationProperties.Name="Add meal instruction" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
         </RefreshView>
 
-        <StackLayout Grid.Row="4" HeightRequest="20"/>
+        <!-- Tab Bar Spacer -->
+        <BoxView Grid.Row="4" HeightRequest="0" />
     </Grid>
 </ContentPage>

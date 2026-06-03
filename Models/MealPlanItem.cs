@@ -1,12 +1,27 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace CampusEats.Models;
 
-public class MealPlanItem
+public partial class MealPlanItem : ObservableObject
 {
-    public int Id { get; set; }
-    public string RecipeName { get; set; } = string.Empty;
-    public int RecipeId { get; set; }
-    public string MealType { get; set; } = string.Empty; // Breakfast, Lunch, Dinner, Snack
-    public DateTime PlannedDate { get; set; }
-    public int Calories { get; set; }
-    public DateTime CreatedAt { get; set; }
+    [ObservableProperty]
+    private int id;
+
+    [ObservableProperty]
+    private string recipeName = string.Empty;
+
+    [ObservableProperty]
+    private int recipeId;
+
+    [ObservableProperty]
+    private string mealType = string.Empty; // Breakfast, Lunch, Dinner, Snack
+
+    [ObservableProperty]
+    private DateTime plannedDate;
+
+    [ObservableProperty]
+    private int calories;
+
+    [ObservableProperty]
+    private DateTime createdAt;
 }

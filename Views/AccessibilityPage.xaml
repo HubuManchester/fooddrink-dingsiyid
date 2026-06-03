@@ -6,185 +6,55 @@
              Title="Accessibility Settings"
              x:DataType="viewmodels:AccessibilityViewModel">
 
-    <ScrollView MaximumWidthRequest="{OnIdiom Phone=600, Tablet=800}">
-        <VerticalStackLayout Padding="{StaticResource LargeMargin}" Spacing="{StaticResource LargeSpacing}">
-            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
-                <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
-                    <Label Text="Accessibility Settings" FontSize="{DynamicResource TitleFontSize}" FontAttributes="Bold"
-                           TextColor="{StaticResource PrimaryColor}"
-                           AutomationProperties.Name="Accessibility settings page title" />
-                    <Label Text="Customize your experience" FontSize="{DynamicResource DefaultFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" />
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <Label Text="Accessibility Settings" FontSize="24" FontAttributes="Bold" />
+            
+            <Border StrokeShape="RoundRectangle 16" Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Theme Mode" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="{Binding ThemeDisplayName}" FontSize="16" />
+                    <Button Text="Toggle Theme" Command="{Binding ToggleThemeCommand}" 
+                            FontSize="14" WidthRequest="120" HeightRequest="44" />
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
-                <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
-                    <Label Text="Theme Mode" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
-                           AutomationProperties.Name="Theme mode selection" />
-                    <Grid ColumnDefinitions="*, Auto">
-                        <Label Text="{Binding ThemeDisplayName}" FontSize="{DynamicResource MediumFontSize}"
-                               AutomationProperties.Name="Current theme" />
-                        <Button Grid.Column="1" Text="Toggle" Command="{Binding ToggleThemeCommand}"
-                                AutomationProperties.Name="Toggle between light and dark theme" />
-                    </Grid>
-                    <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
-                        <Button Text="Light" Command="{Binding SetLightThemeCommand}"
-                                AutomationProperties.Name="Set light theme" />
-                        <Button Text="Dark" Command="{Binding SetDarkThemeCommand}"
-                                AutomationProperties.Name="Set dark theme" />
-                        <Button Text="System" Command="{Binding SetSystemThemeCommand}"
-                                AutomationProperties.Name="Follow system theme setting" />
+            <Border StrokeShape="RoundRectangle 16" Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Font Size" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="{Binding FontScaleDisplay}" FontSize="16" />
+                    <Slider Minimum="0.8" Maximum="2.0" Value="{Binding FontScale, Mode=TwoWay}" />
+                    <HorizontalStackLayout Spacing="10">
+                        <Button Text="A-" Command="{Binding DecreaseFontCommand}" 
+                                FontSize="16" WidthRequest="60" HeightRequest="44" />
+                        <Button Text="A+" Command="{Binding IncreaseFontCommand}" 
+                                FontSize="16" WidthRequest="60" HeightRequest="44" />
+                        <Button Text="Reset" Command="{Binding ResetFontCommand}" 
+                                FontSize="14" WidthRequest="70" HeightRequest="44" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
-                <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
-                    <Label Text="Font Size" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
-                           AutomationProperties.Name="Font size adjustment" />
-                    <Label Text="{Binding FontScaleDisplay}" FontSize="{DynamicResource MediumFontSize}"
-                           AutomationProperties.Name="Current font scale percentage" />
-                    <Slider
-                        Minimum="0.8"
-                        Maximum="2.0"
-                        Value="{Binding FontScale, Mode=TwoWay}"
-                        Margin="0,10,0,0"
-                        AutomationProperties.Name="Font size slider, drag to adjust" />
-                    <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
-                        <Button Text="A-" Command="{Binding DecreaseFontCommand}"
-                                AutomationProperties.Name="Decrease font size" />
-                        <Button Text="A+" Command="{Binding IncreaseFontCommand}"
-                                AutomationProperties.Name="Increase font size" />
-                        <Button Text="Reset" Command="{Binding ResetFontCommand}"
-                                AutomationProperties.Name="Reset font size to default" />
-                    </HorizontalStackLayout>
+            <Border StrokeShape="RoundRectangle 16" Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Text-to-Speech" FontSize="18" FontAttributes="Bold" />
+                    <Button Text="🔊 Test Speech" Command="{Binding TestTtsCommand}" 
+                            FontSize="14" WidthRequest="130" HeightRequest="44" />
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
-                <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
-                    <Label Text="Text-to-Speech" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
-                           AutomationProperties.Name="Text to speech settings" />
-                    <HorizontalStackLayout>
-                        <Label Text="Enable voice reading" FontSize="{DynamicResource DefaultFontSize}"
-                               VerticalOptions="Center"
-                               AutomationProperties.Name="Text to speech enable switch" />
-                        <Switch IsToggled="{Binding TtsEnabled}" HorizontalOptions="End"
-                                AutomationProperties.Name="Toggle text to speech" />
-                    </HorizontalStackLayout>
-                    <Label Text="Speech Speed" FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Speech speed slider label" />
-                    <Slider
-                        Minimum="0.5"
-                        Maximum="2.0"
-                        Value="{Binding TtsSpeed, Mode=TwoWay}"
-                        AutomationProperties.Name="Adjust speech speed slider" />
-                    <Button Text="Test Speech" Command="{Binding TestTtsCommand}"
-                            AutomationProperties.Name="Test text to speech voice" />
+            <Border StrokeShape="RoundRectangle 16" Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Vibration Feedback" FontSize="18" FontAttributes="Bold" />
+                    <Button Text="Test Vibration" Command="{Binding TestVibrationCommand}" 
+                            FontSize="14" WidthRequest="130" HeightRequest="44" />
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
-                <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
-                    <Label Text="Vibration Feedback" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
-                           AutomationProperties.Name="Vibration feedback settings" />
-                    <HorizontalStackLayout>
-                        <Label Text="Enable vibration" FontSize="{DynamicResource DefaultFontSize}"
-                               VerticalOptions="Center"
-                               AutomationProperties.Name="Vibration enable switch" />
-                        <Switch IsToggled="{Binding VibrationEnabled}" HorizontalOptions="End"
-                                AutomationProperties.Name="Toggle vibration feedback" />
-                    </HorizontalStackLayout>
-                    <Button Text="Test Vibration" Command="{Binding TestVibrationCommand}"
-                            AutomationProperties.Name="Test vibration feedback" />
-                </VerticalStackLayout>
-            </Border>
-
-            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
-                <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
-                    <Label Text="WCAG Accessibility Guidelines" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
-                           TextColor="{StaticResource PrimaryColor}"
-                           AutomationProperties.Name="WCAG accessibility guidelines section" />
-
-                    <Label Text="1. Perceivable" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
-                           TextColor="{StaticResource PrimaryColor}"
-                           AutomationProperties.Name="Principle one perceivable" />
-                    <Label Text="Information and user interface components must be presented to users in ways they can perceive. This app provides alternative text for images, sufficient color contrast, and adaptable layout."
-                           FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Perceivable guideline description" />
-
-                    <Label Text="2. Operable" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
-                           TextColor="{StaticResource PrimaryColor}"
-                           AutomationProperties.Name="Principle two operable" />
-                    <Label Text="User interface components and navigation must be operable. This app supports keyboard navigation, provides skip links, and gives users enough time to read content."
-                           FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Operable guideline description" />
-
-                    <Label Text="3. Understandable" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
-                           TextColor="{StaticResource PrimaryColor}"
-                           AutomationProperties.Name="Principle three understandable" />
-                    <Label Text="Information and the operation of user interface must be understandable. This app uses clear language, provides input assistance, and prevents errors."
-                           FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Understandable guideline description" />
-
-                    <Label Text="4. Robust" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
-                           TextColor="{StaticResource PrimaryColor}"
-                           AutomationProperties.Name="Principle four robust" />
-                    <Label Text="Content must be robust enough to be interpreted reliably by a wide variety of user agents. This app follows compatibility guidelines and validates properly."
-                           FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Robust guideline description" />
-                </VerticalStackLayout>
-            </Border>
-
-            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
-                <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
-                    <Label Text="Contrast Standards" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
-                           AutomationProperties.Name="Color contrast standards section" />
-                    <Label Text="This app follows WCAG 2.1 AA standards:" FontSize="{DynamicResource DefaultFontSize}"
-                           AutomationProperties.Name="WCAG compliance statement" />
-                    <Label Text="- Normal text contrast ratio: 4.5:1" FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Normal text contrast requirement" />
-                    <Label Text="- Large text contrast ratio: 3:1" FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Large text contrast requirement" />
-                    <Label Text="- Icons and graphics contrast ratio: 3:1" FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Graphics contrast requirement" />
-                </VerticalStackLayout>
-            </Border>
-
-            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
-                <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
-                    <Label Text="How to Use Accessibility Features" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
-                           TextColor="{StaticResource PrimaryColor}"
-                           AutomationProperties.Name="User guide section" />
-                    <Label Text="Screen Reader Support:" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
-                           AutomationProperties.Name="Screen reader section" />
-                    <Label Text="All buttons and controls have descriptive labels. Navigate using swipe gestures or a physical keyboard."
-                           FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Screen reader usage instructions" />
-
-                    <Label Text="Font Scaling:" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
-                           AutomationProperties.Name="Font scaling section" />
-                    <Label Text="Use the slider above or A+/A- buttons to adjust text size. All text will scale proportionally."
-                           FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Font scaling usage instructions" />
-
-                    <Label Text="Theme Switching:" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
-                           AutomationProperties.Name="Theme switching section" />
-                    <Label Text="Toggle between light and dark modes or follow your system setting for comfortable viewing."
-                           FontSize="{DynamicResource SmallFontSize}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           AutomationProperties.Name="Theme switching usage instructions" />
+            <Border StrokeShape="RoundRectangle 16" Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="WCAG Guidelines" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="This app follows WCAG 2.1 AA accessibility standards." FontSize="14" />
                 </VerticalStackLayout>
             </Border>
         </VerticalStackLayout>

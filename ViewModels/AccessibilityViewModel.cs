@@ -151,7 +151,7 @@ public partial class AccessibilityViewModel : ObservableObject
         }
         UpdateFontScaleDisplay();
     }
-
+    
     /// <summary>
     /// Increase font size
     /// </summary>

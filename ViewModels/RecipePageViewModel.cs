@@ -62,6 +62,25 @@ public partial class RecipePageViewModel : ObservableObject
         // Load data immediately
         LoadCategories();
         _ = LoadRecipes();
+        
+        // Add temporary test data to ensure UI works
+        AddTestRecipes();
+    }
+    
+    private void AddTestRecipes()
+    {
+        // Add test recipes immediately for UI testing
+        if (Recipes.Count == 0)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Recipes.Add(new Recipe { Id = 999, Name = "Kung Pao Chicken", Category = "Staples", Rating = 4.7, Calories = 320, Description = "Famous Sichuan dish, spicy and fragrant." });
+                Recipes.Add(new Recipe { Id = 998, Name = "Tomato Egg Stir Fry", Category = "Staples", Rating = 4.5, Calories = 280, Description = "Classic Chinese home cooking." });
+                Recipes.Add(new Recipe { Id = 997, Name = "Vegetable Salad", Category = "Vegetarian", Rating = 4.3, Calories = 150, Description = "Fresh and healthy green salad." });
+                Recipes.Add(new Recipe { Id = 996, Name = "Tiramisu", Category = "Desserts", Rating = 4.8, Calories = 350, Description = "Italian classic dessert." });
+                Recipes.Add(new Recipe { Id = 995, Name = "Bubble Tea", Category = "Beverages", Rating = 4.4, Calories = 280, Description = "Taiwanese milk tea with chewy tapioca." });
+            });
+        }
     }
 
     public ICommand SearchCommand { get; }

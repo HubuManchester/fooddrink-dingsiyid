@@ -38,9 +38,15 @@
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
                                AutomationProperties.Name="Distance from current location" />
                         <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
-                            <Button Text="Speak" Command="{Binding SpeakRestaurantCommand}" WidthRequest="{OnIdiom Phone=70, Tablet=80}"
+                            <Button Text="Speak" Command="{Binding SpeakRestaurantCommand}" 
+                                    WidthRequest="{OnIdiom Phone=70, Tablet=80, Desktop=90}"
+                                    FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                                    HeightRequest="{StaticResource ButtonMinHeight}"
                                     AutomationProperties.Name="Speak restaurant information" />
-                            <Button Text="Stop" Command="{Binding StopTtsCommand}" WidthRequest="{OnIdiom Phone=60, Tablet=70}"
+                            <Button Text="Stop" Command="{Binding StopTtsCommand}" 
+                                    WidthRequest="{OnIdiom Phone=60, Tablet=70, Desktop=80}"
+                                    FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                                    HeightRequest="{StaticResource ButtonMinHeight}"
                                     AutomationProperties.Name="Stop speaking" />
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
@@ -51,16 +57,14 @@
                         <Label Text="Food Photo" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
                                AutomationProperties.Name="Food photo section" />
-                        <Image Aspect="AspectFill" HeightRequest="{OnIdiom Phone=180, Tablet=200}"
-                               AutomationProperties.Name="Restaurant food image">
-                            <Image.Source>
-                                <MultiBinding Converter="{StaticResource ByteArrayToImageSourceConverter}">
-                                    <Binding Path="Restaurant.ImageData" />
-                                    <Binding Path="Restaurant.ImageName" />
-                                </MultiBinding>
-                            </Image.Source>
-                        </Image>
+                        <Image Source="{Binding Restaurant.ImageName}"
+                               Aspect="AspectFill" 
+                               HeightRequest="{OnIdiom Phone=180, Tablet=200}"
+                               AutomationProperties.Name="Restaurant food image" />
                         <Button Text="Take Photo" Command="{Binding TakePhotoCommand}"
+                                FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                                MinimumWidthRequest="{OnIdiom Phone=100, Tablet=110, Desktop=130}"
+                                HeightRequest="{StaticResource ButtonMinHeight}"
                                 AutomationProperties.Name="Take photo of food" />
                     </VerticalStackLayout>
                 </Border>
@@ -83,7 +87,10 @@
                             <Label Text="Menu" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" VerticalOptions="Center"
                                    AutomationProperties.Name="Menu section" />
-                            <Button Text="Add Dish" Command="{Binding AddDishCommand}" WidthRequest="{OnIdiom Phone=80, Tablet=90}"
+                            <Button Text="Add Dish" Command="{Binding AddDishCommand}" 
+                                    WidthRequest="{OnIdiom Phone=80, Tablet=90, Desktop=100}"
+                                    FontSize="{OnIdiom Phone=14, Tablet=15, Desktop=16}"
+                                    HeightRequest="{StaticResource ButtonMinHeight}"
                                     AutomationProperties.Name="Add new dish" />
                         </HorizontalStackLayout>
                         

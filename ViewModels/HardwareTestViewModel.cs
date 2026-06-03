@@ -23,6 +23,9 @@ public partial class HardwareTestViewModel : ObservableObject
     private string recognizedFoodInfo = string.Empty;
 
     [ObservableProperty]
+    private ImageSource? recognizedFoodImage;
+
+    [ObservableProperty]
     private bool hasShakeResult;
 
     [ObservableProperty]
@@ -70,9 +73,49 @@ public partial class HardwareTestViewModel : ObservableObject
     {
         StatusMessage = "📷 Opening camera...";
         HasRecognitionResult = false;
+        RecognizedFoodImage = null;
 
         try
         {
+            // Check if running on Windows (no camera support)
+            if (!HardwareManager.CameraSupported || !TextToSpeechService.IsSupported)
+            {
+                // Use mock data for Windows testing
+                StatusMessage = "🔄 Using mock camera recognition (Windows)...";
+                await Task.Delay(1500); // Simulate processing time
+
+                var mockResult = await _mockService.MockCaptureAndRecognizeAsync();
+                
+                RecognizedFoodName = mockResult.FoodName;
+                RecognizedFoodInfo = $"Category: {mockResult.Category}\n" +
+                                     $"Calories: {mockResult.Calories}\n" +
+                                     $"Description: {mockResult.Description}";
+
+                // Set mock image
+                if (mockResult.MockImage != null && mockResult.MockImage.Length > 0)
+                {
+                    RecognizedFoodImage = ImageSource.FromStream(() => new MemoryStream(mockResult.MockImage));
+                }
+
+                HasRecognitionResult = true;
+                StatusMessage = $"✅ Mock recognition successful: {mockResult.FoodName}";
+
+                var mainPage = Application.Current?.MainPage;
+                if (mainPage != null)
+                {
+                    await mainPage.DisplayAlert(
+                        "🎉 Mock Recognition (Windows Test)",
+                        $"Food: {mockResult.FoodName}\n" +
+                        $"Category: {mockResult.Category}\n" +
+                        $"Calories: {mockResult.Calories}\n\n" +
+                        $"{mockResult.Description}\n\n" +
+                        "(This is mock data for Windows testing)",
+                        "Great!");
+                }
+                return;
+            }
+
+            // Real camera capture for mobile devices
             var result = await _hardwareManager.CaptureAndRecognizeFoodAsync();
 
             if (result.Success)
@@ -82,16 +125,26 @@ public partial class HardwareTestViewModel : ObservableObject
                                      $"Calories: {result.Calories}\n" +
                                      $"Description: {result.Description}";
 
+                // Set the image source if image data is available
+                if (result.ImageData != null && result.ImageData.Length > 0)
+                {
+                    RecognizedFoodImage = ImageSource.FromStream(() => new MemoryStream(result.ImageData));
+                }
+
                 HasRecognitionResult = true;
                 StatusMessage = $"✅ Recognition successful: {result.FoodName}";
 
-                await Application.Current!.MainPage!.DisplayAlert(
-                    "🎉 Recognition Successful!",
-                    $"Food: {result.FoodName}\n" +
-                    $"Category: {result.Category}\n" +
-                    $"Calories: {result.Calories}\n\n" +
-                    $"{result.Description}",
-                    "Great!");
+                var mainPage = Application.Current?.MainPage;
+                if (mainPage != null)
+                {
+                    await mainPage.DisplayAlert(
+                        "🎉 Recognition Successful!",
+                        $"Food: {result.FoodName}\n" +
+                        $"Category: {result.Category}\n" +
+                        $"Calories: {result.Calories}\n\n" +
+                        $"{result.Description}",
+                        "Great!");
+                }
             }
             else
             {
@@ -126,20 +179,24 @@ public partial class HardwareTestViewModel : ObservableObject
                 HasShakeResult = true;
                 StatusMessage = $"🎲 Random recipe: {recipe.Name}";
 
-                bool viewRecipe = await Application.Current!.MainPage!.DisplayAlert(
-                    "🎲 Shake Result!",
-                    $"Random Recipe: {recipe.Name}\n" +
-                    $"Category: {recipe.Category}\n" +
-                    $"Rating: {recipe.Rating} ⭐\n" +
-                    $"Calories: {recipe.Calories}\n\n" +
-                    "Would you like to view the recipe details?",
-                    "View Recipe", "Skip");
+                var mainPage = Application.Current?.MainPage;
+                if (mainPage != null)
+                {
+                    bool viewRecipe = await mainPage.DisplayAlert(
+                        "🎲 Shake Result!",
+                        $"Random Recipe: {recipe.Name}\n" +
+                        $"Category: {recipe.Category}\n" +
+                        $"Rating: {recipe.Rating} ⭐\n" +
+                        $"Calories: {recipe.Calories}\n\n" +
+                        "Would you like to view the recipe details?",
+                        "View Recipe", "Skip");
 
-                if (viewRecipe)
-            {
-                AppState.SelectedRecipe = recipe;
-                await Shell.Current.GoToAsync("///recipedetailpage");
-            }
+                    if (viewRecipe)
+                    {
+                        AppState.SelectedRecipe = recipe;
+                        await Shell.Current.GoToAsync("///recipedetailpage");
+                    }
+                }
             }
             else
             {
@@ -224,6 +281,32 @@ public partial class HardwareTestViewModel : ObservableObject
 
         try
         {
+            // Check if running on Windows (no location support)
+            if (!HardwareManager.LocationSupported)
+            {
+                // Use mock location for Windows testing
+                StatusMessage = "🔄 Using mock location (Windows)...";
+                await Task.Delay(1000); // Simulate location acquisition
+
+                var mockLocation = await _mockService.MockGetLocationAsync();
+                CurrentLatitude = mockLocation.Latitude;
+                CurrentLongitude = mockLocation.Longitude;
+                HasLocation = true;
+
+                StatusMessage = $"📍 Mock Location: {CurrentLatitude:F6}, {CurrentLongitude:F6}";
+
+                await Application.Current!.MainPage!.DisplayAlert(
+                    "📍 Mock Location (Windows Test)",
+                    $"Mock Location:\n" +
+                    $"Latitude: {CurrentLatitude:F6}\n" +
+                    $"Longitude: {CurrentLongitude:F6}\n\n" +
+                    "This is mock data for Windows testing.\n" +
+                    "Real location would be near Hubei University, Wuhan.",
+                    "OK");
+                return;
+            }
+
+            // Real location for mobile devices
             await _hardwareManager.UpdateLocation();
 
             CurrentLatitude = _hardwareManager.CurrentLatitude;

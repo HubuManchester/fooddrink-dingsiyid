@@ -248,42 +248,41 @@ public partial class DetailPageViewModel : ObservableObject
             return;
         }
 
-        try
+        // Request camera permission
+        var cameraStatus = await Permissions.CheckStatusAsync<Permissions.Camera>();
+        if (cameraStatus != PermissionStatus.Granted)
         {
-            var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
-            
-            // Handle Denied and Restricted status
-            if (status == PermissionStatus.Denied || status == PermissionStatus.Restricted)
+            cameraStatus = await Permissions.RequestAsync<Permissions.Camera>();
+        }
+        if (cameraStatus != PermissionStatus.Granted)
+        {
+            await Application.Current!.MainPage!.DisplayAlert(
+                "Permission Required",
+                "Camera permission is needed to take photos.",
+                "OK");
+            return;
+        }
+
+        // Request storage permission (Android needs, Windows doesn't)
+        if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+        {
+            var storageStatus = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+            if (storageStatus != PermissionStatus.Granted)
             {
-                bool openSettings = await SafeDisplayConfirmAsync("Permission Required", 
-                    "Camera permission is needed to take photos. Would you like to open app settings to enable it?", 
-                    "Yes", "No");
-                if (openSettings)
-                {
-                    await OpenAppSettings();
-                }
+                storageStatus = await Permissions.RequestAsync<Permissions.StorageWrite>();
+            }
+            if (storageStatus != PermissionStatus.Granted)
+            {
+                await Application.Current!.MainPage!.DisplayAlert(
+                    "Permission Required",
+                    "Storage permission is needed to save photos.",
+                    "OK");
                 return;
             }
-            
-            // Request permission if not granted
-            if (status != PermissionStatus.Granted)
-            {
-                status = await Permissions.RequestAsync<Permissions.Camera>();
-                
-                // Check again after request
-                if (status != PermissionStatus.Granted)
-                {
-                    bool openSettings = await SafeDisplayConfirmAsync("Permission Required", 
-                        "Camera permission was not granted. Would you like to open app settings to enable it?", 
-                        "Yes", "No");
-                    if (openSettings)
-                    {
-                        await OpenAppSettings();
-                    }
-                    return;
-                }
-            }
+        }
 
+        try
+        {
             if (!MediaPicker.Default.IsCaptureSupported)
             {
                 await SafeDisplayAlertAsync("Not Supported", 
@@ -298,10 +297,16 @@ public partial class DetailPageViewModel : ObservableObject
                 return;
             }
 
-            using var stream = await photo.OpenReadAsync();
-            using var memoryStream = new MemoryStream();
-            await stream.CopyToAsync(memoryStream);
-            
+            // Generate unique file name
+            var fileName = $"{Restaurant.Id}_{DateTime.Now.Ticks}.jpg";
+            var targetPath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+            // Copy photo to local storage
+            using var sourceStream = await photo.OpenReadAsync();
+            using var fileStream = File.Create(targetPath);
+            await sourceStream.CopyToAsync(fileStream);
+
+            // Update restaurant's image file name (overwrite old)
             var updatedRestaurant = new Restaurant
             {
                 Id = Restaurant.Id,
@@ -311,15 +316,17 @@ public partial class DetailPageViewModel : ObservableObject
                 Description = Restaurant.Description,
                 Latitude = Restaurant.Latitude,
                 Longitude = Restaurant.Longitude,
-                ImageName = Restaurant.ImageName,
+                ImageName = targetPath,  // Store absolute path
                 IsFavorite = Restaurant.IsFavorite,
                 CreatedAt = Restaurant.CreatedAt,
-                ImageData = memoryStream.ToArray(),
                 Distance = Restaurant.Distance
             };
-            
+
             await _databaseService.SaveRestaurantAsync(updatedRestaurant);
             Restaurant = updatedRestaurant;
+            
+            // Notify UI that image has been updated
+            OnPropertyChanged(nameof(Restaurant));
             StatusMessage = "Photo saved successfully!";
         }
         catch (PermissionException)
@@ -496,23 +503,24 @@ public partial class DetailPageViewModel : ObservableObject
 
         try
         {
-            if (Application.Current?.MainPage == null) return;
+            var mainPage = Application.Current?.MainPage;
+            if (mainPage == null) return;
 
-            var name = await Application.Current.MainPage.DisplayPromptAsync(
+            var name = await mainPage.DisplayPromptAsync(
                 "Add Dish", "Enter dish name:", "Add", "Cancel", "New Dish");
 
             if (string.IsNullOrWhiteSpace(name)) return;
 
-            var description = await Application.Current.MainPage.DisplayPromptAsync(
+            var description = await mainPage.DisplayPromptAsync(
                 "Add Dish", "Enter description:", "Next", "Cancel", "");
 
-            string priceStr = await Application.Current.MainPage.DisplayPromptAsync(
+            string priceStr = await mainPage.DisplayPromptAsync(
                 "Add Dish", "Enter price:", "Save", "Cancel", "10.00");
 
             if (!double.TryParse(priceStr, out double price) || price < 0)
                 price = 10.00;
 
-            var category = await Application.Current.MainPage.DisplayPromptAsync(
+            var category = await mainPage.DisplayPromptAsync(
                 "Add Dish", "Enter category:", "Save", "Cancel", "Main");
 
             var newDish = new Dish
@@ -546,17 +554,18 @@ public partial class DetailPageViewModel : ObservableObject
 
         try
         {
-            if (Application.Current?.MainPage == null) return;
+            var mainPage = Application.Current?.MainPage;
+            if (mainPage == null) return;
 
-            var name = await Application.Current.MainPage.DisplayPromptAsync(
+            var name = await mainPage.DisplayPromptAsync(
                 "Edit Dish", "Enter dish name:", "Save", "Cancel", dish.Name);
 
             if (string.IsNullOrWhiteSpace(name)) return;
 
-            var description = await Application.Current.MainPage.DisplayPromptAsync(
+            var description = await mainPage.DisplayPromptAsync(
                 "Edit Dish", "Enter description:", "Next", "Cancel", dish.Description);
 
-            string priceStr = await Application.Current.MainPage.DisplayPromptAsync(
+            string priceStr = await mainPage.DisplayPromptAsync(
                 "Edit Dish", "Enter price:", "Save", "Cancel", dish.Price.ToString("F2"));
 
             if (!double.TryParse(priceStr, out double price) || price < 0)
