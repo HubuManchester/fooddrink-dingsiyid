@@ -21,10 +21,8 @@
     <Grid>
         <ScrollView>
             <VerticalStackLayout Padding="{StaticResource LargeMargin}" Spacing="{StaticResource DefaultSpacing}">
-                <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}" HasShadow="True">
-                    <Frame.BackgroundColor>
-                        <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                    </Frame.BackgroundColor>
+                <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                     <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                         <Label Text="{Binding Restaurant.Name}" FontSize="{DynamicResource TitleFontSize}" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" LineBreakMode="WordWrap" MaxLines="0"
@@ -46,12 +44,9 @@
                                     AutomationProperties.Name="Stop speaking" />
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}" HasShadow="True">
-                    <Frame.BackgroundColor>
-                        <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                    </Frame.BackgroundColor>
+                <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}" BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                     <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                         <Label Text="Food Photo" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
@@ -68,12 +63,9 @@
                         <Button Text="Take Photo" Command="{Binding TakePhotoCommand}"
                                 AutomationProperties.Name="Take photo of food" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}" HasShadow="True">
-                    <Frame.BackgroundColor>
-                        <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                    </Frame.BackgroundColor>
+                <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}" BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                     <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                         <Label Text="About Restaurant" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
@@ -82,13 +74,10 @@
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" LineBreakMode="WordWrap" MaxLines="0"
                                AutomationProperties.Name="Restaurant description" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
                 <!-- Dishes Section -->
-                <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}" HasShadow="True">
-                    <Frame.BackgroundColor>
-                        <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                    </Frame.BackgroundColor>
+                <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}" BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                     <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                         <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
                             <Label Text="Menu" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
@@ -110,7 +99,7 @@
                                         AutomationProperties.Name="Dishes list">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="models:Dish">
-                                    <Frame CornerRadius="{StaticResource DefaultCornerRadius}" Padding="{StaticResource MediumMargin}" Margin="0,4">
+                                    <Border StrokeShape="RoundRectangle 8" Padding="{StaticResource MediumMargin}" Margin="0,4">
                                         <Frame.BackgroundColor>
                                             <AppThemeBinding Light="{StaticResource LightSurface}" Dark="{StaticResource DarkSurface}" />
                                         </Frame.BackgroundColor>
@@ -142,7 +131,7 @@
                                                              AutomationProperties.Name="Delete dish" />
                                             </VerticalStackLayout>
                                         </Grid>
-                                    </Frame>
+                                    </Border>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                             <CollectionView.EmptyView>
@@ -153,12 +142,9 @@
                             </CollectionView.EmptyView>
                         </CollectionView>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}" HasShadow="True">
-                    <Frame.BackgroundColor>
-                        <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                    </Frame.BackgroundColor>
+                <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}" BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                     <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
                         <Label Text="Write Review" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
@@ -182,12 +168,9 @@
                                TextColor="{StaticResource PrimaryColor}" LineBreakMode="WordWrap" MaxLines="0"
                                AutomationProperties.Name="Review submission status" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}" HasShadow="True">
-                    <Frame.BackgroundColor>
-                        <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                    </Frame.BackgroundColor>
+                <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}" BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                     <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                         <Label Text="User Reviews" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
@@ -224,7 +207,7 @@
                             </CollectionView.EmptyView>
                         </CollectionView>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
             </VerticalStackLayout>
         </ScrollView>
 

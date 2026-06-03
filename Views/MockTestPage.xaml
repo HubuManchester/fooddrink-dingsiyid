@@ -10,10 +10,9 @@
 
     <ScrollView MaximumWidthRequest="{OnIdiom Phone=600, Tablet=800}">
         <VerticalStackLayout Padding="{StaticResource LargeMargin}" Spacing="{StaticResource DefaultSpacing}">
-            <Frame CornerRadius="{StaticResource LargeCornerRadius}">
-                <Frame.BackgroundColor>
-                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                </Frame.BackgroundColor>
+            <Frame CornerRadius="12"
+                   Padding="{StaticResource DefaultMargin}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                 <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                     <Label Text="Mock Function Switch" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
@@ -32,10 +31,9 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <Frame CornerRadius="{StaticResource LargeCornerRadius}">
-                <Frame.BackgroundColor>
-                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                </Frame.BackgroundColor>
+            <Frame CornerRadius="12"
+                   Padding="{StaticResource DefaultMargin}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                 <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                     <Label Text="Mock Photo Recognition" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
@@ -51,7 +49,7 @@
                            AutomationProperties.Name="Recognition result header" />
                     <Frame IsVisible="{Binding HasRecognitionResult}"
                            BackgroundColor="{AppThemeBinding Light=#FFF8F0, Dark=#2d2d2d}"
-                           CornerRadius="{StaticResource DefaultCornerRadius}"
+                           CornerRadius="8"
                            Padding="{StaticResource DefaultMargin}">
                         <VerticalStackLayout Spacing="{StaticResource SmallSpacing}">
                             <Label Text="{Binding RecognizedFoodName}"
@@ -75,10 +73,9 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <Frame CornerRadius="{StaticResource LargeCornerRadius}">
-                <Frame.BackgroundColor>
-                    <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                </Frame.BackgroundColor>
+            <Frame CornerRadius="12"
+                   Padding="{StaticResource DefaultMargin}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                 <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                     <Label Text="Mock Location" FontSize="{DynamicResource MediumFontSize}" FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
@@ -105,12 +102,10 @@
                                     AutomationProperties.Name="Nearby restaurants list sorted by distance">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:Restaurant">
-                                <Frame CornerRadius="{StaticResource DefaultCornerRadius}"
+                                <Frame CornerRadius="8"
                                        Margin="{StaticResource SmallMargin}"
-                                       Padding="{StaticResource DefaultMargin}">
-                                    <Frame.BackgroundColor>
-                                        <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-                                    </Frame.BackgroundColor>
+                                       Padding="{StaticResource DefaultMargin}"
+                                       BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                                     <VerticalStackLayout Spacing="{StaticResource SmallSpacing}">
                                         <Label Text="{Binding Name}" FontAttributes="Bold"
                                                FontSize="{DynamicResource DefaultFontSize}"

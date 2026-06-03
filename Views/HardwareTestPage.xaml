@@ -14,7 +14,7 @@
                    HorizontalOptions="Center" Margin="0, 0, 0, 10"
                    AutomationProperties.Name="Hardware test center page title" />
 
-            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightSurface}" Dark="{StaticResource DarkSurface}" />
                 </Frame.BackgroundColor>
@@ -27,9 +27,9 @@
                            Margin="0, 8, 0, 0"
                            AutomationProperties.Name="Current test status message" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -55,7 +55,7 @@
                             TextColor="White" Margin="0, 12, 0, 0"
                             AutomationProperties.Name="Take photo and recognize food ingredients" />
 
-                    <Frame CornerRadius="{StaticResource DefaultCornerRadius}" Padding="{StaticResource DefaultMargin}" Margin="0, 12, 0, 0"
+                    <Border StrokeShape="RoundRectangle 8" Padding="{StaticResource DefaultMargin}" Margin="0, 12, 0, 0"
                            IsVisible="{Binding HasRecognitionResult}"
                            BackgroundColor="{AppThemeBinding Light=#FFF8F4, Dark=#2d2d2d}">
                         <VerticalStackLayout>
@@ -68,11 +68,11 @@
                                    TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" Margin="0, 4, 0, 0"
                                    AutomationProperties.Name="Recognized food information" />
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -98,7 +98,7 @@
                             TextColor="White"
                             AutomationProperties.Name="Shake device for random recipe" />
 
-                    <Frame CornerRadius="{StaticResource DefaultCornerRadius}" Padding="{StaticResource DefaultMargin}" Margin="0, 12, 0, 0"
+                    <Border StrokeShape="RoundRectangle 8" Padding="{StaticResource DefaultMargin}" Margin="0, 12, 0, 0"
                            IsVisible="{Binding HasShakeResult}"
                            BackgroundColor="{AppThemeBinding Light=#F0FFF4, Dark=#1a2f1a}">
                         <VerticalStackLayout>
@@ -111,11 +111,11 @@
                                    TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" Margin="0, 4, 0, 0"
                                    AutomationProperties.Name="Random recipe information" />
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -141,9 +141,9 @@
                             TextColor="White" Margin="0, 8, 0, 0"
                             AutomationProperties.Name="Stop speech playback" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -178,9 +178,9 @@
                                 AutomationProperties.Name="Long vibration pattern" />
                     </Grid>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -200,7 +200,7 @@
                             TextColor="White"
                             AutomationProperties.Name="Get current location coordinates" />
 
-                    <Frame CornerRadius="{StaticResource DefaultCornerRadius}" Padding="{StaticResource DefaultMargin}" Margin="0, 12, 0, 0"
+                    <Border StrokeShape="RoundRectangle 8" Padding="{StaticResource DefaultMargin}" Margin="0, 12, 0, 0"
                            IsVisible="{Binding HasLocation}"
                            BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0d1b2a}">
                         <VerticalStackLayout>
@@ -227,9 +227,9 @@
                                 </Label.FormattedText>
                             </Label>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <Button Text="🚀 Run All Hardware Tests"
                     Command="{Binding RunAllTestsCommand}"

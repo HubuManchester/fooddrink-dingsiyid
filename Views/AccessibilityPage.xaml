@@ -8,7 +8,7 @@
 
     <ScrollView MaximumWidthRequest="{OnIdiom Phone=600, Tablet=800}">
         <VerticalStackLayout Padding="{StaticResource LargeMargin}" Spacing="{StaticResource LargeSpacing}">
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource LargeMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
                 <VerticalStackLayout Spacing="{StaticResource MediumSpacing}">
                     <Label Text="Accessibility Settings" FontSize="{DynamicResource TitleFontSize}" FontAttributes="Bold"
                            TextColor="{StaticResource PrimaryColor}"
@@ -16,9 +16,9 @@
                     <Label Text="Customize your experience" FontSize="{DynamicResource DefaultFontSize}"
                            TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource LargeMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
                 <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
                     <Label Text="Theme Mode" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
                            AutomationProperties.Name="Theme mode selection" />
@@ -37,9 +37,9 @@
                                 AutomationProperties.Name="Follow system theme setting" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource LargeMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
                 <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
                     <Label Text="Font Size" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
                            AutomationProperties.Name="Font size adjustment" />
@@ -60,9 +60,9 @@
                                 AutomationProperties.Name="Reset font size to default" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource LargeMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
                 <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
                     <Label Text="Text-to-Speech" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
                            AutomationProperties.Name="Text to speech settings" />
@@ -84,9 +84,9 @@
                     <Button Text="Test Speech" Command="{Binding TestTtsCommand}"
                             AutomationProperties.Name="Test text to speech voice" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource LargeMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
                 <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
                     <Label Text="Vibration Feedback" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
                            AutomationProperties.Name="Vibration feedback settings" />
@@ -100,9 +100,9 @@
                     <Button Text="Test Vibration" Command="{Binding TestVibrationCommand}"
                             AutomationProperties.Name="Test vibration feedback" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource LargeMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
                 <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
                     <Label Text="WCAG Accessibility Guidelines" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
                            TextColor="{StaticResource PrimaryColor}"
@@ -140,9 +140,9 @@
                            TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
                            AutomationProperties.Name="Robust guideline description" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource LargeMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
                 <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
                     <Label Text="Contrast Standards" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
                            AutomationProperties.Name="Color contrast standards section" />
@@ -158,9 +158,9 @@
                            TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
                            AutomationProperties.Name="Graphics contrast requirement" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource LargeMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
                 <VerticalStackLayout Spacing="{StaticResource DefaultSpacing}">
                     <Label Text="How to Use Accessibility Features" FontSize="{DynamicResource HeaderFontSize}" FontAttributes="Bold"
                            TextColor="{StaticResource PrimaryColor}"
@@ -186,7 +186,7 @@
                            TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
                            AutomationProperties.Name="Theme switching usage instructions" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

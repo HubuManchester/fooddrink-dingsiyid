@@ -40,7 +40,7 @@
                     WidthRequest="{OnIdiom Phone=120, Tablet=150}"
                     MinimumHeightRequest="{StaticResource ButtonMinHeight}"
                     AutomationProperties.Name="Select meal type" />
-            <Button Text="➕ Add Meal"
+            <Button Text="+ Add Meal"
                     Style="{StaticResource SecondaryButton}"
                     Command="{Binding AddMealCommand}"
                     AutomationProperties.Name="Add meal to plan" />
@@ -48,7 +48,7 @@
 
         <!-- Calories Card -->
         <Frame Grid.Row="2"
-               CornerRadius="{StaticResource ExtraLargeCornerRadius}"
+               CornerRadius="16"
                Padding="{StaticResource LargeMargin}"
                Margin="{StaticResource LargeMargin}"
                HasShadow="True" 
@@ -69,10 +69,9 @@
                             AutomationProperties.Name="Meal plan items list">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:MealPlanItem">
-                        <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}"
+                        <Border StrokeShape="RoundRectangle 16"
                                Margin="0, 0, 0, 16"
                                Padding="0"
-                               HasShadow="True" 
                                BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
                             <Grid Padding="{StaticResource DefaultMargin}" ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
                                     <VerticalStackLayout Grid.Column="0">
@@ -91,30 +90,32 @@
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
-                                    <Grid Grid.Column="1" RowSpan="2" ColumnDefinitions="Auto, Auto" VerticalOptions="Center">
-                                        <Button Text="✏️"
-                                                FontSize="{OnIdiom Phone=14, Tablet=16}"
+                                    <Grid Grid.Column="1" RowSpan="2" ColumnDefinitions="Auto, Auto" VerticalOptions="Center" ColumnSpacing="{StaticResource SmallSpacing}">
+                                        <Button Text="Edit"
+                                                FontSize="{OnIdiom Phone=12, Tablet=14}"
                                                 TextColor="{StaticResource PrimaryColor}"
                                                 BackgroundColor="{StaticResource LightPrimary}"
-                                                CornerRadius="10"
+                                                CornerRadius="{StaticResource DefaultCornerRadius}"
                                                 BorderWidth="1"
                                                 BorderColor="{StaticResource PrimaryColor}"
                                                 Command="{Binding Source={x:Reference MealPlanPageView}, Path=BindingContext.EditMealCommand}"
                                                 CommandParameter="{Binding .}"
-                                                WidthRequest="{OnIdiom Phone=44, Tablet=52}" 
-                                                HeightRequest="{OnIdiom Phone=38, Tablet=42}"
-                                                Padding="0"
+                                                WidthRequest="{OnIdiom Phone=56, Tablet=64}" 
+                                                HeightRequest="{OnIdiom Phone=44, Tablet=50}"
+                                                Padding="6,4"
+                                                MinimumHeightRequest="{StaticResource ButtonMinHeight}"
                                                 AutomationProperties.Name="Edit meal" />
-                                        <Button Text="🗑️"
-                                                FontSize="{OnIdiom Phone=14, Tablet=16}"
+                                        <Button Text="Delete"
+                                                FontSize="{OnIdiom Phone=12, Tablet=14}"
                                                 TextColor="White"
                                                 BackgroundColor="{StaticResource ErrorColor}"
-                                                CornerRadius="10"
+                                                CornerRadius="{StaticResource DefaultCornerRadius}"
                                                 Command="{Binding Source={x:Reference MealPlanPageView}, Path=BindingContext.RemoveMealCommand}"
                                                 CommandParameter="{Binding .}"
-                                                WidthRequest="{OnIdiom Phone=44, Tablet=52}" 
-                                                HeightRequest="{OnIdiom Phone=38, Tablet=42}"
-                                                Padding="0"
+                                                WidthRequest="{OnIdiom Phone=56, Tablet=64}" 
+                                                HeightRequest="{OnIdiom Phone=44, Tablet=50}"
+                                                Padding="6,4"
+                                                MinimumHeightRequest="{StaticResource ButtonMinHeight}"
                                                 AutomationProperties.Name="Remove meal from plan" />
                                     </Grid>
                                     <Label Grid.Column="0" Grid.Row="2" FontSize="{DynamicResource SmallFontSize}"
@@ -129,13 +130,13 @@
                                         </Label.FormattedText>
                                     </Label>
                             </Grid>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>
                     <VerticalStackLayout Padding="{StaticResource ExtraLargeMargin}" HorizontalOptions="Center" VerticalOptions="Center">
                         <Frame BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}" 
-                               CornerRadius="{StaticResource ExtraLargeCornerRadius}" 
+                               CornerRadius="16" 
                                Padding="{StaticResource ExtraLargeMargin}">
                             <VerticalStackLayout HorizontalOptions="Center">
                                 <Label Text="🍳" FontSize="64" HorizontalOptions="Center" Margin="0,0,0,16" />
@@ -145,7 +146,7 @@
                                         <AppThemeBinding Light="{StaticResource LightText}" Dark="{StaticResource DarkText}" />
                                     </Label.TextColor>
                                 </Label>
-                                <Label Text="Tap ➕ Add Meal to create your first meal plan" 
+                                <Label Text="Tap + Add Meal to create your first meal plan" 
                                        FontSize="{DynamicResource DefaultFontSize}"
                                        HorizontalOptions="Center" LineBreakMode="WordWrap" MaxLines="0" Margin="0,8,0,0">
                                     <Label.TextColor>

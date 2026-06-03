@@ -19,7 +19,7 @@
 
     <ScrollView MaximumWidthRequest="{OnIdiom Phone=600, Tablet=800}">
         <VerticalStackLayout Padding="{StaticResource LargeMargin}" Spacing="{StaticResource DefaultSpacing}">
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource LargeMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource LargeMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -43,18 +43,18 @@
                            TextColor="#FFD700"
                            AutomationProperties.Name="Recipe rating" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
                 <Image Source="{Binding Recipe.ImageName}" Aspect="AspectFill"
                        HeightRequest="{OnIdiom Phone=200, Tablet=300}"
                        AutomationProperties.Name="Recipe image" />
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -80,9 +80,9 @@
                                AutomationProperties.Name="Preparation time value" />
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -94,9 +94,9 @@
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
                            AutomationProperties.Name="Recipe description" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -108,9 +108,9 @@
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
                            AutomationProperties.Name="Recipe ingredients list" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame CornerRadius="{StaticResource ExtraLargeCornerRadius}" Padding="{StaticResource DefaultMargin}">
+            <Border StrokeShape="RoundRectangle 16" Padding="{StaticResource DefaultMargin}">
                 <Frame.BackgroundColor>
                     <AppThemeBinding Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
                 </Frame.BackgroundColor>
@@ -122,7 +122,7 @@
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
                            AutomationProperties.Name="Step by step cooking instructions" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <HorizontalStackLayout Spacing="{StaticResource SmallSpacing}">
                 <Button Text="Add to Shopping List" Command="{Binding AddToShoppingListCommand}"

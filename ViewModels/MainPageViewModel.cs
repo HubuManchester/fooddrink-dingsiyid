@@ -32,6 +32,7 @@ public partial class MainPageViewModel : ObservableObject
     private string locationStatus = "Getting your location...";
 
     public IAsyncRelayCommand RefreshCommand { get; }
+    public IAsyncRelayCommand ShowLocationCommand { get; }
 
     public MainPageViewModel(DatabaseService databaseService, MockService mockService, NetworkService networkService, LocalStorageService localStorage, HardwareManager hardwareManager)
     {
@@ -51,6 +52,7 @@ public partial class MainPageViewModel : ObservableObject
         
         CuisineFilters.Add("All Cuisines");
         RefreshCommand = new AsyncRelayCommand(LoadData, () => !IsRefreshing);
+        ShowLocationCommand = new AsyncRelayCommand(ShowLocation);
         _ = InitializeDataAsync();
     }
     
@@ -485,6 +487,26 @@ public partial class MainPageViewModel : ObservableObject
         catch (Exception ex)
         {
             LocationStatus = $"Location update error: {ex.Message}";
+        }
+    }
+
+    private async Task ShowLocation()
+    {
+        try
+        {
+            if (Application.Current?.MainPage == null) return;
+
+            // Show Hubei University location info
+            LocationStatus = "📍 Hubei University, Wuhan";
+            
+            await Application.Current.MainPage.DisplayAlert(
+                "📍 Current Location",
+                "Hubei University\nWuhan, Hubei Province\nChina",
+                "OK");
+        }
+        catch (Exception ex)
+        {
+            LocationStatus = $"Failed to show location: {ex.Message}";
         }
     }
 }

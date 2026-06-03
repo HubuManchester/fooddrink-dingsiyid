@@ -140,6 +140,16 @@ public partial class RecipeDetailViewModel : ObservableObject
 
     private async Task GoBack()
     {
-        await Shell.Current.GoToAsync("..");
+        try
+        {
+            // First try relative navigation
+            await Shell.Current.GoToAsync("..");
+        }
+        catch
+        {
+            // If relative navigation fails, navigate to hardware test page as fallback
+            // This handles the case when coming from hardware test page
+            await Shell.Current.GoToAsync("///hardwaretestpage");
+        }
     }
 }

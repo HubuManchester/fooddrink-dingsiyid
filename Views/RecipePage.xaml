@@ -67,12 +67,12 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Recipe">
                         <Grid Padding="{StaticResource DefaultMargin}" MaximumWidthRequest="{OnIdiom Phone=600, Tablet=800}">
-                            <Frame CornerRadius="{StaticResource LargeCornerRadius}" Padding="{StaticResource DefaultMargin}" HasShadow="True">
-                                <Frame.GestureRecognizers>
+                            <Border StrokeShape="RoundRectangle 12" Padding="{StaticResource DefaultMargin}">
+                                <Border.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Command="{Binding Source={x:Reference RecipePageView}, Path=BindingContext.SelectRecipeCommand}"
                                         CommandParameter="{Binding .}" />
-                                </Frame.GestureRecognizers>
+                                </Border.GestureRecognizers>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="{OnIdiom Phone=90, Tablet=120}" />
@@ -110,7 +110,7 @@
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
                                 </Grid>
-                            </Frame>
+                            </Border>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
